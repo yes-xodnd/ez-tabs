@@ -79,13 +79,20 @@ const tree = [
   },
 ];
 
-const nodeDummy = {
+const dummyNode = {
   children: [
     {
       id: "2",
       index: 0,
       parentId: "1",
-      title: "children1",
+      title: "child1",
+      url: 'https://github.com/yes-xodnd'
+    },
+    {
+      id: "3",
+      index: 1,
+      parentId: "1",
+      title: "child2",
       url: 'https://github.com/yes-xodnd'
     }
   ],
@@ -102,5 +109,5 @@ const getTree = () => new Promise<BookmarkNode[]>(resolve => resolve(tree));
 export default getTree;
 
 export {
-  nodeDummy
+  dummyNode
 };
