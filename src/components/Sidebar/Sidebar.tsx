@@ -1,5 +1,5 @@
 import { BookmarkNode } from "src/constants/types";
-import BookmarkItem from "./BookmarkItem";
+import DirectoryListItem from "./DirectoryListItem";
 
 interface Props {
   rootNode: BookmarkNode;
@@ -8,7 +8,7 @@ interface Props {
 const Sidebar = ({ rootNode }: Props) => {
   
   return (
-    <BookmarkItem node={rootNode} />
+    <DirectoryListItem node={rootNode} />
   ); 
 };
 
