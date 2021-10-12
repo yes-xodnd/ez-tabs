@@ -4,7 +4,7 @@ interface Props {
   node: BookmarkNode;
 }
 
-const BookmarkItem = ({ node }: Props) => {
+const DirectoryListItem = ({ node }: Props) => {
   
   return (
     <div>
@@ -12,10 +12,11 @@ const BookmarkItem = ({ node }: Props) => {
       <div>
       { node.children?.length &&
         node.children
-        .map(childNode => <BookmarkItem node={childNode} key={childNode.id} />) }
+        .filter(node => node.children)
+        .map(childNode => <DirectoryListItem node={childNode} key={childNode.id} />) }
       </div>
     </div>  
   );  
 }
 
-export default BookmarkItem;
+export default DirectoryListItem;
