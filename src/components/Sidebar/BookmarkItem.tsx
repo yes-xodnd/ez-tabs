@@ -10,11 +10,11 @@ const BookmarkItem = ({ node }: Props) => {
     <div>
       <div>{ node.title }</div>
       <div>
-      { node.children &&
+      { node.children?.length &&
         node.children
         .map(childNode => <BookmarkItem node={childNode} key={childNode.id} />) }
       </div>
-    </div>
+    </div>  
   );  
 }
 
