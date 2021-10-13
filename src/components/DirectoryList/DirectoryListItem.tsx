@@ -6,11 +6,11 @@ import { useToggle, useTypedSelector } from "src/hooks";
 
 interface Props {
   node: BookmarkNode;
-  handleClickTitle: Function;
+  onClickTitle: Function;
   depth?: number;
 }
 
-const DirectoryListItem = ({ node, handleClickTitle, depth = 0 }: Props) => {
+const DirectoryListItem = ({ node, onClickTitle, depth = 0 }: Props) => {
   const { selectedDirId } = useTypedSelector(({ bookmarks }) => bookmarks);
   const [isOpen, toggleOpen] = useToggle(false);
   const isSelected = selectedDirId === node.id; 
@@ -23,7 +23,7 @@ const DirectoryListItem = ({ node, handleClickTitle, depth = 0 }: Props) => {
         <Arrow size="16" isOpen={isOpen} onClick={toggleOpen} />
         <Folder size="16" />
         <Title 
-          onClick={handleClickTitle(node.id)}
+          onClick={onClickTitle(node.id)}
           title={node.title}>
           { node.title }
         </Title>
@@ -40,7 +40,7 @@ const DirectoryListItem = ({ node, handleClickTitle, depth = 0 }: Props) => {
               node={childNode}
               key={childNode.id}
               depth={depth + 1}
-              handleClickTitle={handleClickTitle} />
+              onClickTitle={onClickTitle} />
           ))
         }
       </ChildrenContainer>

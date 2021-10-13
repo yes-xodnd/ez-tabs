@@ -5,7 +5,7 @@ import { MouseEventHandler } from 'react';
 
 describe('Directory List Item', () => {
   const renderItem = (handleClick: MouseEventHandler = () => {}) => render(
-    <DirectoryListItem node={node} handleClickTitle={handleClick} />
+    <DirectoryListItem node={node} onClickTitle={handleClick} />
   );
   
   test('render node title', () => {

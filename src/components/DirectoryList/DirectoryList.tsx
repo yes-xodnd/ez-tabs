@@ -14,7 +14,12 @@ const DirectoryList = ({ rootNode, handleClickTitle }: Props) => {
       {
         rootNode.children &&
         rootNode.children
-        .map(node => <DirectoryListItem node={node} key={node.id} handleClickTitle={handleClickTitle} />)
+        .map(node => (
+          <DirectoryListItem 
+            node={node} 
+            key={node.id} 
+            onClickTitle={handleClickTitle} />)
+        )
       }
     </Wrapper>
   ); 
