@@ -24,7 +24,7 @@ export default DirectoryList;
 
 const Wrapper = styled.aside`
   min-width: 200px;
-  max-width: 30%;
+  max-width: 300px;
   border-radius: 1rem;
   padding: 1rem;
   background: white;
