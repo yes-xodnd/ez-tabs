@@ -1,5 +1,5 @@
 import styled from 'styled-components';
-import { Folder, MoreVert, ArrowDropDown } from '@styled-icons/material-outlined';
+import { Folder, FolderOpen, MoreVert, ArrowDropDown } from '@styled-icons/material-outlined';
 import { cursorPointer } from 'src/style/styled-css';
 import { BookmarkNode } from "src/constants/types";
 import { useToggle, useTypedSelector } from "src/hooks";
@@ -21,7 +21,11 @@ const DirectoryListItem = ({ node, onClickTitle, depth = 0 }: Props) => {
         depth={depth}
         isSelected={isSelected}>
         <Arrow size="16" isOpen={isOpen} onClick={toggleOpen} />
-        <Folder size="16" />
+        {
+          isSelected
+          ? <FolderOpen size="16" />
+          : <Folder size="16" />
+        }
         <Title 
           onClick={onClickTitle(node.id)}
           title={node.title}>
@@ -52,7 +56,7 @@ export default DirectoryListItem;
   
 const NodeContentContainer = styled.div<{ depth: number, isSelected: boolean }>`
   display: grid;
-  grid-template-columns: 24px 24px auto 24px;
+  grid-template-columns: 24px 24px auto 32px;
   place-items: center center;
   column-gap: 0.5rem;
   padding: 0.5rem 0;
