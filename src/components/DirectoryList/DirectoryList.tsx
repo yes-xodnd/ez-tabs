@@ -27,9 +27,9 @@ const DirectoryList = ({ rootNode, handleClickTitle }: Props) => {
 
 export default DirectoryList;
 
-const Wrapper = styled.aside`
+const Wrapper = styled.div`
   min-width: 200px;
-  max-width: 300px;
+  max-width: 250px;
   border-radius: 1rem;
   padding: 1rem;
   background: white;
