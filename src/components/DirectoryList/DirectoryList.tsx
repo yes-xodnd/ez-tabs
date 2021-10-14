@@ -14,7 +14,12 @@ const DirectoryList = ({ rootNode, handleClickTitle }: Props) => {
       {
         rootNode.children &&
         rootNode.children
-        .map(node => <DirectoryListItem node={node} key={node.id} handleClickTitle={handleClickTitle} />)
+        .map(node => (
+          <DirectoryListItem 
+            node={node} 
+            key={node.id} 
+            onClickTitle={handleClickTitle} />)
+        )
       }
     </Wrapper>
   ); 
@@ -22,9 +27,9 @@ const DirectoryList = ({ rootNode, handleClickTitle }: Props) => {
 
 export default DirectoryList;
 
-const Wrapper = styled.aside`
+const Wrapper = styled.div`
   min-width: 200px;
-  max-width: 30%;
+  max-width: 250px;
   border-radius: 1rem;
   padding: 1rem;
   background: white;

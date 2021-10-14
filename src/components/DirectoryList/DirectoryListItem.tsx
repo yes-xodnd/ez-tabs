@@ -1,16 +1,16 @@
 import styled from 'styled-components';
-import { Folder, MoreVert, ArrowDropDown } from '@styled-icons/material-outlined';
+import { Folder, FolderOpen, MoreVert, ArrowDropDown } from '@styled-icons/material-outlined';
 import { cursorPointer } from 'src/style/styled-css';
 import { BookmarkNode } from "src/constants/types";
 import { useToggle, useTypedSelector } from "src/hooks";
 
 interface Props {
   node: BookmarkNode;
-  handleClickTitle: Function;
+  onClickTitle: Function;
   depth?: number;
 }
 
-const DirectoryListItem = ({ node, handleClickTitle, depth = 0 }: Props) => {
+const DirectoryListItem = ({ node, onClickTitle, depth = 0 }: Props) => {
   const { selectedDirId } = useTypedSelector(({ bookmarks }) => bookmarks);
   const [isOpen, toggleOpen] = useToggle(false);
   const isSelected = selectedDirId === node.id; 
@@ -21,9 +21,13 @@ const DirectoryListItem = ({ node, handleClickTitle, depth = 0 }: Props) => {
         depth={depth}
         isSelected={isSelected}>
         <Arrow size="16" isOpen={isOpen} onClick={toggleOpen} />
-        <Folder size="16" />
+        {
+          isSelected
+          ? <FolderOpen size="16" />
+          : <Folder size="16" />
+        }
         <Title 
-          onClick={handleClickTitle(node.id)}
+          onClick={onClickTitle(node.id)}
           title={node.title}>
           { node.title }
         </Title>
@@ -40,7 +44,7 @@ const DirectoryListItem = ({ node, handleClickTitle, depth = 0 }: Props) => {
               node={childNode}
               key={childNode.id}
               depth={depth + 1}
-              handleClickTitle={handleClickTitle} />
+              onClickTitle={onClickTitle} />
           ))
         }
       </ChildrenContainer>
@@ -52,7 +56,7 @@ export default DirectoryListItem;
   
 const NodeContentContainer = styled.div<{ depth: number, isSelected: boolean }>`
   display: grid;
-  grid-template-columns: 24px 24px auto 24px;
+  grid-template-columns: 24px 24px auto 32px;
   place-items: center center;
   column-gap: 0.5rem;
   padding: 0.5rem 0;
