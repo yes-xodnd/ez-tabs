@@ -19,8 +19,11 @@ export default App;
 
 const Wrapper = styled.main`
   display: flex;
-  background: #f1f1f1;
   max-height: 100vh;
   padding: 1rem;
   gap: 1rem;
+
+  & > div {
+    box-shadow: 0 0 5px lightgrey;
+  }
 `;
