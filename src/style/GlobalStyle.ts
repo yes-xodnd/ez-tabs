@@ -6,6 +6,7 @@ const GlobalStyle = createGlobalStyle`
 
   body {
     margin: 0;
+    background: #f1f1f1;
   }
 `;
 
