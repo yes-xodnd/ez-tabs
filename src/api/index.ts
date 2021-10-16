@@ -1,12 +1,5 @@
-import getTreeDummy from "src/dummy/getTree";
+import apiDummy from 'src/dummy/api';
 
-const api = {
-  getTree: getTreeDummy
-};
-
-
-if (process.env.NODE_ENV === 'production') {
-  api.getTree = chrome.bookmarks.getTree;
-}
-  
-export default api;
+export default (process.env.NODE_ENV === 'production')
+  ? chrome.bookmarks
+  : apiDummy;
