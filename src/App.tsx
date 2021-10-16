@@ -3,6 +3,7 @@ import styled from 'styled-components';
 import { getTree } from 'src/reducers/bookmarks';
 import { useTypedDispatch } from './hooks';
 import DirectoryListContainer from './components/DirectoryList/DirectoryListContainer';
+import NodeListContainer from './components/NodeList/NodeListContainer';
 
 function App() {
   const dispatch = useTypedDispatch();
@@ -11,6 +12,7 @@ function App() {
   return (
     <Wrapper className="App">
       <DirectoryListContainer />
+      <NodeListContainer />
     </Wrapper>
   );
 }
@@ -19,7 +21,7 @@ export default App;
 
 const Wrapper = styled.main`
   display: flex;
-  max-height: 100vh;
+  height: 100%;
   padding: 1rem;
   gap: 1rem;
 
