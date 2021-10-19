@@ -18,7 +18,7 @@ const DirectoryList = ({ rootNode, handleClickTitle }: Props) => {
           <DirectoryListItem 
             node={node} 
             key={node.id} 
-            onClickTitle={handleClickTitle} />)
+            handleClickTitle={handleClickTitle} />)
         )
       }
     </Wrapper>
