@@ -20,7 +20,7 @@ const SELECT_DIR = 'SELECT_DIR';
 export const getTree = createAsyncThunk(
   GET_TREE, 
   async () => {
-    const tree = await api.getTree();
+    const tree = await api.bookmarks.getTree();
     return tree[0];
   }
 );
