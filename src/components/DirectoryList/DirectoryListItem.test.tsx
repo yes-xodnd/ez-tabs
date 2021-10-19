@@ -1,30 +1,47 @@
 import DirectoryListItem from './DirectoryListItem';
-import { dummyNode as node } from 'src/dummy/getTree';
-import { render, fireEvent } from '@testing-library/react';
-import { MouseEventHandler } from 'react';
+import { render, fireEvent, RenderResult } from '@testing-library/react';
+import * as hooks from 'src/hooks';
+import node from 'src/dummy/bookmarks/node';
+
+const spySelector = jest.spyOn(hooks, 'useTypedSelector');
+const useSpySelector = () => spySelector.mockReturnValue({
+  bookmarks: { selectedDirId: '1' } 
+});
 
 describe('Directory List Item', () => {
-  const renderItem = (handleClick: MouseEventHandler = () => {}) => render(
-    <DirectoryListItem node={node} onClickTitle={handleClick} />
-  );
+  const onClickTitle = jest.fn();
+  let renderResult: RenderResult;
+
+  beforeEach(() => {
+    useSpySelector();
+    renderResult = render(
+      <DirectoryListItem node={node} handleClickTitle={() => onClickTitle} />
+    );
+  });
   
   test('render node title', () => {
-    const { getByText } = renderItem();
+    const { getByText } = renderResult;    
+
     expect(getByText(node.title)).toBeInTheDocument();
   });
 
-  test('render children nodes', () => {
-    const { getByText } = renderItem();
-
-    for (const { title } of node.children) {
-      expect(getByText(title)).toBeInTheDocument();
-    }
+  test('calls onClickTitle prop when clicked title', () => {
+    const { getByText } = renderResult;
+    fireEvent.click(getByText(node.title));
+    
+    expect(onClickTitle).toBeCalledTimes(1);
   });
 
-  test('calss onClickTitle prop when clicked title', () => {
-    const handleClick = jest.fn();
-    const { getByText } = renderItem();
-    fireEvent.click(getByText(node.title));
-    expect(handleClick).toBeCalledTimes(1);
-  })
+  
+  test('opens drop-down list when clicked arrow', async () => {
+    const { getByTitle, getByText } = renderResult;
+    const arrow = getByTitle('하위 디렉토리 목록 보기')
+    fireEvent.click(arrow);
+
+    setTimeout(() => {
+      for (const { title } of node.children) {
+        expect(getByText(title)).toBeInTheDocument();
+      }
+    }, 0);
+  });
 });
