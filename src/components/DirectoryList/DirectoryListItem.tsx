@@ -1,37 +1,38 @@
 import styled from 'styled-components';
-import { Folder, FolderOpen, MoreVert, ArrowDropDown } from '@styled-icons/material-outlined';
-import { cursorPointer } from 'src/style/styled-css';
+import { Folder, FolderOpen, ArrowDropDown } from '@styled-icons/material-outlined';
 import { BookmarkNode } from "src/constants/types";
 import { useToggle, useTypedSelector } from "src/hooks";
 
 interface Props {
   node: BookmarkNode;
-  onClickTitle: Function;
+  handleClickTitle: Function;
   depth?: number;
 }
 
-const DirectoryListItem = ({ node, onClickTitle, depth = 0 }: Props) => {
+const DirectoryListItem = ({ node, handleClickTitle, depth = 0 }: Props) => {
   const { selectedDirId } = useTypedSelector(({ bookmarks }) => bookmarks);
   const [isOpen, toggleOpen] = useToggle(false);
   const isSelected = selectedDirId === node.id; 
-  
+
   return (
     <div>
       <NodeContentContainer 
         depth={depth}
         isSelected={isSelected}>
-        <Arrow size="16" isOpen={isOpen} onClick={toggleOpen} />
+        <Arrow 
+          size="16"
+          isOpen={isOpen}
+          onClick={toggleOpen}
+          title="하위 디렉토리 목록 보기"
+          />
         {
           isSelected
           ? <FolderOpen size="16" />
           : <Folder size="16" />
         }
-        <Title 
-          onClick={onClickTitle(node.id)}
-          title={node.title}>
+        <Title onClick={handleClickTitle(node.id)} title={node.title} >
           { node.title }
         </Title>
-        <MoreIcon size="16" onClick={() => alert('clicked more')} />
       </NodeContentContainer>
 
       <ChildrenContainer isOpen={isOpen}>
@@ -44,7 +45,8 @@ const DirectoryListItem = ({ node, onClickTitle, depth = 0 }: Props) => {
               node={childNode}
               key={childNode.id}
               depth={depth + 1}
-              onClickTitle={onClickTitle} />
+              handleClickTitle={handleClickTitle}
+              />
           ))
         }
       </ChildrenContainer>
@@ -56,7 +58,7 @@ export default DirectoryListItem;
   
 const NodeContentContainer = styled.div<{ depth: number, isSelected: boolean }>`
   display: grid;
-  grid-template-columns: 24px 24px auto 32px;
+  grid-template-columns: 24px 24px auto;
   place-items: center center;
   column-gap: 0.5rem;
   padding: 0.5rem 0;
@@ -68,25 +70,24 @@ const NodeContentContainer = styled.div<{ depth: number, isSelected: boolean }>`
 `;
 
 const Arrow = styled(ArrowDropDown)<{ isOpen: boolean }>`
-  ${ cursorPointer }
   transform: rotate(${({ isOpen }) => isOpen ? '270deg' : '0' });
-`;
-
-const MoreIcon = styled(MoreVert)`
-  ${ cursorPointer }
+  &:hover {
+    cursor: pointer;
+  }
 `;
 
 const Title = styled.div`
-  ${ cursorPointer }
-
   justify-self: start;
   max-width: 100%;
   font-size: 0.8rem;
   white-space: nowrap;
   overflow: hidden;
+
+  &:hover {
+    cursor: pointer;
+  }
 `;
 
 const ChildrenContainer = styled.div<{ isOpen: boolean }>`
   display: ${({ isOpen }) => isOpen ? 'block' : 'none'};
-
 `;

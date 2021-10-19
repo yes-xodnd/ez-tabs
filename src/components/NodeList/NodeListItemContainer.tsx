@@ -16,8 +16,12 @@ const NodeListItemContainer = ({ node }: Props) => {
     <Wrapper>
       {
         node.url
-        ? <NodeListItemLink node={node} handleDoubleClick={() => window.open(node.url)} />
-        : <NodeListItemDirectory node={node} handleDoubleClick={() => dispatch(selectDir(node.id))} />
+        ? <NodeListItemLink 
+            node={node} 
+            handleDoubleClick={() => window.open(node.url)} />
+        : <NodeListItemDirectory 
+            node={node} 
+            handleDoubleClick={() => dispatch(selectDir(node.id))} />
       }
     </Wrapper>
   );
