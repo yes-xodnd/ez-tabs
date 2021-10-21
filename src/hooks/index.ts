@@ -1,13 +1,15 @@
 import { useState } from "react";
-import { TypedUseSelectorHook, useDispatch, useSelector } from "react-redux";
-import { RootState, Dispatch } from 'src/store';
-
-export const useTypedSelector: TypedUseSelectorHook<RootState> = useSelector;
-export const useTypedDispatch = () => useDispatch<Dispatch>();
-
+import useCheck from './useCheck';
+import { useTypedDispatch, useTypedSelector } from './redux';
 
 export const useToggle = (initValue: boolean): [boolean, () => void] => {
   const [state, setState] = useState(initValue);
   const toggleState = () => setState(!state);
   return [state, toggleState];
 }
+
+export {
+  useCheck,
+  useTypedDispatch,
+  useTypedSelector
+};
