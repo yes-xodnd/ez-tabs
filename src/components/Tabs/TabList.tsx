@@ -1,5 +1,6 @@
 import { Tab } from 'src/constants/types';
 import styled from 'styled-components';
+import Header from './Header';
 import TabListItem from './TabListItem';
 
 interface Props {
@@ -10,6 +11,7 @@ const TabList = ({ tabs }: Props) => {
 
   return (
     <Wrapper>
+      <Header />
       { tabs.map(tab => <TabListItem tab={tab} key={tab.url} />) }
     </Wrapper>
   );
