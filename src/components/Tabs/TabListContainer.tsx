@@ -1,10 +1,14 @@
 import { Tab } from 'src/constants/types';
 import { useEffect, useState } from 'react';
+import useCheck, { createCheckContext } from 'src/hooks/useCheck';
 import api, { onTabsChange } from 'src/api';
 import TabList from './TabList';
 
-const TabsContainer = () => {
-  const [tabs, setTabs] = useState<Tab[]>([]);
+export const checkContext = createCheckContext();
+
+const TabListContainer = () => {
+  const [ tabs, setTabs ] = useState<Tab[]>([]);
+  const [ checked, setChecked ] = useCheck(tabs);
   
   useEffect(() => {
     const updateTabs = () => api.tabs.query({}).then(setTabs);
@@ -13,8 +17,10 @@ const TabsContainer = () => {
   }, []);
 
   return (
-    <TabList tabs={tabs} />
+    <checkContext.Provider value={{ checked, setChecked }}>
+      <TabList tabs={tabs} />
+    </checkContext.Provider>
   );
 };
 
-export default TabsContainer;
+export default TabListContainer;
