@@ -4,7 +4,7 @@ import { getTree } from 'src/reducers/bookmarks';
 import { useTypedDispatch } from './hooks';
 import DirectoryListContainer from './components/DirectoryList/DirectoryListContainer';
 import NodeListContainer from './components/NodeList/NodeListContainer';
-import TabsContainer from './components/Tabs/TabListContainer';
+import TabListContainer from './components/Tabs/TabListContainer';
 
 function App() {
   const dispatch = useTypedDispatch();
@@ -14,7 +14,7 @@ function App() {
     <Wrapper className="App">
       <DirectoryListContainer />
       <NodeListContainer />
-      <TabsContainer />
+      <TabListContainer />
     </Wrapper>
   );
 }
