@@ -1,6 +1,6 @@
 import { useEffect } from 'react';
 import styled from 'styled-components';
-import { getTree } from 'src/reducers/bookmarks';
+import { getTree } from 'src/store/modules/bookmarksSlice';
 import { useTypedDispatch } from './hooks';
 import DirectoryListContainer from './components/DirectoryList/DirectoryListContainer';
 import NodeListContainer from './components/NodeList/NodeListContainer';
