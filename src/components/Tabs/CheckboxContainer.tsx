@@ -1,16 +1,16 @@
 import { ChangeEventHandler, useContext } from "react";
-import Checkbox from "src/components/Checkbox";
+import Checkbox from "src/components/UI/Checkbox";
 import { checkContext } from "src/components/Tabs/TabListContainer";
 
 const CheckboxContainer = ({ id }: { id: string}) => {
-  const { checked, setChecked } = useContext(checkContext);
-  const isChecked = checked.includes(id);
-
-  const handleOnChange: ChangeEventHandler = () => setChecked([ id ], !isChecked);
+  const { checkedItems, setCheckedItems } = useContext(checkContext);
+  
+  const isChecked = checkedItems.includes(id);
+  const handleOnChange: ChangeEventHandler = () => setCheckedItems([ id ], !isChecked);
 
   return (
       <Checkbox
-        isChecked={checked.includes(id)}
+        isChecked={isChecked}
         onChange={handleOnChange}
       />
   );
