@@ -1,16 +1,16 @@
 import { createContext, useEffect, useState } from "react";
 
-type SetChecked = (id: string[], value: boolean) => void;
+type SetCheckedItems = (id: string[], value: boolean) => void;
 
 interface CheckContextValue {
-  checked: string[];
-  setChecked: SetChecked;
+  checkedItems: string[];
+  setCheckedItems: SetCheckedItems;
 }
 
-const useCheck = (arr: any[]): [ string[], SetChecked ] => {
+const useCheck = (arr: any[]): [ string[], SetCheckedItems ] => {
   const [state, setState] = useState<string[]>([]);
   
-  const setChecked = (id: string[], value: boolean) => {
+  const setCheckedItems = (id: string[], value: boolean) => {
     const nextState = value
     ? [ ...state, ...id ]
     : state.filter(v => !id.includes(v));
@@ -23,13 +23,13 @@ const useCheck = (arr: any[]): [ string[], SetChecked ] => {
     setState([]); 
   }, [ arr ]);
 
-  return [ state, setChecked ];
+  return [ state, setCheckedItems ];
 };
 
 
 export const createCheckContext = () => createContext<CheckContextValue>({
-  checked: [],
-  setChecked: (id: string[], value: boolean) => {},
+  checkedItems: [],
+  setCheckedItems: (id: string[], value: boolean) => {},
 });
 
 export default useCheck;
