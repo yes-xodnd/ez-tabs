@@ -1,5 +1,7 @@
-import { BookmarkNode, ChildNode, ParentNode } from 'src/constants/types';
+import { BookmarkNode } from 'src/constants/types';
 import nodes from './nodes';
+
+type NodeMap = Map<string, BookmarkNode>;
 
 interface CreateDetails {
   index?: number;
@@ -8,17 +10,20 @@ interface CreateDetails {
   url?: string;
 }
 
-const nodeMap = createNodeMap();
+let nodeList = nodes;
+let nodeMap: NodeMap = new Map();
+let tree: BookmarkNode[];
+let isUpdated = true;
+
 const nextId = (() => {
   let _nextId = 600;
   return (): string => (_nextId++).toString();
 })();
 
-function createNodeMap(): Map<string, BookmarkNode> {
-  
-  const nodeMap = nodes.reduce(
-    (map, node) => map.set(node.id, { ...node }),
-    new Map<string, BookmarkNode>()
+function createTree() {
+  nodeMap = nodeList.reduce(
+    (map, node) => map.set(node.id, { ...node }), 
+    new Map()
   );
 
   for (const node of nodeMap.values()) {
@@ -26,85 +31,81 @@ function createNodeMap(): Map<string, BookmarkNode> {
   }
 
   for (const node of nodeMap.values()) {
-    if (!node.parentId) continue;
-    const parentNode = nodeMap.get(node.parentId) as ParentNode;
-    parentNode.children.push(node);
+    if (node.parentId) {
+      const parentNode = nodeMap.get(node.parentId);
+      parentNode?.children?.push(node);
+    }
   }
 
   for (const node of nodeMap.values()) {
-    if (!node.children) continue;
-    node.children = node.children.sort((a, b) => Number(a.id) - Number(b.id));
+    if (node.children) {
+      node.children = node.children
+        .sort((a, b) => Number(a.id) - Number(b.id));
+    }
   }
-  return nodeMap;
-}
 
-async function get(id: string | string[]) : Promise<(BookmarkNode | undefined)[] > {
-  let idList: string[] = (typeof id === 'string') ? [ id ] : id;
-  return idList.map(id => nodeMap.get(id));
+  tree = [ nodeMap.get('0') as BookmarkNode ];
+  isUpdated = false;
+  return tree;
 }
 
 async function getTree() {
-  return [ nodeMap.get('0') as BookmarkNode ];
+  if (!tree || isUpdated) createTree();
+  return tree;
 }
 
-async function remove(id: string): Promise<BookmarkNode[]> {
-  const node = nodeMap.get(id) as ChildNode;
-  const parentNode = nodeMap.get(node.parentId) as ParentNode;
-  const index = parentNode.children.findIndex(childNode => childNode.id === id);
-  parentNode.children.splice(index, 1);
-  nodeMap.delete(id);
+async function get(id: string | string[]) {
+  if (!tree) getTree();
 
+  const idList = (typeof id === 'string') ? [ id ] : id;
+  return idList.map(id => nodeMap.get(id));
+};
+
+async function remove(id: string) {
+  if (nodeMap.has(id)) {
+    nodeList = nodeList.filter(node => node.id !== id);
+  }
+
+  isUpdated = true;
   return getTree();
 }
 
 async function removeTree(id: string) {
-  const [ targetNode ] = await get(id);
-  if (!targetNode) return;
-
-  const idList: string[] = [];
-  let queue: BookmarkNode[] = [ targetNode ];
-
+  const node = nodeMap.get(id) as BookmarkNode;
+  const targetIds: string[] = [];
+  let queue = [ node ];
+  
   while (queue.length) {
     const node = queue.shift() as BookmarkNode;
+    targetIds.push(node.id);
 
-    if (node.children?.length) {
-      queue.concat(node.children);
-      idList.concat(node.children.map(({ id }) => id));
-    }
+    if (node.children) queue.concat(node.children);
   }
 
-  idList.forEach(nodeMap.delete);
-  return remove(id);
+  nodeList = nodeList.filter(node => !targetIds.includes(node.id));
+  isUpdated = true;
+  return getTree();
 }
 
-function create({title = 'no name', parentId = '0', url }: CreateDetails)
-: Promise<BookmarkNode[]> {
+async function create({ url, title = '', parentId = '0' }: CreateDetails) {
+
   const id = nextId();
-  const parentNode = nodeMap.get(parentId) as ParentNode;
   const node: BookmarkNode = { id, title, parentId };
   
   if (url) node.url = url;
   else node.children = [];
   
-  if (parentNode.children.length) {
-    const lastChild = parentNode.children.slice(-1)[0] as ChildNode;
-    node.index = lastChild.index + 1;
-  } else {
-    node.index = 0;
-  }
-  
-  nodeMap.set(id, node);
-  parentNode.children.push(node);
-
+  nodeList.push(node);
+  isUpdated = true;
   return getTree();
 }
 
 const api = {
-  create,
   get,
   getTree,
   remove,
   removeTree,
+  create,
 };
 
 export default api;

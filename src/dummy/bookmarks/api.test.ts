@@ -49,25 +49,31 @@ describe('Dummy api', () => {
   });
 
   test('remove node', async () => {
+    let [ node ] = await api.get(targetId) as BookmarkNode[];
     await api.remove(targetId);
-    const getResult = await api.get(targetId);
-    const tree = await api.getTree();
-    const getResultFromTree = getFromTree(tree, targetId);
 
-    expect(getResult[0]).toBeUndefined();
-    expect(getResultFromTree).toBeUndefined();
+    const [ nodeRemoved ] = await api.get(targetId);
+    const [ parentNode ] = await api.get(node.parentId as string);
+
+    expect(nodeRemoved).toBeUndefined();
+    expect(parentNode?.children?.includes(node)).toBeFalsy();
+  });
+
+  test('create node', async () => {
+    const { url, title, parentId } = targetNode;
+    
+    await api.create({ url, title, parentId });
+
+    const [ parentNode ] = await api.get(parentId);
+    const res = parentNode?.children
+      ?.filter(node => node.title === title && node.url === url);
+    
+    expect(res).toHaveLength(1);
+  });
+
+  test('removeTree', async () => {
+    const tree = await api.removeTree('1');
+    const [ node ] = await api.get('1');
+    expect(node).toBeUndefined();
   });
 });
-
-function getFromTree(tree: BookmarkNode[], id: string): BookmarkNode | undefined {
-  let queue = tree;
-  
-  while (queue.length) {
-    const node = queue.shift() as BookmarkNode;
-    if (!node.children) continue;
-
-    const target = node.children.find(childNode => childNode.id === id);
-    if (target) return target;
-    queue.concat(node.children);
-  }
-}
