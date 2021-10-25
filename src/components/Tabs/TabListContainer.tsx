@@ -8,7 +8,7 @@ export const checkContext = createCheckContext();
 
 const TabListContainer = () => {
   const [ tabs, setTabs ] = useState<Tab[]>([]);
-  const [ checked, setChecked ] = useCheck(tabs);
+  const [ checkedItems, setCheckedItems ] = useCheck(tabs);
   
   useEffect(() => {
     const updateTabs = () => api.tabs.query({}).then(setTabs);
@@ -17,7 +17,7 @@ const TabListContainer = () => {
   }, []);
 
   return (
-    <checkContext.Provider value={{ checked, setChecked }}>
+    <checkContext.Provider value={{ checkedItems, setCheckedItems }}>
       <TabList tabs={tabs} />
     </checkContext.Provider>
   );
