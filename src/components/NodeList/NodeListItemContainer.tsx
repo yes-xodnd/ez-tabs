@@ -1,6 +1,6 @@
 import { BookmarkNode } from "src/constants/types";
 import { useTypedDispatch } from "src/hooks";
-import { selectDir } from "src/reducers/bookmarks";
+import { selectDir } from "src/store/modules/bookmarksSlice";
 import NodeListItemLink from './NodeListItemLink';
 import NodeListItemDirectory from './NodeListItemDirectory';
 import styled from "styled-components";
