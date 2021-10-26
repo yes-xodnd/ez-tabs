@@ -1,6 +1,6 @@
 import { useTypedDispatch, useTypedSelector } from "src/hooks";
 import DirectoryList from "./DirectoryList";
-import { selectDir } from "src/reducers/bookmarks";
+import { selectDir } from "src/store/modules/bookmarksSlice";
 
 const DirectoryListContainer = () => {
   const { rootNode } = useTypedSelector(({ bookmarks }) => bookmarks);

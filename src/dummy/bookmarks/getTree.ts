@@ -82,3 +82,5 @@ const tree = [
 const getTree = () => new Promise<BookmarkNode[]>(resolve => resolve(tree)); 
 
 export default getTree;
+
+export { tree };
