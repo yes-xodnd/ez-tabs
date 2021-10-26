@@ -87,7 +87,7 @@ async function removeTree(id: string) {
   return getTree();
 }
 
-async function create({ url, title = '', parentId = '0' }: CreateDetails) {
+async function create({ url = '', title = '', parentId = '0' }: CreateDetails) {
 
   const id = nextId();
   const node: BookmarkNode = { id, title, parentId };
@@ -96,8 +96,10 @@ async function create({ url, title = '', parentId = '0' }: CreateDetails) {
   else node.children = [];
   
   nodeList.push(node);
-  isUpdated = true;
-  return getTree();
+  createTree();
+
+  const [ res ] = await api.get(id);
+  return res as BookmarkNode;
 }
 
 const api = {
