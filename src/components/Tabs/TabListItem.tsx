@@ -1,22 +1,27 @@
-import { Tab } from 'src/constants/types';
 import styled from 'styled-components';
-import CheckboxContainer from './CheckboxContainer';
+import { Tab } from 'src/constants/types';
+import { Close } from '@styled-icons/material-outlined';
+import { MouseEventHandler } from 'react';
 
 interface Props {
   tab: Tab;
+  checkbox: JSX.Element;
+  closeTab: MouseEventHandler;
 }
 
-const TabListItem = ({ tab }: Props) => {
+const TabListItem = ({ tab, checkbox, closeTab }: Props) => {
   const hostname = (url: string) => new URL(url).hostname;
   const faviconSrc = tab.favIconUrl || 'https://www.google.com/s2/favicons?domain=www';
-  const tabId = tab.id?.toString() || '';
 
   return (
     <ContentContainer>
-      <CheckboxContainer id={tabId} />
+      { checkbox }
       <img src={faviconSrc} alt="favicon" width="16" height="16" />
       <Title title={tab.title} >{ tab.title }</Title>
-      <div></div>
+      <CloseTab 
+        size='16'
+        title='탭 닫기'
+        onClick={closeTab} />
 
       <Hostname>{ tab.url && hostname(tab.url) }</Hostname>
     </ContentContainer>
@@ -55,4 +60,12 @@ const Hostname = styled.div`
   grid-column: 3;
   justify-self: start;
   color: lightgrey;
-`
+`;
+
+const CloseTab = styled(Close)`
+  color: darkgrey;
+  &:hover {
+    cursor: pointer;
+    color: tomato;
+  }
+`;

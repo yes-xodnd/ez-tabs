@@ -11,7 +11,7 @@ const CheckboxContainer = ({ id }: { id: string}) => {
   return (
       <Checkbox
         isChecked={isChecked}
-        onChange={handleOnChange}
+        handleChange={handleOnChange}
       />
   );
 };

@@ -2,18 +2,17 @@ import { ChangeEventHandler } from "react";
 
 interface Props {
   isChecked: boolean;
-  onChange: ChangeEventHandler;
-  title?: string;
+  handleChange: ChangeEventHandler;
 }
 
-const Checkbox = ({ isChecked, onChange, title }: Props) => {
+const Checkbox = ({ isChecked, handleChange }: Props) => {
 
   return (
     <input 
       type="checkbox"
       checked={isChecked}
-      onChange={onChange}
-      title={title || '체크하기'}
+      onChange={handleChange}
+      title={isChecked ? '선택 취소' : '선택'}
       />
   );
 };

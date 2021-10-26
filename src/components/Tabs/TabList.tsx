@@ -1,24 +1,25 @@
 import { Tab } from 'src/constants/types';
 import styled from 'styled-components';
 import Header from './Header';
-import TabListItem from './TabListItem';
+import TabListItemContainer from './TabListItemContainer';
 import ButtonAdd from './ButtonAdd';
 
 interface Props {
   tabs: Tab[];
+  addBookmarks: () => void;
 }
 
-const TabList = ({ tabs }: Props) => {
+const TabList = ({ tabs, addBookmarks }: Props) => {
 
   return (
     <Wrapper>
       <Header />
       <ListWrapper>
-        { tabs.map(tab => <TabListItem tab={tab} key={tab.url} />) }
+        { tabs.map(tab => <TabListItemContainer tab={tab} key={tab.url} />) }
       </ListWrapper>
-      <FloatButtonWrapper>
-        <ButtonAdd />
-      </FloatButtonWrapper>
+      <div>
+        <ButtonAdd addBookmarks={addBookmarks} />
+      </div>
     </Wrapper>
   );
 };
@@ -38,9 +39,4 @@ const Wrapper = styled.div`
 
 const ListWrapper = styled.div`
   flex-grow: 2;
-`;
-
-
-const FloatButtonWrapper = styled.div`
-
 `;
