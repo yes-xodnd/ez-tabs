@@ -18,10 +18,7 @@ const useCheck = (arr: any[]): [ string[], SetCheckedItems ] => {
     setState(nextState);
   }
   
-  useEffect(() => { 
-    console.log('useCheck: referenced array changed', arr.length);
-    setState([]); 
-  }, [ arr ]);
+  useEffect(() => { setState([]); }, [ arr ]);
 
   return [ state, setCheckedItems ];
 };
