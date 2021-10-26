@@ -1,13 +1,13 @@
 import { BookmarkNode } from "src/constants/types";
 import styled from "styled-components";
-import DirectoryListItem from "./DirectoryListItem";
+import FolderListItem from "./FolderTreeNode";
 
 interface Props {
   rootNode: BookmarkNode;
   handleClickTitle: Function;
 }
 
-const DirectoryList = ({ rootNode, handleClickTitle }: Props) => {
+const FolderTree = ({ rootNode, handleClickTitle }: Props) => {
 
   return (
     <Wrapper>
@@ -15,7 +15,7 @@ const DirectoryList = ({ rootNode, handleClickTitle }: Props) => {
         rootNode.children &&
         rootNode.children
         .map(node => (
-          <DirectoryListItem 
+          <FolderListItem 
             node={node} 
             key={node.id} 
             handleClickTitle={handleClickTitle} />)
@@ -25,7 +25,7 @@ const DirectoryList = ({ rootNode, handleClickTitle }: Props) => {
   ); 
 };
 
-export default DirectoryList;
+export default FolderTree;
 
 const Wrapper = styled.div`
   min-width: 200px;

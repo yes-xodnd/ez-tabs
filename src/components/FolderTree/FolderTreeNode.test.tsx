@@ -1,4 +1,4 @@
-import DirectoryListItem from './DirectoryListItem';
+import FolderListItem from './FolderTreeNode';
 import { render, fireEvent, RenderResult } from '@testing-library/react';
 import dummyNode from 'src/dummy/bookmarks/node';
 import store from 'src/store';
@@ -11,7 +11,7 @@ describe('Directory List Item', () => {
   beforeEach(() => {
     renderResult = render(
       <Provider store={store}>
-        <DirectoryListItem node={dummyNode} handleClickTitle={() => onClickTitle} />
+        <FolderListItem node={dummyNode} handleClickTitle={() => onClickTitle} />
       </Provider>
     );
   });

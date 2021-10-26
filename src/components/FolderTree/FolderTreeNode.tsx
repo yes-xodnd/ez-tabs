@@ -9,10 +9,10 @@ interface Props {
   depth?: number;
 }
 
-const DirectoryListItem = ({ node, handleClickTitle, depth = 0 }: Props) => {
-  const { selectedDirId } = useTypedSelector(({ bookmarks }) => bookmarks);
+const FolderListItem = ({ node, handleClickTitle, depth = 0 }: Props) => {
+  const { focusedFolderId } = useTypedSelector(({ bookmarks }) => bookmarks);
   const [isOpen, toggleOpen] = useToggle(false);
-  const isSelected = selectedDirId === node.id; 
+  const isSelected = focusedFolderId === node.id; 
 
   return (
     <div>
@@ -41,7 +41,7 @@ const DirectoryListItem = ({ node, handleClickTitle, depth = 0 }: Props) => {
           node.children
           .filter(node => node.children)
           .map(childNode => (
-            <DirectoryListItem 
+            <FolderListItem 
               node={childNode}
               key={childNode.id}
               depth={depth + 1}
@@ -54,7 +54,7 @@ const DirectoryListItem = ({ node, handleClickTitle, depth = 0 }: Props) => {
   );  
 }
 
-export default DirectoryListItem;
+export default FolderListItem;
   
 const NodeContentContainer = styled.div<{ depth: number, isSelected: boolean }>`
   display: grid;

@@ -10,7 +10,7 @@ import { RootState } from 'src/store';
 
 interface BookmarksState {
   rootNode: BookmarkNode;
-  selectedDirId: string;
+  focusedFolderId: string;
 }
 
 interface NodeDict {
@@ -19,7 +19,7 @@ interface NodeDict {
 
 const initialState: BookmarksState = {
   rootNode: {} as BookmarkNode,
-  selectedDirId: "1",
+  focusedFolderId: "1",
 };
 
 // actions 
@@ -31,7 +31,7 @@ export const getTree = createAsyncThunk(
   }
 );
 
-export const selectDir = createAction(
+export const setFocusedFolderId = createAction(
   'SELECT_DIR',
   (id: string) => ({ payload: id })
 );
@@ -71,8 +71,8 @@ const bookmarksSlice = createSlice({
         (state, action) => { state.rootNode = action.payload; }
       )
       .addCase(
-        selectDir,
-        (state, action) => { state.selectedDirId = action.payload; }
+        setFocusedFolderId,
+        (state, action) => { state.focusedFolderId = action.payload; }
       )
   }
 });
