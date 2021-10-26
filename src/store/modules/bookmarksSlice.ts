@@ -4,7 +4,7 @@ import {
   createSlice,
   createSelector 
 } from '@reduxjs/toolkit';
-import { BookmarkNode } from 'src/constants/types';
+import { BookmarkNode, Tab } from 'src/constants/types';
 import api from 'src/api';
 import { RootState } from 'src/store';
 
@@ -31,15 +31,33 @@ export const getTree = createAsyncThunk(
   }
 );
 
-export const setTree = createAction(
-  'SET_TREE',
-  (tree: BookmarkNode[]) => ({ payload: tree[0] })
-)
-
 export const selectDir = createAction(
   'SELECT_DIR',
   (id: string) => ({ payload: id })
 );
+
+export const createFromTabs = createAsyncThunk<void, Tab[], { state: RootState }>(
+  'CREATE_FROM_TABS',
+  async (checkedTabs: Tab[], { dispatch, getState }) => {
+    const state = getState();
+    const rootNode = rootNodeSelector(state);
+
+    const tabsRootNode = rootNode.children
+      ?.filter(childNode => childNode.title === 'Tabs')[0]
+      || await api.bookmarks.create({ title: 'Tabs', parentId: '0' });
+
+    const FolderNode = await api.bookmarks.create({ 
+      title: new Date().toLocaleString(),
+      parentId: tabsRootNode.id,
+    });
+
+    for (const { url, title } of checkedTabs) {
+      await api.bookmarks.create({ url, title, parentId: FolderNode.id });
+    }
+
+    dispatch(getTree());
+  }
+)
 
 // slice
 const bookmarksSlice = createSlice({
@@ -53,10 +71,6 @@ const bookmarksSlice = createSlice({
         (state, action) => { state.rootNode = action.payload; }
       )
       .addCase(
-        setTree,
-        (state, action) => { state.rootNode = action.payload; }
-      )
-      .addCase(
         selectDir,
         (state, action) => { state.selectedDirId = action.payload; }
       )
@@ -64,11 +78,10 @@ const bookmarksSlice = createSlice({
 });
 
 // selectors
-const rootNode = (state: RootState): BookmarkNode => state.bookmarks.rootNode;
-
+const rootNodeSelector = (state: RootState): BookmarkNode => state.bookmarks.rootNode;
 
 export const nodeDictSelector = createSelector(
-  rootNode,
+  rootNodeSelector,
   (rootNode): NodeDict => {
     const dict: NodeDict = {};
     let queue: BookmarkNode[] = [ rootNode ];
@@ -81,5 +94,23 @@ export const nodeDictSelector = createSelector(
 
     return dict;
 });
+
+export const parentListSelector = createSelector(
+  nodeDictSelector,
+  (_: RootState, id: string) => id,
+  (nodeDict, id) => {
+    const node = nodeDict[id];
+    let result = [ node ];
+    let { parentId } = node;
+    
+    while (parentId) {
+      const parentNode = nodeDict[parentId];
+      result = [ parentNode, ...result ];
+      parentId = parentNode.parentId;
+    }
+
+    return result;
+  }
+);
 
 export default bookmarksSlice.reducer;
