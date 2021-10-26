@@ -32,7 +32,7 @@ export const getTree = createAsyncThunk(
 );
 
 export const setFocusedFolderId = createAction(
-  'SELECT_DIR',
+  'SET_FOCUSED_FOLDER_ID',
   (id: string) => ({ payload: id })
 );
 
