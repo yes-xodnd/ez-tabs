@@ -1,16 +1,9 @@
-import { useState } from "react";
-import useCheck from './useCheck';
 import { useTypedDispatch, useTypedSelector } from './redux';
-
-const useToggle = (initValue: boolean): [boolean, () => void] => {
-  const [state, setState] = useState(initValue);
-  const toggleState = () => setState(!state);
-  return [state, toggleState];
-}
+import { useFocus, useFolderOpen } from './FolderTree';
 
 export {
-  useCheck,
   useTypedDispatch,
   useTypedSelector,
-  useToggle
+  useFocus,
+  useFolderOpen,
 };
