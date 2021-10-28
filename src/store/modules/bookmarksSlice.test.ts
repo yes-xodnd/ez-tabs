@@ -1,6 +1,4 @@
 import { configureStore, combineReducers } from '@reduxjs/toolkit';
-import api from 'src/api';
-import { BookmarkNode } from 'src/constants/types';
 import bookmarksReducer, { 
   getTree, 
   setFocusedFolderId,
@@ -11,7 +9,6 @@ import bookmarksReducer, {
 
 const reducer = combineReducers({ bookmarks: bookmarksReducer });
 const store = configureStore({ reducer });
-type RootState = ReturnType<typeof store.getState>;
 
 describe('Store Bookmarks slice: Actions', () => {
 

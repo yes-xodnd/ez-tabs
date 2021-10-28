@@ -4,13 +4,15 @@ import {
   createSlice,
   createSelector 
 } from '@reduxjs/toolkit';
-import { BookmarkNode, Tab } from 'src/constants/types';
-import api from 'src/api';
+import { BookmarkNode } from 'src/constants/types';
+import { selectCheckedTabs } from './tabsSlice';
 import { RootState } from 'src/store';
+import api from 'src/api';
 
 interface BookmarksState {
   rootNode: BookmarkNode;
   focusedFolderId: string;
+  openFolderNodeIds: string[];
 }
 
 interface NodeDict {
@@ -20,6 +22,7 @@ interface NodeDict {
 const initialState: BookmarksState = {
   rootNode: {} as BookmarkNode,
   focusedFolderId: "1",
+  openFolderNodeIds: [],
 };
 
 // actions 
@@ -36,11 +39,14 @@ export const setFocusedFolderId = createAction(
   (id: string) => ({ payload: id })
 );
 
-export const createFromTabs = createAsyncThunk<void, Tab[], { state: RootState }>(
+
+
+export const createFromTabs = createAsyncThunk<void, void, { state: RootState }>(
   'CREATE_FROM_TABS',
-  async (checkedTabs: Tab[], { dispatch, getState }) => {
+  async (_, { dispatch, getState }) => {
     const state = getState();
-    const rootNode = rootNodeSelector(state);
+    const checkedTabs = selectCheckedTabs(state);
+    const rootNode = selectRootNode(state);
 
     const tabsRootNode = rootNode.children
       ?.filter(childNode => childNode.title === 'Tabs')[0]
@@ -57,7 +63,21 @@ export const createFromTabs = createAsyncThunk<void, Tab[], { state: RootState }
 
     dispatch(getTree());
   }
-)
+);
+
+export const openFolderNode = createAsyncThunk<string[], string, { state: RootState }>(
+  'OPEN_FOLDER_NODE',
+  (id: string, { getState }) => {
+    const parentListIds = parentListSelector(getState(), id).map(node => node.id);
+    return parentListIds;
+  }
+);
+
+export const closeFolderNode = createAction(
+  'CLOSE_FOLDER_NODE',
+  (id: string) => ({ payload: id })
+);
+
 
 // slice
 const bookmarksSlice = createSlice({
@@ -74,14 +94,29 @@ const bookmarksSlice = createSlice({
         setFocusedFolderId,
         (state, action) => { state.focusedFolderId = action.payload; }
       )
+      .addCase(
+        openFolderNode.fulfilled,
+        (state, action) => { 
+          state.openFolderNodeIds = [ 
+            ...new Set([ ...state.openFolderNodeIds, ...action.payload ])
+          ];
+        }
+      )
+      .addCase(
+        closeFolderNode,
+        (state, action) => {
+          state.openFolderNodeIds = state.openFolderNodeIds
+          .filter(id => id !== action.payload);
+        }
+      )
   }
 });
 
 // selectors
-const rootNodeSelector = (state: RootState): BookmarkNode => state.bookmarks.rootNode;
+const selectRootNode = (state: RootState): BookmarkNode => state.bookmarks.rootNode;
 
 export const nodeDictSelector = createSelector(
-  rootNodeSelector,
+  selectRootNode,
   (rootNode): NodeDict => {
     const dict: NodeDict = {};
     let queue: BookmarkNode[] = [ rootNode ];
