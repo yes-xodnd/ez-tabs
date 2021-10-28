@@ -1,22 +1,23 @@
 import { BookmarkNode } from "src/constants/types";
-import { useFolderFocus, useFolderOpen } from "src/hooks";
+import { useFolderFocus, useTypedDispatch } from "src/hooks";
 import NodeListItemLink from './NodeListItem';
 import styled from "styled-components";
+import { openFolderNode } from "src/store/modules/bookmarksSlice";
 
 interface Props {
   node: BookmarkNode;
 }
 
 const NodeListItemContainer = ({ node }: Props) => {  
+  const dispatch = useTypedDispatch();
   const { setFocus } = useFolderFocus(node.id);
-  const { toggleOpen } = useFolderOpen(node.id);
 
   const handleDoubleClick = () => {
     if (node.url) {
       window.open(node.url);
     } else {
+      dispatch(openFolderNode(node.id));
       setFocus(); 
-      toggleOpen();
     }
   };  
 
