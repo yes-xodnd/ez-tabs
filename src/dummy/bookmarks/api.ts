@@ -102,12 +102,22 @@ async function create({ url = '', title = '', parentId = '0' }: CreateDetails) {
   return res as BookmarkNode;
 }
 
+async function update(id: string, changes: { url?: string, title?: string }) {
+  const { title } = changes;
+  
+  const [ node ] = await get(id) as BookmarkNode[];
+  if (node && title) node.title = title;
+
+  return node;
+}
+
 const api = {
   get,
   getTree,
   remove,
   removeTree,
   create,
+  update,
 };
 
 export default api;
