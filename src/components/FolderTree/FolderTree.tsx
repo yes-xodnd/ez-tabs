@@ -1,25 +1,16 @@
-import { BookmarkNode } from "src/constants/types";
+import { useTypedSelector } from "src/hooks";
 import styled from "styled-components";
-import FolderListItem from "./FolderTreeNode";
+import FolderListNode from "./FolderTreeNode";
 
-interface Props {
-  rootNode: BookmarkNode;
-  handleClickTitle: Function;
-}
-
-const FolderTree = ({ rootNode, handleClickTitle }: Props) => {
+const FolderTree = () => {
+  const { rootNode } = useTypedSelector(state => state.bookmarks);
 
   return (
     <Wrapper>
       {
         rootNode.children &&
         rootNode.children
-        .map(node => (
-          <FolderListItem 
-            node={node} 
-            key={node.id} 
-            handleClickTitle={handleClickTitle} />)
-        )
+        .map(node => <FolderListNode node={node} key={node.id} />)
       }
     </Wrapper>
   ); 
