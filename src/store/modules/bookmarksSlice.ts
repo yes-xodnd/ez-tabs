@@ -15,10 +15,6 @@ interface BookmarksState {
   openFolderNodeIds: string[];
 }
 
-interface NodeDict {
-  [id: string]: BookmarkNode;
-}
-
 const initialState: BookmarksState = {
   rootNode: {} as BookmarkNode,
   focusedFolderId: "1",
@@ -38,8 +34,6 @@ export const setFocusedFolderId = createAction(
   'SET_FOCUSED_FOLDER_ID',
   (id: string) => ({ payload: id })
 );
-
-
 
 export const createFromTabs = createAsyncThunk<void, void, { state: RootState }>(
   'CREATE_FROM_TABS',
@@ -68,7 +62,7 @@ export const createFromTabs = createAsyncThunk<void, void, { state: RootState }>
 export const openFolderNode = createAsyncThunk<string[], string, { state: RootState }>(
   'OPEN_FOLDER_NODE',
   (id: string, { getState }) => {
-    const parentListIds = parentListSelector(getState(), id).map(node => node.id);
+    const parentListIds = selectParentList(getState(), id).map(node => node.id);
     return parentListIds;
   }
 );
@@ -78,6 +72,51 @@ export const closeFolderNode = createAction(
   (id: string) => ({ payload: id })
 );
 
+export const rename = createAsyncThunk(
+  'RENAME',
+  async (details: {id: string, title: string}, { dispatch }) => {
+    const { id, title } = details;
+    const node = await api.bookmarks.update(id, { title });
+    
+    dispatch(getTree());
+  }
+)
+
+// selectors
+const selectRootNode = (state: RootState): BookmarkNode => state.bookmarks.rootNode;
+
+export const selectNodeDict = createSelector(
+  selectRootNode,
+  (rootNode) => {
+    const dict: { [id: string]: BookmarkNode } = {};
+    let queue: BookmarkNode[] = [ rootNode ];
+    
+    while (queue.length) {
+      const node = queue.shift() as BookmarkNode;
+      dict[node.id] = node;
+      if (node.children) queue = [ ...queue, ...node.children ];
+    }
+
+    return dict;
+});
+
+export const selectParentList = createSelector(
+  selectNodeDict,
+  (_: RootState, id: string) => id,
+  (nodeDict, id) => {
+    const node = nodeDict[id];
+    let result = [ node ];
+    let { parentId } = node;
+    
+    while (parentId) {
+      const parentNode = nodeDict[parentId];
+      result = [ parentNode, ...result ];
+      parentId = parentNode.parentId;
+    }
+
+    return result;
+  }
+);
 
 // slice
 const bookmarksSlice = createSlice({
@@ -111,41 +150,5 @@ const bookmarksSlice = createSlice({
       )
   }
 });
-
-// selectors
-const selectRootNode = (state: RootState): BookmarkNode => state.bookmarks.rootNode;
-
-export const nodeDictSelector = createSelector(
-  selectRootNode,
-  (rootNode): NodeDict => {
-    const dict: NodeDict = {};
-    let queue: BookmarkNode[] = [ rootNode ];
-    
-    while (queue.length) {
-      const node = queue.shift() as BookmarkNode;
-      dict[node.id] = node;
-      if (node.children) queue = [ ...queue, ...node.children ];
-    }
-
-    return dict;
-});
-
-export const parentListSelector = createSelector(
-  nodeDictSelector,
-  (_: RootState, id: string) => id,
-  (nodeDict, id) => {
-    const node = nodeDict[id];
-    let result = [ node ];
-    let { parentId } = node;
-    
-    while (parentId) {
-      const parentNode = nodeDict[parentId];
-      result = [ parentNode, ...result ];
-      parentId = parentNode.parentId;
-    }
-
-    return result;
-  }
-);
 
 export default bookmarksSlice.reducer;
