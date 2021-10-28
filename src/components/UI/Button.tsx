@@ -24,12 +24,14 @@ const ButtonWithIcon = ({ content, handleClick, icon, disabled }: Props) => {
 
 export default ButtonWithIcon;
 
-const Wrapper = styled.div<{ disabled: boolean }>`
+const Wrapper = styled.button<{ disabled: boolean }>`
   display: flex;
   justify-content: center;
   align-items: center;
   gap: 0.5rem;
+  width: 100%;
   padding: 0.5rem;
+  border: none;
   border-radius: 5px;
   background-color: ${({ disabled }) => disabled ? 'darkgrey' : 'royalblue'};
   color: white;
