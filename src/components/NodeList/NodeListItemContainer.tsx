@@ -1,7 +1,6 @@
 import { BookmarkNode } from "src/constants/types";
-import { useFocus, useFolderOpen } from "src/hooks";
-import NodeListItemLink from './NodeListItemLink';
-import NodeListItemDirectory from './NodeListItemDirectory';
+import { useFolderFocus, useFolderOpen } from "src/hooks";
+import NodeListItemLink from './NodeListItem';
 import styled from "styled-components";
 
 interface Props {
@@ -9,25 +8,21 @@ interface Props {
 }
 
 const NodeListItemContainer = ({ node }: Props) => {  
-  const { setFocus } = useFocus(node.id);
+  const { setFocus } = useFolderFocus(node.id);
   const { toggleOpen } = useFolderOpen(node.id);
 
   const handleDoubleClick = () => {
-    setFocus();
-    toggleOpen();
-  }
+    if (node.url) {
+      window.open(node.url);
+    } else {
+      setFocus(); 
+      toggleOpen();
+    }
+  };  
 
   return (
     <Wrapper>
-      {
-        node.url
-        ? <NodeListItemLink 
-            node={node} 
-            handleDoubleClick={() => window.open(node.url)} />
-        : <NodeListItemDirectory 
-            node={node} 
-            handleDoubleClick={handleDoubleClick} />
-      }
+      <NodeListItemLink node={node} handleDoubleClick={handleDoubleClick}/>
     </Wrapper>
   );
 };
