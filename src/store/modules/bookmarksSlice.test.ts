@@ -2,10 +2,10 @@ import { configureStore, combineReducers } from '@reduxjs/toolkit';
 import bookmarksReducer, { 
   getTree, 
   setFocusedFolderId,
-  nodeDictSelector, 
-  parentListSelector
+  selectNodeDict, 
+  selectParentList
 } from './bookmarksSlice';
-
+import { RootState } from '..';
 
 const reducer = combineReducers({ bookmarks: bookmarksReducer });
 const store = configureStore({ reducer });
@@ -26,12 +26,12 @@ describe('Store Bookmarks slice: Actions', () => {
   });
 
   test('nodeDictSelector', async () => {
-    const nodeDict = nodeDictSelector(store.getState());
+    const nodeDict = selectNodeDict(store.getState() as RootState);
     expect(Object.keys(nodeDict)).toHaveLength(9);
   });
   
   test('parentListSelector', async () => {
-    const parentList = parentListSelector(store.getState(), '523');
+    const parentList = selectParentList(store.getState() as RootState, '523');
     expect(parentList.map(node => node.id)).toEqual(['0', '1', '523']);
   });
 });

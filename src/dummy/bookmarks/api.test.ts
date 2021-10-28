@@ -48,6 +48,12 @@ describe('Dummy api', () => {
     expect(node).toEqual(targetNode);
   });
 
+  test('rename and return updated node', async () => {
+    const nextName = 'nextName';
+    const node = await api.update(targetId, { title: nextName });
+    expect(node?.title).toBe(nextName);
+  });
+
   test('remove node', async () => {
     let [ node ] = await api.get(targetId) as BookmarkNode[];
     await api.remove(targetId);

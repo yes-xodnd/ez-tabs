@@ -55,7 +55,7 @@ async function getTree() {
 }
 
 async function get(id: string | string[]) {
-  if (!tree) getTree();
+  if (!tree || isUpdated) createTree();
 
   const idList = (typeof id === 'string') ? [ id ] : id;
   return idList.map(id => nodeMap.get(id));
@@ -102,12 +102,24 @@ async function create({ url = '', title = '', parentId = '0' }: CreateDetails) {
   return res as BookmarkNode;
 }
 
+async function update(id: string, changes: { url?: string, title?: string }) {
+  const { title } = changes;
+  
+  const nodeData = nodeList.find(node => node.id === id);
+  if (nodeData && title) nodeData.title = title;
+
+  isUpdated = true;
+  const [ node ] = await get(id);
+  return node;
+}
+
 const api = {
   get,
   getTree,
   remove,
   removeTree,
   create,
+  update,
 };
 
 export default api;

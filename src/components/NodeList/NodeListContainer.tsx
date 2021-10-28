@@ -1,20 +1,12 @@
-import { useEffect, useState } from "react";
-import { BookmarkNode } from "src/constants/types";
 import { useTypedSelector } from "src/hooks";
 import NodeList from './NodeList';
-import api from 'src/api';
+import { selectNodeDict,  } from 'src/store/modules/bookmarksSlice'
 
 const NodeListContainer = () => {
-  const { focusedFolderId: selectedDirId } = useTypedSelector(({ bookmarks }) => bookmarks);
-  const [nodeList, setNodeList] = useState<BookmarkNode[]>([]);
-  
-  useEffect(() => {
-    api.bookmarks
-    .get(selectedDirId)
-    .then(([ node ]) => node && setNodeList(node.children as BookmarkNode[]));
-  }, [ selectedDirId ]);
+  const { focusedFolderId } = useTypedSelector(({ bookmarks }) => bookmarks);
+  const nodeDict = useTypedSelector(selectNodeDict);
 
-  return <NodeList nodes={nodeList} />;
+  return <NodeList nodes={nodeDict[focusedFolderId]?.children || []} />;
 };
 
 export default NodeListContainer;
