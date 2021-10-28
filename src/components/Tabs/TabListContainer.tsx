@@ -1,39 +1,27 @@
-import { useEffect, useState } from 'react';
-import { useDispatch } from 'react-redux';
-import { Tab } from 'src/constants/types';
-
-import useCheck, { createCheckContext } from 'src/hooks/useCheck';
-import api, { onTabsChange } from 'src/api';
+import { useEffect } from 'react';
+import { onTabsChange } from 'src/api';
 import { createFromTabs } from 'src/store/modules/bookmarksSlice';
+import { getTabs, clear } from 'src/store/modules/tabsSlice';
 import TabList from './TabList';
-
-export const checkContext = createCheckContext();
+import { useTypedDispatch, useTypedSelector } from 'src/hooks';
 
 const TabListContainer = () => {
-  const [ tabs, setTabs ] = useState<Tab[]>([]);
-  const [ checkedItems, setCheckedItems ] = useCheck(tabs);
-  const dispatch = useDispatch();
+  const { tabs } = useTypedSelector(state => state.tabs);
+  const dispatch = useTypedDispatch();
   
   useEffect(() => {
-    const updateTabs = () => api.tabs.query({})
-    .then(res => res.filter(tab => !tab.url?.match(/chrome:\/\/bookmarks/g)))
-    .then(setTabs);
+    const updateTabs = () => dispatch(getTabs());
     onTabsChange(updateTabs);
     updateTabs();
-  }, []);
+  }, [ dispatch ]);
 
-  const addBookmarks = () => {
-    const checkedTabs = checkedItems
-      .map(id => tabs.find(tab => tab.id?.toString() === id)) as chrome.tabs.Tab[];
-    console.log(checkedTabs);
-
-    dispatch(createFromTabs(checkedTabs));
-  };
+  const addBookmarks = () => { 
+    dispatch(createFromTabs());
+    dispatch(clear());
+  }
 
   return (
-    <checkContext.Provider value={{ checkedItems, setCheckedItems }}>
-      <TabList tabs={tabs} addBookmarks={addBookmarks} />
-    </checkContext.Provider>
+    <TabList tabs={tabs} addBookmarks={addBookmarks} />
   );
 };
 

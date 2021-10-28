@@ -1,6 +1,5 @@
 import { BookmarkNode } from "src/constants/types";
-import { useTypedDispatch } from "src/hooks";
-import { selectDir } from "src/store/modules/bookmarksSlice";
+import { useFocus, useFolderOpen } from "src/hooks";
 import NodeListItemLink from './NodeListItemLink';
 import NodeListItemDirectory from './NodeListItemDirectory';
 import styled from "styled-components";
@@ -10,7 +9,13 @@ interface Props {
 }
 
 const NodeListItemContainer = ({ node }: Props) => {  
-  const dispatch = useTypedDispatch();
+  const { setFocus } = useFocus(node.id);
+  const { toggleOpen } = useFolderOpen(node.id);
+
+  const handleDoubleClick = () => {
+    setFocus();
+    toggleOpen();
+  }
 
   return (
     <Wrapper>
@@ -21,7 +26,7 @@ const NodeListItemContainer = ({ node }: Props) => {
             handleDoubleClick={() => window.open(node.url)} />
         : <NodeListItemDirectory 
             node={node} 
-            handleDoubleClick={() => dispatch(selectDir(node.id))} />
+            handleDoubleClick={handleDoubleClick} />
       }
     </Wrapper>
   );

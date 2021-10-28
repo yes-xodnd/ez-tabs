@@ -5,7 +5,7 @@ import NodeList from './NodeList';
 import api from 'src/api';
 
 const NodeListContainer = () => {
-  const { selectedDirId } = useTypedSelector(({ bookmarks }) => bookmarks);
+  const { focusedFolderId: selectedDirId } = useTypedSelector(({ bookmarks }) => bookmarks);
   const [nodeList, setNodeList] = useState<BookmarkNode[]>([]);
   
   useEffect(() => {

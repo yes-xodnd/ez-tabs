@@ -1,7 +1,8 @@
+import { MouseEventHandler } from 'react';
 import styled from 'styled-components';
 import { Tab } from 'src/constants/types';
 import { Close } from '@styled-icons/material-outlined';
-import { MouseEventHandler } from 'react';
+import Favicon from 'src/components/UI/Favicon';
 
 interface Props {
   tab: Tab;
@@ -11,12 +12,11 @@ interface Props {
 
 const TabListItem = ({ tab, checkbox, closeTab }: Props) => {
   const hostname = (url: string) => new URL(url).hostname;
-  const faviconSrc = tab.favIconUrl || 'https://www.google.com/s2/favicons?domain=www';
 
   return (
     <ContentContainer>
       { checkbox }
-      <img src={faviconSrc} alt="favicon" width="16" height="16" />
+      <Favicon url={ tab.favIconUrl } />
       <Title title={tab.title} >{ tab.title }</Title>
       <CloseTab 
         size='16'
@@ -64,8 +64,12 @@ const Hostname = styled.div`
 
 const CloseTab = styled(Close)`
   color: darkgrey;
+  border-radius: 100%;
+  transition: 200ms;
+
   &:hover {
     cursor: pointer;
     color: tomato;
+    background: white;
   }
 `;

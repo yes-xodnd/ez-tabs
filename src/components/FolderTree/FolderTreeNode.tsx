@@ -1,24 +1,23 @@
 import styled from 'styled-components';
 import { Folder, FolderOpen, ArrowDropDown } from '@styled-icons/material-outlined';
 import { BookmarkNode } from "src/constants/types";
-import { useToggle, useTypedSelector } from "src/hooks";
+import { useFolderOpen, useFocus } from 'src/hooks/FolderTree';
 
 interface Props {
   node: BookmarkNode;
-  handleClickTitle: Function;
   depth?: number;
 }
 
-const DirectoryListItem = ({ node, handleClickTitle, depth = 0 }: Props) => {
-  const { selectedDirId } = useTypedSelector(({ bookmarks }) => bookmarks);
-  const [isOpen, toggleOpen] = useToggle(false);
-  const isSelected = selectedDirId === node.id; 
+const FolderListNode = ({ node, depth = 0 }: Props) => {
+  const { isFocused, setFocus } = useFocus(node.id);
+  const { isOpen, toggleOpen } = useFolderOpen(node.id);
 
   return (
     <div>
       <NodeContentContainer 
+        onDoubleClick={() => { toggleOpen(); setFocus(); }}
         depth={depth}
-        isSelected={isSelected}>
+        isFocused={isFocused}>
         <Arrow 
           size="16"
           isOpen={isOpen}
@@ -26,11 +25,11 @@ const DirectoryListItem = ({ node, handleClickTitle, depth = 0 }: Props) => {
           title="하위 디렉토리 목록 보기"
           />
         {
-          isSelected
+          isFocused
           ? <FolderOpen size="16" />
           : <Folder size="16" />
         }
-        <Title onClick={handleClickTitle(node.id)} title={node.title} >
+        <Title onClick={setFocus} title={node.title} >
           { node.title }
         </Title>
       </NodeContentContainer>
@@ -41,11 +40,10 @@ const DirectoryListItem = ({ node, handleClickTitle, depth = 0 }: Props) => {
           node.children
           .filter(node => node.children)
           .map(childNode => (
-            <DirectoryListItem 
+            <FolderListNode 
               node={childNode}
               key={childNode.id}
               depth={depth + 1}
-              handleClickTitle={handleClickTitle}
               />
           ))
         }
@@ -54,9 +52,9 @@ const DirectoryListItem = ({ node, handleClickTitle, depth = 0 }: Props) => {
   );  
 }
 
-export default DirectoryListItem;
+export default FolderListNode;
   
-const NodeContentContainer = styled.div<{ depth: number, isSelected: boolean }>`
+const NodeContentContainer = styled.div<{ depth: number, isFocused: boolean }>`
   display: grid;
   grid-template-columns: 24px 24px auto;
   place-items: center center;
@@ -64,8 +62,8 @@ const NodeContentContainer = styled.div<{ depth: number, isSelected: boolean }>`
   padding: 0.5rem 0;
   padding-left: ${({ depth }) => (depth * 12) + 'px' };
   border-radius: 5px;
-  background-color: ${({ isSelected }) => isSelected ? 'royalblue' : 'transparent'};
-  color: ${({ isSelected }) => isSelected ? 'white' : 'unset'};
+  background-color: ${({ isFocused }) => isFocused ? 'royalblue' : 'transparent'};
+  color: ${({ isFocused }) => isFocused ? 'white' : 'unset'};
   overflow: hidden;
 `;
 

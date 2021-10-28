@@ -1,9 +1,7 @@
 import { configureStore, combineReducers } from '@reduxjs/toolkit';
-import api from 'src/api';
-import { BookmarkNode } from 'src/constants/types';
 import bookmarksReducer, { 
   getTree, 
-  selectDir,
+  setFocusedFolderId,
   nodeDictSelector, 
   parentListSelector
 } from './bookmarksSlice';
@@ -11,7 +9,6 @@ import bookmarksReducer, {
 
 const reducer = combineReducers({ bookmarks: bookmarksReducer });
 const store = configureStore({ reducer });
-type RootState = ReturnType<typeof store.getState>;
 
 describe('Store Bookmarks slice: Actions', () => {
 
@@ -23,9 +20,9 @@ describe('Store Bookmarks slice: Actions', () => {
   });
 
   test('handle selectDir action', () => {
-    store.dispatch(selectDir('2'));
+    store.dispatch(setFocusedFolderId('2'));
 
-    expect(store.getState().bookmarks.selectedDirId).toBe('2');
+    expect(store.getState().bookmarks.focusedFolderId).toBe('2');
   });
 
   test('nodeDictSelector', async () => {

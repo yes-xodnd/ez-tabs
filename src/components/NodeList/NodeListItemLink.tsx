@@ -2,6 +2,7 @@ import { BookmarkNode } from 'src/constants/types';
 import styled from 'styled-components';
 import { MoreVert } from '@styled-icons/material-outlined';
 import { MouseEventHandler } from 'react';
+import Favicon from 'src/components/UI/Favicon';
 
 interface Props {
   node: BookmarkNode;
@@ -10,12 +11,11 @@ interface Props {
 
 const NodeListItemLink = ({ node, handleDoubleClick }: Props) => {
   const isSelected = false;
-  const src = `https://www.google.com/s2/favicons?domain=${node.url}`;
   
   return (
     <div>
       <NodeContentContainer isSelected={isSelected} onDoubleClick={handleDoubleClick}>
-        <img src={src} alt="favicon" />
+        <Favicon url={node.url} snatcher />
         <Title>
           { node.title }
         </Title>
@@ -54,4 +54,4 @@ const Hostname = styled.div`
   grid-column: 2 / span 2;
   justify-self: start;
   color: lightgrey;
-`
+`;

@@ -2,7 +2,7 @@ import { useEffect } from 'react';
 import styled from 'styled-components';
 import { getTree } from 'src/store/modules/bookmarksSlice';
 import { useTypedDispatch } from './hooks';
-import DirectoryListContainer from './components/DirectoryList/DirectoryListContainer';
+import FolderTree from './components/FolderTree/FolderTree';
 import NodeListContainer from './components/NodeList/NodeListContainer';
 import TabListContainer from './components/Tabs/TabListContainer';
 
@@ -12,7 +12,7 @@ function App() {
 
   return (
     <Wrapper className="App">
-      <DirectoryListContainer />
+      <FolderTree />
       <NodeListContainer />
       <TabListContainer />
     </Wrapper>
