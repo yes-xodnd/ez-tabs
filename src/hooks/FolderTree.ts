@@ -16,7 +16,7 @@ const useFolderOpen = (id: string): { isOpen: boolean, toggleOpen: () => void } 
   return { isOpen, toggleOpen };
 };
 
-const useFocus = (id: string): { isFocused: boolean, setFocus: () => void } => { 
+const useFolderFocus = (id: string): { isFocused: boolean, setFocus: () => void } => { 
   const { focusedFolderId } = useTypedSelector(({ bookmarks }) => bookmarks);
   const dispatch = useTypedDispatch();
 
@@ -28,5 +28,5 @@ const useFocus = (id: string): { isFocused: boolean, setFocus: () => void } => {
 
 export { 
   useFolderOpen,
-  useFocus,
+  useFolderFocus,
 };

@@ -1,9 +1,9 @@
 import { useTypedDispatch, useTypedSelector } from './redux';
-import { useFocus, useFolderOpen } from './FolderTree';
+import { useFolderFocus, useFolderOpen } from './FolderTree';
 
 export {
   useTypedDispatch,
   useTypedSelector,
-  useFocus,
+  useFolderFocus,
   useFolderOpen,
 };

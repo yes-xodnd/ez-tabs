@@ -1,7 +1,7 @@
 import styled from 'styled-components';
 import { Folder, FolderOpen, ArrowDropDown } from '@styled-icons/material-outlined';
 import { BookmarkNode } from "src/constants/types";
-import { useFolderOpen, useFocus } from 'src/hooks/FolderTree';
+import { useFolderOpen, useFolderFocus } from 'src/hooks/FolderTree';
 
 interface Props {
   node: BookmarkNode;
@@ -9,7 +9,7 @@ interface Props {
 }
 
 const FolderListNode = ({ node, depth = 0 }: Props) => {
-  const { isFocused, setFocus } = useFocus(node.id);
+  const { isFocused, setFocus } = useFolderFocus(node.id);
   const { isOpen, toggleOpen } = useFolderOpen(node.id);
 
   return (
