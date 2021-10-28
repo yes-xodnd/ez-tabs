@@ -51,7 +51,7 @@ describe('Dummy api', () => {
   test('rename and return updated node', async () => {
     const nextName = 'nextName';
     const node = await api.update(targetId, { title: nextName });
-    expect(node.title).toBe(nextName);
+    expect(node?.title).toBe(nextName);
   });
 
   test('remove node', async () => {
