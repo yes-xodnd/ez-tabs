@@ -1,12 +1,11 @@
 import { AddCircleOutline } from '@styled-icons/material-outlined';
-import { useContext } from 'react';
-import { checkContext } from './TabListContainer';
 import Button from 'src/components/UI/Button';
+import { useTypedSelector } from 'src/hooks';
 
 const ButtonAdd = ({ addBookmarks }: { addBookmarks: () => void }) => {
-  const { checkedItems } = useContext(checkContext);
+  const { checkedTabIds } = useTypedSelector(state => state.tabs);
   const Icon = <AddCircleOutline size="16" />;
-  const disabled = !checkedItems.length;
+  const disabled = !checkedTabIds.length;
 
   return (
     <Button 
