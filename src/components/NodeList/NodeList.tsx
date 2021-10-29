@@ -19,7 +19,8 @@ const NodeList = ({ node, toParentNode }: Props) => {
         node?.parentId && 
         <NodeContentContainer onClick={toParentNode}>
           <ArrowUpward size="16" />
-          <div>상위 폴더로 이동</div>
+          <div></div>
+          <div>상위 폴더</div>
         </NodeContentContainer>
       }
       {

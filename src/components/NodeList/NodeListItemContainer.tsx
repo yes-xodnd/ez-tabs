@@ -1,8 +1,8 @@
 import { BookmarkNode } from "src/constants/types";
-import { useCurrentFolder, useTypedDispatch } from "src/hooks";
-import NodeListItemLink from './NodeListItem';
-import styled from "styled-components";
-import { openFolderNode } from "src/store/modules/bookmarksSlice";
+import { useCurrentFolder, useTypedDispatch, useTypedSelector } from "src/hooks";
+import { openFolderNode, selectIsChecked, toggleCheck } from "src/store/modules/bookmarksSlice";
+import NodeListItem from './NodeListItem';
+import Checkbox from 'src/components/UI/Checkbox';
 
 interface Props {
   node: BookmarkNode;
@@ -11,6 +11,7 @@ interface Props {
 const NodeListItemContainer = ({ node }: Props) => {  
   const dispatch = useTypedDispatch();
   const { setCurrentFolder } = useCurrentFolder(node.id);
+  const isChecked = useTypedSelector(state => selectIsChecked(state, node.id));
 
   const handleDoubleClick = () => {
     if (node.url) {
@@ -21,8 +22,18 @@ const NodeListItemContainer = ({ node }: Props) => {
     }
   };  
 
+  const checkbox = <Checkbox 
+    isChecked={isChecked}
+    handleChange={() => {}}
+    />
+
   return (
-    <NodeListItemLink node={node} handleDoubleClick={handleDoubleClick}/>
+    <NodeListItem 
+      node={node} 
+      handleDoubleClick={handleDoubleClick}
+      toggleCheck={() => { dispatch(toggleCheck(node.id)) }}
+      checkbox={checkbox}
+      />
   );
 };
 

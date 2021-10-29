@@ -10,15 +10,22 @@ import DropDownContainer from './DropDownContainer';
 interface Props {
   node: BookmarkNode;
   handleDoubleClick: MouseEventHandler;
+  checkbox: JSX.Element;
+  toggleCheck: () => void;
 }
 
-const NodeListItemLink = ({ node, handleDoubleClick }: Props) => {
+const NodeListItemLink = ({ node, handleDoubleClick, checkbox, toggleCheck }: Props) => {
   const [ isRename, setIsRename ] = useState(false);
   const [ dropDownVisible, setDropDownVisible ] = useState(false);
+  const isBaseNode = ['1', '2'].includes(node.id);
 
   return (
     <div>
-      <NodeContentContainer onDoubleClick={handleDoubleClick} >
+      <NodeContentContainer onDoubleClick={handleDoubleClick} onClick={toggleCheck} >
+        <div>
+          { !isBaseNode && checkbox }
+        </div>
+
         {
           node.url 
           ? <Favicon url={node.url} snatcher />
@@ -38,7 +45,7 @@ const NodeListItemLink = ({ node, handleDoubleClick }: Props) => {
 
         <div>
           {
-            !['1', '2'].includes(node.id) &&
+            !isBaseNode &&
             <MoreVert 
               size="16"
               onClick={() => setDropDownVisible(!dropDownVisible)}
@@ -63,7 +70,7 @@ export default NodeListItemLink;
 
 export const NodeContentContainer = styled.div`
   display: grid;
-  grid-template-columns: 24px auto 32px;
+  grid-template-columns: 24px 24px auto 32px;
   place-items: center center;
   column-gap: 0.5rem;
   row-gap: 5px;

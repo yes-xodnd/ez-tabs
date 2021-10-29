@@ -14,17 +14,21 @@ interface BookmarksState {
   rootNode: BookmarkNode;
   currentFolderNodeId: string;
   openFolderNodeIds: string[];
+  checkedNodeIds: string[];
 }
 
 const initialState: BookmarksState = {
   rootNode: {} as BookmarkNode,
   currentFolderNodeId: "0",
   openFolderNodeIds: [],
+  checkedNodeIds: []
 };
+
+const name = 'BOOKMARKS';
 
 // actions 
 export const getTree = createAsyncThunk(
-  'GET_TREE', 
+  name + '/GET_TREE', 
   async () => {
     const tree = await api.bookmarks.getTree();
     return tree[0];
@@ -32,12 +36,12 @@ export const getTree = createAsyncThunk(
 );
 
 export const setCurrentFolderNodeId = createAction(
-  'SET_CURRENT_FOLDER_NODE_ID',
+  name + '/SET_CURRENT_FOLDER_NODE_ID',
   (id: string) => ({ payload: id })
 );
 
 export const createFromTabs = createAsyncThunk<void, void, { state: RootState }>(
-  'CREATE_FROM_TABS',
+  name + '/CREATE_FROM_TABS',
   async (_, { dispatch, getState }) => {
     const state = getState();
     const checkedTabs = selectCheckedTabs(state);
@@ -64,7 +68,7 @@ export const createFromTabs = createAsyncThunk<void, void, { state: RootState }>
 );
 
 export const openFolderNode = createAsyncThunk<string[], string, { state: RootState }>(
-  'OPEN_FOLDER_NODE',
+  name + '/OPEN_FOLDER_NODE',
   (id: string, { getState }) => {
     const parentListIds = selectParentList(getState(), id).map(node => node.id);
     return parentListIds;
@@ -72,12 +76,12 @@ export const openFolderNode = createAsyncThunk<string[], string, { state: RootSt
 );
 
 export const closeFolderNode = createAction(
-  'CLOSE_FOLDER_NODE',
+  name + '/CLOSE_FOLDER_NODE',
   (id: string) => ({ payload: id })
 );
 
 export const rename = createAsyncThunk(
-  'RENAME',
+  name + '/RENAME',
   async (details: {id: string, title: string}, { dispatch }) => {
     const { id, title } = details;
     await api.bookmarks.update(id, { title });
@@ -87,12 +91,44 @@ export const rename = createAsyncThunk(
 )
 
 export const remove = createAsyncThunk(
-  'REMOVE',
+  name + '/REMOVE',
   async (node: BookmarkNode, { dispatch }) => {
     
     node.url 
       ? await api.bookmarks.remove(node.id)
       : await api.bookmarks.removeTree(node.id);
+
+    dispatch(getTree());
+  }
+);
+
+export const checkAll = createAsyncThunk<string[], void, { state: RootState }>(
+  name + '/CHECK_ALL',
+  async (_, { getState }) => {
+    const node = selectCurrentFolderNode(getState());
+    return node.children?.map(node => node.id) || [];
+  }
+);
+
+export const toggleCheck = createAction(
+  name + '/TOGGLE_CHECK',
+  (id: string) => ({ payload: id })
+);
+
+export const uncheckAll = createAction(name + '/CHECK_CLEAR');
+
+export const removeChecked = createAsyncThunk<void, void, { state: RootState }>(
+  name + '/REMOVE_CHECKED',
+  async (_, { getState, dispatch }) => {
+    const { checkedNodeIds } = getState().bookmarks;
+    for (const id of checkedNodeIds) {
+      const [ node ] = await api.bookmarks.get(id);
+      if (!node) continue;
+
+      (node.children) 
+      ? await api.bookmarks.removeTree(id)
+      : await api.bookmarks.remove(id);
+    }
 
     dispatch(getTree());
   }
@@ -140,9 +176,17 @@ export const selectCurrentFolderNode = createSelector(
   (nodeDict, id) => nodeDict[id]
 );
 
+export const selectIsChecked = (state: RootState, id: string) => {
+  return state.bookmarks.checkedNodeIds.includes(id);
+}
+
+export const selectIsAllChecked = (state: RootState) => {
+  return selectCurrentFolderNode(state)?.children?.length === state.bookmarks.checkedNodeIds.length;
+}
+
 // slice
 const bookmarksSlice = createSlice({
-  name: 'bookmarks',
+  name,
   initialState,
   reducers: {},
   extraReducers: builder => {
@@ -153,7 +197,10 @@ const bookmarksSlice = createSlice({
       )
       .addCase(
         setCurrentFolderNodeId,
-        (state, action) => { state.currentFolderNodeId = action.payload; }
+        (state, action) => { 
+          state.currentFolderNodeId = action.payload;
+          state.checkedNodeIds = [];
+        }
       )
       .addCase(
         openFolderNode.fulfilled,
@@ -169,6 +216,23 @@ const bookmarksSlice = createSlice({
           state.openFolderNodeIds = state.openFolderNodeIds
           .filter(id => id !== action.payload);
         }
+      )
+      .addCase(
+        checkAll.fulfilled,
+        (state, action) => { state.checkedNodeIds = action.payload; }
+      )
+      .addCase(
+        toggleCheck,
+        (state, action) => { 
+          const id = action.payload;
+          state.checkedNodeIds = state.checkedNodeIds.includes(id)
+          ? state.checkedNodeIds.filter(item => item !== id)
+          : [ ...state.checkedNodeIds, id ];
+         }
+      )
+      .addCase(
+        uncheckAll,
+        state => { state.checkedNodeIds = []; }
       )
   }
 });
