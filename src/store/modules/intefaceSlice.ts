@@ -1,5 +1,6 @@
-import { createAction, createSlice } from "@reduxjs/toolkit";
+import { createAction, createAsyncThunk, createSlice } from "@reduxjs/toolkit";
 import { WindowTypes } from 'src/constants/types';
+import { RootState } from "..";
 
 interface interfaceState {
   activeWindows: WindowTypes[];
@@ -11,11 +12,23 @@ const initialState: interfaceState = {
 
 const prepareWindowType = (type: WindowTypes) => ({ payload: type });
 
+
 // actions
-export const toggleActive = createAction(
+export const toggleActive = createAsyncThunk<void, WindowTypes, { state: RootState }>(
   'TOGGLE_ACTIVE',
-  prepareWindowType
+  (type: WindowTypes, { getState, dispatch }) => {
+    const isActive = selectIsActiveWindow(getState(), type);
+
+    isActive
+    ? dispatch(deactivateWindow(type))
+    : dispatch(activateWindow(type));
+  }
 );
+
+export const activateWindow = createAction(
+  'ACTIVATE_WINDOW',
+  prepareWindowType
+)
 
 export const deactivateWindow = createAction(
   'DEACTIVATE_WINDOW',
@@ -27,6 +40,8 @@ export const activateWindowAlone = createAction(
   prepareWindowType
 );
 
+const selectIsActiveWindow = (state: RootState, type: WindowTypes) => state.interfaces.activeWindows.includes(type);
+
 const slice = createSlice({
   name: 'interface',
   initialState,
@@ -34,14 +49,8 @@ const slice = createSlice({
   extraReducers: builder => {
     builder
       .addCase(
-        toggleActive,
-        (state, action) => {
-          const type = action.payload;
-
-          state.activeWindows = (state.activeWindows.includes(type))
-            ? state.activeWindows.filter(item => item !== type)
-            : [ ...state.activeWindows, type ];
-        }
+        activateWindow,
+        (state, action) => { state.activeWindows.push(action.payload); }
       )
       .addCase(
         deactivateWindow,
