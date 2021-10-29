@@ -61,6 +61,11 @@ async function get(id: string | string[]) {
   return idList.map(id => nodeMap.get(id));
 };
 
+async function getChildren(id: string) {
+  if (!tree || isUpdated) createTree();
+  return nodeMap.get(id)?.children;
+}
+
 async function remove(id: string) {
   if (nodeMap.has(id)) {
     nodeList = nodeList.filter(node => node.id !== id);
@@ -114,11 +119,12 @@ async function update(id: string, changes: { url?: string, title?: string }) {
 }
 
 const api = {
+  create,
   get,
+  getChildren,
   getTree,
   remove,
   removeTree,
-  create,
   update,
 };
 
