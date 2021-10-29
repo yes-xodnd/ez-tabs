@@ -1,19 +1,32 @@
 import styled from "styled-components";
-import { Close } from '@styled-icons/material-outlined';
+import { Minimize, Fullscreen } from '@styled-icons/material-outlined';
+import { WindowTypes } from 'src/constants/types';
+import { useTypedDispatch } from 'src/hooks';
+import { deactivateWindow, activateWindowAlone } from 'src/store/modules/intefaceSlice';
 
 interface Props {
   title: string;
-  hideWindow: () => void;
+  windowType: WindowTypes;
 }
 
-const WindowHeader = ({ title, hideWindow}: Props) => {
+const WindowHeader = ({ title, windowType }: Props) => {
+  const dispatch = useTypedDispatch();
+  
+  const hide = () => { dispatch(deactivateWindow(windowType)); };
+  const openFull = () => { dispatch(activateWindowAlone(windowType)); };
   
   return (
     <Header>
       <Title>{ title }</Title>
-      <HideButton title="창 닫기" onClick={hideWindow}>
-        <Close size="16" />
-      </HideButton>
+      <ButtonList>
+        <Button title="최대로 보기"  onClick={openFull} >
+          <Fullscreen size="20"/>
+        </Button>
+
+        <Button title="닫기" onClick={hide} >
+          <Minimize size="20"/>
+        </Button>
+      </ButtonList>
     </Header>
   );
 };
@@ -30,21 +43,28 @@ const Title = styled.div`
   font-weight: bold;
 `;
 
-const HideButton = styled.div`
-  position: absolute;
-  top: 1rem;
-  right: 1rem;
-  width: 20px;
-  height: 20px;
-
+const Button = styled.button`
+  border-radius: 5px;
+  background-color: transparent;
+  border: none;
+  padding: 0;
+  width: 24px;
+  height: 24px;
   display: flex;
   justify-content: center;
   align-items: center;
-  border-radius: 5px;
-  
+
   &:hover {
     cursor: pointer;
-    background-color: crimson;
+    background-color: royalblue;
     color: white;
   }
+`
+const ButtonList = styled.div`
+  position: absolute;
+  top: 1rem;
+  right: 1rem;
+
+  display: flex;
+  gap: 5px;
 `
