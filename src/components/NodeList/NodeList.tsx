@@ -1,15 +1,26 @@
 import { BookmarkNode } from 'src/constants/types';
 import styled from 'styled-components';
 import NodeListItemContainer from './NodeListItemContainer';
+import { NodeContentContainer } from './NodeListItem';
+import { ArrowUpward } from '@styled-icons/material-outlined';
 
 interface Props {
-  nodes: BookmarkNode[];
+  node: BookmarkNode | undefined;
+  toParentNode: () => void;
 }
 
-const NodeList = ({ nodes }: Props) => {
+const NodeList = ({ node, toParentNode }: Props) => {
+  const nodes = node?.children || [];
 
   return (
     <Wrapper>
+      {
+        node?.parentId && 
+        <NodeContentContainer onClick={toParentNode}>
+          <ArrowUpward size="16" />
+          <div>상위 폴더로 이동</div>
+        </NodeContentContainer>
+      }
       {
         !!nodes.length &&
         nodes.map(childNode => (
