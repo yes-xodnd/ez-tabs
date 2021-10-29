@@ -12,13 +12,12 @@ function App() {
 
   return (
     <Wrapper className="App">
-    <SideMenuContainer />
+      <SideMenuContainer />
 
-    <Windows>
-      <BookmarksWindow />
-      <TabsWindow />
-    </Windows>
-
+      <Windows>
+        <BookmarksWindow />
+        <TabsWindow />
+      </Windows>
     </Wrapper>
   );
 }
@@ -35,5 +34,5 @@ const Windows = styled.div`
   justify-content: center;
   gap: 1rem;
   width: 100%;
-  padding: 1rem 2rem;
+  padding: 1.5rem 2rem;
 `
