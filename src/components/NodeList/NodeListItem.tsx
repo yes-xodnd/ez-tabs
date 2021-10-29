@@ -43,6 +43,7 @@ const NodeListItemLink = ({ node, handleDoubleClick }: Props) => {
           { 
             dropDownVisible && 
             <DropDownContainer 
+              node={node}
               handleClickRename={() => setIsRename(true)}
               closeDropDown={() => setDropDownVisible(false)} />
           }

@@ -27,10 +27,12 @@ export default Dropdown;
 const Wrapper = styled.ul`
   position: absolute;
   padding: 0;
+  border-radius: 5px;
   list-style: none;
   background-color: white;
-  box-shadow: 5px 5px 5px grey;
+  box-shadow: 1px 1px 5px grey;
   color: black;
+  overflow: hidden;
 `;
 
 const Item = styled.li`
