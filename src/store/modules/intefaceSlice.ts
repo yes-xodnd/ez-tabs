@@ -1,9 +1,8 @@
 import { createAction, createSlice } from "@reduxjs/toolkit";
-
-type windowTypes = 'BOOKMARKS' | 'TABS';
+import { WindowTypes } from 'src/constants/types';
 
 interface interfaceState {
-  activeWindows: windowTypes[];
+  activeWindows: WindowTypes[];
 }
 
 const initialState: interfaceState = {
@@ -13,7 +12,7 @@ const initialState: interfaceState = {
 // actions
 export const toggleActive = createAction(
   'TOGGLE_ACTIVE',
-  (type: windowTypes) => ({ payload: type })
+  (type: WindowTypes) => ({ payload: type })
 );
 
 const slice = createSlice({

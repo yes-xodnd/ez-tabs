@@ -1,4 +1,4 @@
-import { FolderSpecial } from '@styled-icons/material-outlined';
+import { FolderSpecial, Apps } from '@styled-icons/material-outlined';
 import SideMenu from './SideMenu';
 import { useTypedDispatch } from 'src/hooks/redux';
 import { toggleActive } from 'src/store/modules/intefaceSlice';
@@ -17,6 +17,11 @@ const SideMenuContainer = () => {
       title: '북마크',
       icon: <FolderSpecial size="24" />,
       action: () => { dispatch(toggleActive('BOOKMARKS')); }
+    },
+    {
+      title: '탭 관리',
+      icon: <Apps size="24" />,
+      action: () => { dispatch(toggleActive('TABS')); }
     }
   ];
 

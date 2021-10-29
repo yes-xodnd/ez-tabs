@@ -11,4 +11,4 @@ export interface ParentNode extends BookmarkNode {
 
 export type Tab = chrome.tabs.Tab;
 export type QueryInfo = chrome.tabs.QueryInfo;
-
+export type WindowTypes = 'BOOKMARKS' | 'TABS';

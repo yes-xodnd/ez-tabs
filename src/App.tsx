@@ -2,9 +2,8 @@ import { useEffect } from 'react';
 import styled from 'styled-components';
 import { getTree } from 'src/store/modules/bookmarksSlice';
 import { useTypedDispatch } from './hooks';
-import FolderTree from './components/FolderTree/FolderTree';
-import NodeListContainer from './components/NodeList/NodeListContainer';
-import TabListContainer from './components/Tabs/TabListContainer';
+import BookmarksWindow from './windows/BookmarksWindow';
+import TabsWindow from './windows/TabsWindow';
 import SideMenuContainer from './components/SideMenu/SideMenuContainer';
 
 function App() {
@@ -12,13 +11,14 @@ function App() {
   useEffect(() => { dispatch(getTree()) }, [dispatch]);
 
   return (
-    <Wrapper>
+    <Wrapper className="App">
     <SideMenuContainer />
-    <WindowsWrapper className="App">
-      <FolderTree />
-      <NodeListContainer />
-      <TabListContainer />
-    </WindowsWrapper>
+
+    <Windows>
+      <BookmarksWindow />
+      <TabsWindow />
+    </Windows>
+
     </Wrapper>
   );
 }
@@ -30,13 +30,10 @@ const Wrapper = styled.div`
   height: 100%;
 `;
 
-const WindowsWrapper = styled.main`
+const Windows = styled.div`
   display: flex;
-  height: 100%;
-  padding: 1rem;
+  justify-content: center;
   gap: 1rem;
-
-  & > div {
-    box-shadow: 0 0 5px lightgrey;
-  }
-`;
+  width: 100%;
+  padding: 1rem 2rem;
+`

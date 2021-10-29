@@ -1,8 +1,8 @@
 import { Tab } from 'src/constants/types';
 import styled from 'styled-components';
-import Header from './Header';
 import TabListItemContainer from './TabListItemContainer';
 import ButtonAdd from './ButtonAdd';
+import { customScroll } from 'src/style';
 
 interface Props {
   tabs: Tab[];
@@ -13,7 +13,6 @@ const TabList = ({ tabs, addBookmarks }: Props) => {
 
   return (
     <Wrapper>
-      <Header />
       <ListWrapper>
         { tabs.map(tab => <TabListItemContainer tab={tab} key={tab.url} />) }
       </ListWrapper>
@@ -29,14 +28,13 @@ export default TabList;
 const Wrapper = styled.div`
   display: flex;
   flex-direction: column;
-  min-width: 300px;
-  width: 30%;
-  max-width: 30%;
-  border-radius: 1rem;
-  padding: 1rem;
-  background: white;
+  gap: 1rem;
+  flex-grow: 2;
 `;
 
 const ListWrapper = styled.div`
+  ${ customScroll }
+
   flex-grow: 2;
+  overflow-y: scroll;
 `;
