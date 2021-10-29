@@ -1,5 +1,5 @@
 import { useTypedDispatch, useTypedSelector } from ".";
-import { closeFolderNode, openFolderNode, setFocusedFolderId } from "src/store/modules/bookmarksSlice";
+import { closeFolderNode, openFolderNode, setCurrentFolderNodeId } from "src/store/modules/bookmarksSlice";
 
 
 const useFolderOpen = (id: string): { isOpen: boolean, toggleOpen: () => void } => {
@@ -16,17 +16,20 @@ const useFolderOpen = (id: string): { isOpen: boolean, toggleOpen: () => void } 
   return { isOpen, toggleOpen };
 };
 
-const useFolderFocus = (id: string): { isFocused: boolean, setFocus: () => void } => { 
-  const { focusedFolderId } = useTypedSelector(({ bookmarks }) => bookmarks);
+const useCurrentFolder = (id: string): { 
+  isCurrentFolder: boolean,
+  setCurrentFolder: () => void
+} => { 
+  const { currentFolderNodeId } = useTypedSelector(({ bookmarks }) => bookmarks);
   const dispatch = useTypedDispatch();
 
-  const isFocused = focusedFolderId === id;
-  const setFocus = () => dispatch(setFocusedFolderId(id));
+  const isCurrentFolder = currentFolderNodeId === id;
+  const setCurrentFolder = () => dispatch(setCurrentFolderNodeId(id));
   
-  return { isFocused, setFocus };
+  return { isCurrentFolder, setCurrentFolder };
 };
 
 export { 
   useFolderOpen,
-  useFolderFocus,
+  useCurrentFolder,
 };
