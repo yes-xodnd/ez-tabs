@@ -11,13 +11,13 @@ import api from 'src/api';
 
 interface BookmarksState {
   rootNode: BookmarkNode;
-  focusedFolderId: string;
+  currentFolderNodeId: string;
   openFolderNodeIds: string[];
 }
 
 const initialState: BookmarksState = {
   rootNode: {} as BookmarkNode,
-  focusedFolderId: "1",
+  currentFolderNodeId: "0",
   openFolderNodeIds: [],
 };
 
@@ -30,8 +30,8 @@ export const getTree = createAsyncThunk(
   }
 );
 
-export const setFocusedFolderId = createAction(
-  'SET_FOCUSED_FOLDER_ID',
+export const setCurrentFolderNodeId = createAction(
+  'SET_CURRENT_FOLDER_NODE_ID',
   (id: string) => ({ payload: id })
 );
 
@@ -130,6 +130,12 @@ export const selectParentList = createSelector(
   }
 );
 
+export const selectCurrentFolderNode = createSelector(
+  selectNodeDict,
+  (state: RootState) => state.bookmarks.currentFolderNodeId,
+  (nodeDict, id) => nodeDict[id]
+);
+
 // slice
 const bookmarksSlice = createSlice({
   name: 'bookmarks',
@@ -142,8 +148,8 @@ const bookmarksSlice = createSlice({
         (state, action) => { state.rootNode = action.payload; }
       )
       .addCase(
-        setFocusedFolderId,
-        (state, action) => { state.focusedFolderId = action.payload; }
+        setCurrentFolderNodeId,
+        (state, action) => { state.currentFolderNodeId = action.payload; }
       )
       .addCase(
         openFolderNode.fulfilled,
