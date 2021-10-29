@@ -33,11 +33,19 @@ const Wrapper = styled.button<{ disabled: boolean }>`
   padding: 0.5rem;
   border: none;
   border-radius: 5px;
-  background-color: ${({ disabled }) => disabled ? 'darkgrey' : 'royalblue'};
+  background-color: ${
+    ({ disabled, theme }) => disabled 
+      ? 'darkgrey'
+      : theme.colors.mainLight
+  };
   color: white;
 
   &:hover {
     cursor: pointer;
-    background-color: ${({ disabled }) => disabled ? 'darkgrey' : 'midnightblue'};
+    background-color: ${
+      ({ disabled, theme }) => disabled 
+        ? 'darkgrey' 
+        : theme.colors.main
+    };
   }
 `;

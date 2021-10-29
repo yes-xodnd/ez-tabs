@@ -35,17 +35,16 @@ const ContentContainer = styled.div`
   grid-template-columns: 24px 24px auto 32px;
   place-items: center center;
   column-gap: 0.5rem;
+  row-gap: 5px;
   padding: 0.5rem 0;
   border-radius: 5px;
-  border: 1px solid transparent;
-  overflow: hidden;
   font-size: 0.8rem;
+  overflow: hidden;
 
   
   &:hover {
     cursor: pointer;
-    background: royalblue;
-    color: white;
+    background: ${props => props.theme.colors.hover};
   }
 `;
 
@@ -59,7 +58,7 @@ const Title = styled.div`
 const Hostname = styled.div`
   grid-column: 3;
   justify-self: start;
-  color: lightgrey;
+  color: darkgrey;
 `;
 
 const CloseTab = styled(Close)`

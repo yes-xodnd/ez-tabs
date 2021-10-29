@@ -81,8 +81,7 @@ export const NodeContentContainer = styled.div`
 
   &:hover {
     cursor: pointer;
-    background-color: royalblue;
-    color: white;
+    background: ${props => props.theme.colors.hover};
   }
 `;
 
@@ -97,5 +96,5 @@ const Title = styled.div`
 const Hostname = styled.div`
   grid-column: 2 / span 2;
   justify-self: start;
-  color: lightgrey;
+  color: darkgrey;
 `;

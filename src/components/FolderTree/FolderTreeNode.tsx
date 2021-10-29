@@ -62,7 +62,11 @@ const NodeContentContainer = styled.div<{ depth: number, isFocused: boolean }>`
   padding: 0.5rem 0;
   padding-left: ${({ depth }) => (depth * 12) + 'px' };
   border-radius: 5px;
-  background-color: ${({ isFocused }) => isFocused ? 'royalblue' : 'transparent'};
+  background-color: ${
+    ({ isFocused, theme }) => isFocused 
+      ? theme.colors.main
+      : 'transparent'
+  };
   color: ${({ isFocused }) => isFocused ? 'white' : 'unset'};
   overflow: hidden;
 `;
