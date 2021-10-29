@@ -1,4 +1,4 @@
-import { AddCircleOutline } from '@styled-icons/material-outlined';
+import { BookmarkBorder } from '@styled-icons/material-outlined';
 import Button from 'src/components/UI/Button';
 import { useTypedDispatch, useTypedSelector } from 'src/hooks';
 import { createFromTabs } from 'src/store/modules/bookmarksSlice';
@@ -13,7 +13,7 @@ const ButtonAdd = () => {
     dispatch(clear());
   }
 
-  const Icon = <AddCircleOutline size="16" />;
+  const Icon = <BookmarkBorder size="16" />;
   const disabled = !checkedTabIds.length;
 
   return (
