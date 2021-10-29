@@ -9,10 +9,22 @@ const initialState: interfaceState = {
   activeWindows: [ 'BOOKMARKS', 'TABS' ],
 }
 
+const prepareWindowType = (type: WindowTypes) => ({ payload: type });
+
 // actions
 export const toggleActive = createAction(
   'TOGGLE_ACTIVE',
-  (type: WindowTypes) => ({ payload: type })
+  prepareWindowType
+);
+
+export const deactivateWindow = createAction(
+  'DEACTIVATE_WINDOW',
+  prepareWindowType
+)
+
+export const activateWindowAlone = createAction(
+  'ACTIVATE_WINDOW_ALONE',
+  prepareWindowType
 );
 
 const slice = createSlice({
@@ -30,6 +42,17 @@ const slice = createSlice({
             ? state.activeWindows.filter(item => item !== type)
             : [ ...state.activeWindows, type ];
         }
+      )
+      .addCase(
+        deactivateWindow,
+        (state, action) => { 
+          state.activeWindows = state.activeWindows
+            .filter(item => item !== action.payload);
+        }
+      )
+      .addCase(
+        activateWindowAlone,
+        (state, action) => { state.activeWindows = [ action.payload ]; }
       )
   }
 });
