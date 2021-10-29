@@ -35,13 +35,17 @@ const NodeListItemLink = ({ node, handleDoubleClick }: Props) => {
           : <div>{ node.title }</div>
           }
         </Title>
+
         <div>
-          <MoreVert 
-            size="16"
-            onClick={() => setDropDownVisible(!dropDownVisible)}
-            />
+          {
+            !['1', '2'].includes(node.id) &&
+            <MoreVert 
+              size="16"
+              onClick={() => setDropDownVisible(!dropDownVisible)}
+              />    
+          }
           { 
-            dropDownVisible && 
+            dropDownVisible &&
             <DropDownContainer 
               node={node}
               handleClickRename={() => setIsRename(true)}
