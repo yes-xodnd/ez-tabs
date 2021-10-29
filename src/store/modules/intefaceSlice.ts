@@ -1,6 +1,5 @@
 import { createAction, createSlice } from "@reduxjs/toolkit";
-
-type windowTypes = 'BOOKMARKS' | 'TABS';
+import { windowTypes } from 'src/constants/types';
 
 interface interfaceState {
   activeWindows: windowTypes[];
