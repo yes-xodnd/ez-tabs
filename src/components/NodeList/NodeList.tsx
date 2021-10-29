@@ -37,8 +37,9 @@ export default NodeList;
 const Wrapper = styled.div`
   ${ customScroll }
 
+  padding: 1rem;
   flex-grow: 2;
   width: 400px;
   overflow-x: hidden;
-  overflow-y: scroll;
+  overflow-y: auto;
 `;

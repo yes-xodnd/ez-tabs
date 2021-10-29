@@ -2,9 +2,11 @@ import styled from 'styled-components';
 import { WindowTypes } from 'src/constants/types';
 import { WindowWrapper } from 'src/style';
 import { useWindow } from 'src/hooks';
+
+import WindowHeader from 'src/components/UI/WindowHeader';
+import Toolbar from 'src/components/Bookmarks/BookmarksToolbar';
 import FolderTree from 'src/components/FolderTree/FolderTree';
 import NodeListContainer from 'src/components/NodeList/NodeListContainer';
-import WindowHeader from 'src/components/UI/WindowHeader';
 
 const BookmarksWindow = () => {
   const windowType: WindowTypes = 'BOOKMARKS';
@@ -15,10 +17,8 @@ const BookmarksWindow = () => {
     {
       isActive && 
       <Wrapper>
-        <WindowHeader 
-          title={'북마크'} 
-          hideWindow={hideWindow} 
-          />
+        <WindowHeader title={'북마크'} hideWindow={hideWindow} />
+        <Toolbar />
         <ContentContainer>
           <FolderTree />
           <NodeListContainer />

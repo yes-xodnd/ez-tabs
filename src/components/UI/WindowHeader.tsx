@@ -4,10 +4,9 @@ import { Close } from '@styled-icons/material-outlined';
 interface Props {
   title: string;
   hideWindow: () => void;
-  children?: JSX.Element;
 }
 
-const WindowHeader = ({ title, hideWindow }: Props) => {
+const WindowHeader = ({ title, hideWindow}: Props) => {
   
   return (
     <Header>
@@ -23,18 +22,18 @@ export default WindowHeader;
 
 const Header = styled.header`
   position: relative;
-  padding-bottom: 1rem;
 `;
 
 const Title = styled.div`
+  padding: 1rem;
   font-size: 1.2rem;
   font-weight: bold;
 `;
 
 const HideButton = styled.div`
   position: absolute;
-  top: 0;
-  right: 0;
+  top: 1rem;
+  right: 1rem;
   width: 20px;
   height: 20px;
 
