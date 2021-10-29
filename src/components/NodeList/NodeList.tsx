@@ -3,6 +3,7 @@ import styled from 'styled-components';
 import NodeListItemContainer from './NodeListItemContainer';
 import { NodeContentContainer } from './NodeListItem';
 import { ArrowUpward } from '@styled-icons/material-outlined';
+import { customScroll } from 'src/style';
 
 interface Props {
   node: BookmarkNode | undefined;
@@ -34,10 +35,10 @@ const NodeList = ({ node, toParentNode }: Props) => {
 export default NodeList;
 
 const Wrapper = styled.div`
-  min-width: 300px;
-  width: 30%;
-  max-width: 30%;
-  border-radius: 1rem;
-  padding: 1rem;
-  background: white;
+  ${ customScroll }
+
+  flex-grow: 2;
+  width: 400px;
+  overflow-x: hidden;
+  overflow-y: scroll;
 `;
