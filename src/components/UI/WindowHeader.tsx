@@ -1,5 +1,5 @@
 import styled from "styled-components";
-import { Minimize, Fullscreen } from '@styled-icons/material-outlined';
+import { Fullscreen, Close } from '@styled-icons/material-outlined';
 import { WindowTypes } from 'src/constants/types';
 import { useTypedDispatch } from 'src/hooks';
 import { deactivateWindow, activateWindowAlone } from 'src/store/modules/intefaceSlice';
@@ -24,7 +24,7 @@ const WindowHeader = ({ title, windowType }: Props) => {
         </Button>
 
         <Button title="닫기" onClick={hide} >
-          <Minimize size="20"/>
+          <Close size="20"/>
         </Button>
       </ButtonList>
     </Header>
@@ -35,18 +35,17 @@ export default WindowHeader;
 
 const Header = styled.header`
   position: relative;
+  padding: 0.5rem 1rem;
 `;
 
 const Title = styled.div`
-  padding: 1rem;
-  font-size: 1.2rem;
-  font-weight: bold;
+  font-size: 1rem;
 `;
 
 const Button = styled.button`
-  border-radius: 5px;
   background-color: transparent;
-  border: none;
+  border-radius: 5px;
+  border: 1px solid transparent;
   padding: 0;
   width: 24px;
   height: 24px;
@@ -56,14 +55,13 @@ const Button = styled.button`
 
   &:hover {
     cursor: pointer;
-    background-color: royalblue;
-    color: white;
+    border-color: lightgrey;
   }
 `
 const ButtonList = styled.div`
   position: absolute;
-  top: 1rem;
-  right: 1rem;
+  top: 0.25rem;
+  right: 0.25rem;
 
   display: flex;
   gap: 5px;

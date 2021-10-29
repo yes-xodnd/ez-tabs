@@ -40,7 +40,6 @@ const Wrapper = styled(WindowWrapper)`
 const ContentContainer = styled.div`
   display: flex;
   flex-grow: 2;
-  gap: 1rem;
   overflow: hidden;
   border-radius: 5px;
 `;

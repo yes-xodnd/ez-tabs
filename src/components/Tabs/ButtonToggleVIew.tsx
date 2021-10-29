@@ -9,7 +9,7 @@ interface Props {
 const ButtonToggleView = ({ isListView, toggleView }: Props) => {
   return (
     <ToolbarButton 
-      title={isListView ? '그리드로 보기' : '리스트로 보기'}
+      title={isListView ? '그리드' : '리스트'}
       handleClick={ toggleView }
       Icon={isListView ? GridView : ViewList}
       />
