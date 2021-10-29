@@ -76,8 +76,20 @@ export const rename = createAsyncThunk(
   'RENAME',
   async (details: {id: string, title: string}, { dispatch }) => {
     const { id, title } = details;
-    const node = await api.bookmarks.update(id, { title });
+    await api.bookmarks.update(id, { title });
     
+    dispatch(getTree());
+  }
+)
+
+export const remove = createAsyncThunk(
+  'REMOVE',
+  async (node: BookmarkNode, { dispatch }) => {
+    
+    node.url 
+      ? await api.bookmarks.remove(node.id)
+      : await api.bookmarks.removeTree(node.id);
+
     dispatch(getTree());
   }
 )
