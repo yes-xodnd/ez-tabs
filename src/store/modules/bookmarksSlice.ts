@@ -6,6 +6,7 @@ import {
 } from '@reduxjs/toolkit';
 import { BookmarkNode } from 'src/constants/types';
 import { selectCheckedTabs } from './tabsSlice';
+import { activateWindow } from './intefaceSlice';
 import { RootState } from 'src/store';
 import api from 'src/api';
 
@@ -40,11 +41,11 @@ export const createFromTabs = createAsyncThunk<void, void, { state: RootState }>
   async (_, { dispatch, getState }) => {
     const state = getState();
     const checkedTabs = selectCheckedTabs(state);
-    const rootNode = selectRootNode(state);
+    const children = await api.bookmarks.getChildren('1');
 
-    const tabsRootNode = rootNode.children
-      ?.filter(childNode => childNode.title === 'Tabs')[0]
-      || await api.bookmarks.create({ title: 'Tabs', parentId: '0' });
+    const tabsRootNode = children
+      ?.find(childNode => childNode.title === 'Tabs')
+      || await api.bookmarks.create({ title: 'Tabs', parentId: '1' });
 
     const FolderNode = await api.bookmarks.create({ 
       title: new Date().toLocaleString(),
@@ -55,7 +56,10 @@ export const createFromTabs = createAsyncThunk<void, void, { state: RootState }>
       await api.bookmarks.create({ url, title, parentId: FolderNode.id });
     }
 
-    dispatch(getTree());
+    await dispatch(getTree());
+    dispatch(activateWindow('BOOKMARKS'));
+    dispatch(setCurrentFolderNodeId(FolderNode.id));
+    dispatch(openFolderNode(FolderNode.id));
   }
 );
 
