@@ -22,9 +22,9 @@ export default FolderTree;
 const Wrapper = styled.div`
   ${ customScroll }
 
+  padding: 1rem;
   min-width: 200px;
   max-width: 250px;
-  padding-right: 1rem;
   border-right: 1px solid lightgrey;
   overflow-y: scroll;
 `;

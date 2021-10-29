@@ -1,9 +1,12 @@
-import { WindowWrapper } from 'src/style';
-import TabListContainer from 'src/components/Tabs/TabListContainer';
-import WindowHeader from 'src/components/UI/WindowHeader';
-import { useWindow } from 'src/hooks';
-import { WindowTypes } from 'src/constants/types';
 import styled from 'styled-components';
+import { WindowTypes } from 'src/constants/types';
+import { useWindow } from 'src/hooks';
+import { WindowWrapper } from 'src/style';
+
+import WindowHeader from 'src/components/UI/WindowHeader';
+import Toolbar from 'src/components/Tabs/TabsToolbar';
+import TabListContainer from 'src/components/Tabs/TabListContainer';
+import ButtonAdd from 'src/components/Tabs/ButtonAdd';
 
 const TabsWindow = () => {
   const windowType: WindowTypes = 'TABS';
@@ -14,8 +17,10 @@ const TabsWindow = () => {
       {
         isActive &&
         <Wrapper>
-          <WindowHeader title={'탭 관리'} hideWindow={hideWindow} />
+          <WindowHeader title={'탭'} hideWindow={hideWindow} />
+          <Toolbar />
           <TabListContainer />
+          <ButtonAdd  />
         </Wrapper>
       }
     </>

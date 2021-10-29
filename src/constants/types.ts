@@ -1,3 +1,5 @@
+import { GridView } from '@styled-icons/material-outlined';
+
 export type BookmarkNode = chrome.bookmarks.BookmarkTreeNode;
 
 export interface ChildNode extends BookmarkNode {
@@ -12,3 +14,5 @@ export interface ParentNode extends BookmarkNode {
 export type Tab = chrome.tabs.Tab;
 export type QueryInfo = chrome.tabs.QueryInfo;
 export type WindowTypes = 'BOOKMARKS' | 'TABS';
+
+export type StyledIcon = typeof GridView;
