@@ -1,7 +1,7 @@
 import { configureStore, combineReducers } from '@reduxjs/toolkit';
 import bookmarksReducer, { 
   getTree, 
-  setFocusedFolderId,
+  setCurrentFolderNodeId,
   selectNodeDict, 
   selectParentList
 } from './bookmarksSlice';
@@ -20,9 +20,9 @@ describe('Store Bookmarks slice: Actions', () => {
   });
 
   test('handle selectDir action', () => {
-    store.dispatch(setFocusedFolderId('2'));
+    store.dispatch(setCurrentFolderNodeId('2'));
 
-    expect(store.getState().bookmarks.focusedFolderId).toBe('2');
+    expect(store.getState().bookmarks.currentFolderNodeId).toBe('2');
   });
 
   test('nodeDictSelector', async () => {

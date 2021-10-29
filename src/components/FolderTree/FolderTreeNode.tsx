@@ -1,7 +1,7 @@
 import styled from 'styled-components';
 import { Folder, FolderOpen, ArrowDropDown } from '@styled-icons/material-outlined';
 import { BookmarkNode } from "src/constants/types";
-import { useFolderOpen, useFolderFocus } from 'src/hooks/FolderTree';
+import { useFolderOpen, useCurrentFolder } from 'src/hooks/FolderTree';
 
 interface Props {
   node: BookmarkNode;
@@ -9,15 +9,15 @@ interface Props {
 }
 
 const FolderListNode = ({ node, depth = 0 }: Props) => {
-  const { isFocused, setFocus } = useFolderFocus(node.id);
+  const { isCurrentFolder, setCurrentFolder } = useCurrentFolder(node.id);
   const { isOpen, toggleOpen } = useFolderOpen(node.id);
 
   return (
     <div>
       <NodeContentContainer 
-        onDoubleClick={() => { toggleOpen(); setFocus(); }}
+        onDoubleClick={() => { toggleOpen(); setCurrentFolder(); }}
         depth={depth}
-        isFocused={isFocused}>
+        isFocused={isCurrentFolder}>
         <Arrow 
           size="16"
           isOpen={isOpen}
@@ -25,11 +25,11 @@ const FolderListNode = ({ node, depth = 0 }: Props) => {
           title="하위 디렉토리 목록 보기"
           />
         {
-          isFocused
+          isCurrentFolder
           ? <FolderOpen size="16" />
           : <Folder size="16" />
         }
-        <Title onClick={setFocus} title={node.title} >
+        <Title onClick={setCurrentFolder} title={node.title} >
           { node.title }
         </Title>
       </NodeContentContainer>

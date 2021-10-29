@@ -1,12 +1,22 @@
-import { useTypedSelector } from "src/hooks";
+import { useTypedSelector, useTypedDispatch } from "src/hooks";
 import NodeList from './NodeList';
-import { selectNodeDict,  } from 'src/store/modules/bookmarksSlice'
+import { setCurrentFolderNodeId, selectCurrentFolderNode } from 'src/store/modules/bookmarksSlice';
 
 const NodeListContainer = () => {
-  const { focusedFolderId } = useTypedSelector(({ bookmarks }) => bookmarks);
-  const nodeDict = useTypedSelector(selectNodeDict);
+  const currentFolderNode = useTypedSelector(selectCurrentFolderNode);
+  const dispatch = useTypedDispatch();
 
-  return <NodeList nodes={nodeDict[focusedFolderId]?.children || []} />;
+  const toParentNode = () => {
+    const parentId = currentFolderNode?.parentId;
+    if (parentId) dispatch(setCurrentFolderNodeId(parentId));
+  }
+
+  return (
+    <NodeList 
+      node={currentFolderNode}
+      toParentNode={toParentNode}
+      />
+  );
 };
 
 export default NodeListContainer;

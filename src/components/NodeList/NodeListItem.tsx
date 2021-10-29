@@ -57,7 +57,7 @@ const NodeListItemLink = ({ node, handleDoubleClick }: Props) => {
 
 export default NodeListItemLink;
 
-const NodeContentContainer = styled.div`
+export const NodeContentContainer = styled.div`
   display: grid;
   grid-template-columns: 24px auto 32px;
   place-items: center center;
@@ -67,6 +67,12 @@ const NodeContentContainer = styled.div`
   border-radius: 5px;
   font-size: 0.8rem;
   overflow: hidden;
+
+  &:hover {
+    cursor: pointer;
+    background-color: royalblue;
+    color: white;
+  }
 `;
 
 const Title = styled.div`
