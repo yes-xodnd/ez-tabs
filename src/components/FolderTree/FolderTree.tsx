@@ -1,4 +1,5 @@
 import { useTypedSelector } from "src/hooks";
+import { customScroll } from "src/style";
 import styled from "styled-components";
 import FolderListNode from "./FolderTreeNode";
 
@@ -19,9 +20,11 @@ const FolderTree = () => {
 export default FolderTree;
 
 const Wrapper = styled.div`
+  ${ customScroll }
+
   min-width: 200px;
   max-width: 250px;
-  border-radius: 1rem;
-  padding: 1rem;
-  background: white;
+  padding-right: 1rem;
+  border-right: 1px solid lightgrey;
+  overflow-y: scroll;
 `;
