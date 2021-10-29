@@ -1,9 +1,10 @@
 import { configureStore, combineReducers } from '@reduxjs/toolkit';
 import bookmarks from './modules/bookmarksSlice';
 import tabs from './modules/tabsSlice';
+import interfaces from './modules/intefaceSlice';
 import logger from 'redux-logger';
 
-const reducer = combineReducers({ bookmarks, tabs });
+const reducer = combineReducers({ bookmarks, tabs, interfaces });
 
 const middlewares = (process.env.NODE_ENV !== 'production') 
 ? [ logger ]
