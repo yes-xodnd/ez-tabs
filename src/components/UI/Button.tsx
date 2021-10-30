@@ -1,51 +1,49 @@
-import { MouseEventHandler } from "react";
+import { StyledIcon, ButtonTypes } from 'src/constants/types';
 import styled from "styled-components";
-
 
 interface Props {
   content: string;
-  handleClick?: MouseEventHandler;
-  icon?: JSX.Element;
-  disabled?: boolean;
+  handleClick: () => void;
+  Icon?: StyledIcon;
+  title?: string;
+  buttonType?: ButtonTypes;
 }
 
-const ButtonWithIcon = ({ content, handleClick, icon, disabled }: Props) => {
+const Button = ({ content, handleClick, Icon, title, buttonType = 'NORMAL' }: Props) => {
 
   return (
-    <Wrapper
-      onClick={disabled ? () => {} : handleClick}
-      disabled={disabled || false}
-      >
-      { !!icon && icon }
-      {content}
-    </Wrapper>
+    <SButton onClick={handleClick} buttonType={buttonType} title={title} >
+      { !!Icon && <Icon size="16" />}
+      { content }
+    </SButton>
   );
 };
 
-export default ButtonWithIcon;
+export default Button;
 
-const Wrapper = styled.button<{ disabled: boolean }>`
+const SButton = styled.button<{ buttonType: string }>`
   display: flex;
-  justify-content: center;
   align-items: center;
-  gap: 0.5rem;
-  width: 100%;
-  padding: 0.5rem;
-  border: none;
+  gap: 3px;
+  padding: 5px;
   border-radius: 5px;
-  background-color: ${
-    ({ disabled, theme }) => disabled 
-      ? 'darkgrey'
-      : theme.colors.mainLight
-  };
-  color: white;
-
+  border: 1px solid lightgrey;
+  font-size: 0.8rem;
+  background-color: white;
+  color: #333333;
+  
   &:hover {
     cursor: pointer;
-    background-color: ${
-      ({ disabled, theme }) => disabled 
-        ? 'darkgrey' 
-        : theme.colors.main
-    };
-  }
-`;
+    background-color: ${({ theme, buttonType }) => {
+
+      switch(buttonType) {
+        case 'DANGER': 
+          return theme.colors.danger;
+
+        default:
+          return theme.colors.main;
+      }
+    }};
+    color: white;
+  }  
+`
