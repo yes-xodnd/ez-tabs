@@ -1,7 +1,6 @@
-import { createAction, createSlice, createSelector, createAsyncThunk } from "@reduxjs/toolkit";
+import { createAction, createSlice, createAsyncThunk } from "@reduxjs/toolkit";
 import api from "src/api";
 import { RootState } from '../index';
-
 
 interface TabsState {
   tabs: chrome.tabs.Tab[];
@@ -14,7 +13,7 @@ const initialState: TabsState = {
 }
 
 export const getTabs = createAsyncThunk(
-  'GET_TABS',
+  'TABS/GET_TABS',
   async () => {
     const tabs = await api.tabs.query({});
     return tabs.filter(tab => !tab.url?.match(/chrome:\/\/bookmarks/g));
@@ -25,15 +24,22 @@ export const getTabs = createAsyncThunk(
 export const checkAll = createAction('CHECK_ALL');
 export const clear = createAction('CLEAR');
 export const toggleCheck = createAction(
-  'TOGGLE_CHECK',
+  'TABS/TOGGLE_CHECK',
   (id: number) => ({ payload: id })
 );
 
 export const removeChecked = createAsyncThunk<void, void, { state: RootState }>(
-  'REMOVE_CHECKED',
+  'TABS/REMOVE_CHECKED',
   async (_, { getState }) => {
     const { checkedTabIds } = getState().tabs;
     await api.tabs.remove(checkedTabIds);
+  }
+);
+
+export const closeTab = createAsyncThunk(
+  'TABS/CLOSE_TAB',
+  async (id: number) => {
+    api.tabs.remove(id);
   }
 );
 
