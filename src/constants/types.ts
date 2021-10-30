@@ -16,3 +16,4 @@ export type QueryInfo = chrome.tabs.QueryInfo;
 export type WindowTypes = 'BOOKMARKS' | 'TABS';
 
 export type StyledIcon = typeof GridView;
+export type ButtonTypes = 'NORMAL' | 'DANGER';
