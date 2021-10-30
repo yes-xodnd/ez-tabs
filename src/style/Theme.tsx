@@ -2,15 +2,15 @@ import React from 'react';
 import { ThemeProvider, DefaultTheme } from 'styled-components';
 
 // const main = 'hsl(172, 79%, 29%)';
-const main = 'hsl(213, 81%, 52%)';
+const main = 'hsl(213, 78%, 52%)';
 
 const defaultTheme: DefaultTheme = {
   colors: {
     main: main,
-    mainLight: changeHSL(main, [0, 0, 10]),
+    mainLight: changeHSL(main, [0, 0, 15]),
     mainDark: changeHSL(main, [0, 0, -10]),
     danger: 'crimson',
-    hover: 'hsl(213, 20%, 97%)'
+    hover: 'rgb(235, 237, 243)'
   }
 };
 
