@@ -10,7 +10,7 @@ interface Props {
 const ToolbarButton = ({ title, handleClick, Icon }: Props) => {
   return (
     <Wrapper title={title} onClick={handleClick}>
-      <Icon size="20" />
+      <Icon size="16" />
       <div>{ title }</div>
     </Wrapper>
   );
