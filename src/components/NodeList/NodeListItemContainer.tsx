@@ -24,14 +24,13 @@ const NodeListItemContainer = ({ node }: Props) => {
 
   const checkbox = <Checkbox 
     isChecked={isChecked}
-    handleChange={() => {}}
+    handleChange={() => { dispatch(toggleCheck(node.id)) }}
     />
 
   return (
     <NodeListItem 
       node={node} 
       handleDoubleClick={handleDoubleClick}
-      toggleCheck={() => { dispatch(toggleCheck(node.id)) }}
       checkbox={checkbox}
       />
   );

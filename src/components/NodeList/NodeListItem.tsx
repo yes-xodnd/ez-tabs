@@ -11,17 +11,16 @@ interface Props {
   node: BookmarkNode;
   handleDoubleClick: MouseEventHandler;
   checkbox: JSX.Element;
-  toggleCheck: () => void;
 }
 
-const NodeListItemLink = ({ node, handleDoubleClick, checkbox, toggleCheck }: Props) => {
+const NodeListItemLink = ({ node, handleDoubleClick, checkbox }: Props) => {
   const [ isRename, setIsRename ] = useState(false);
   const [ dropDownVisible, setDropDownVisible ] = useState(false);
   const isBaseNode = ['1', '2'].includes(node.id);
 
   return (
     <div>
-      <NodeContentContainer onDoubleClick={handleDoubleClick} onClick={toggleCheck} >
+      <NodeContentContainer onDoubleClick={handleDoubleClick}>
         <div>
           { !isBaseNode && checkbox }
         </div>
@@ -60,7 +59,12 @@ const NodeListItemLink = ({ node, handleDoubleClick, checkbox, toggleCheck }: Pr
           }
         </div>
         
-        { node.url && <Hostname>{ new URL(node.url as string).hostname }</Hostname> }
+        { 
+          node.url && 
+          <Hostname title={node.url}>
+            { new URL(node.url as string).hostname }
+          </Hostname> 
+        }
       </NodeContentContainer>
     </div>
   );
