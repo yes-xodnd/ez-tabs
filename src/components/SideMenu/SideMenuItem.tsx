@@ -2,10 +2,10 @@ import styled from "styled-components";
 import { MenuItem } from './SideMenuContainer';
 
 const SideMenuItem = ({ item }: { item: MenuItem }) => {
-  const { icon, title, action } = item;
+  const { icon, title, handleClick, handleDoubleClick} = item;
   
   return (
-    <Wrapper title={title} onClick={action}>
+    <Wrapper title={title} onClick={handleClick} onDoubleClick={handleDoubleClick}>
       { icon }
     </Wrapper>
   );
