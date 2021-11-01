@@ -1,18 +1,27 @@
 import { useEffect } from 'react';
 import styled from 'styled-components';
 import { getTree } from 'src/store/modules/bookmarksSlice';
+import { getTabs } from 'src/store/modules/tabsSlice';
 import { useTypedDispatch } from './hooks';
+import { addTabsChangeListener } from 'src/api';
+
 import BookmarksWindow from './windows/BookmarksWindow';
 import TabsWindow from './windows/TabsWindow';
-import SideMenuContainer from './components/SideMenu/SideMenuContainer';
+import SideMenu from './components/SideMenu/SideMenuContainer';
+
 
 function App() {
   const dispatch = useTypedDispatch();
-  useEffect(() => { dispatch(getTree()) }, [dispatch]);
+  
+  useEffect(() => { 
+    dispatch(getTree());
+    dispatch(getTabs());
+    addTabsChangeListener(() => dispatch(getTabs()));  
+  }, [dispatch]);
 
   return (
     <Wrapper className="App">
-      <SideMenuContainer />
+      <SideMenu />
 
       <Windows>
         <BookmarksWindow />
