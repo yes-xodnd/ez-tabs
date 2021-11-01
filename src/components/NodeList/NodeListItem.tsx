@@ -6,6 +6,7 @@ import { BookmarkNode } from 'src/constants/types';
 import Favicon from 'src/components/UI/Favicon';
 import InputRename from "./InputRename";
 import DropDownContainer from './DropDownContainer';
+import { getHostname } from 'src/util';
 
 interface Props {
   node: BookmarkNode;
@@ -62,7 +63,7 @@ const NodeListItemLink = ({ node, handleDoubleClick, checkbox }: Props) => {
         { 
           node.url && 
           <Hostname title={node.url}>
-            { new URL(node.url as string).hostname }
+            { getHostname(node.url) }
           </Hostname> 
         }
       </NodeContentContainer>
