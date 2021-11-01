@@ -8,6 +8,7 @@ import { addTabsChangeListener } from 'src/api';
 
 import BookmarksWindow from './windows/BookmarksWindow';
 import TabsWindow from './windows/TabsWindow';
+import SearchWindow from './windows/SearchWindow';
 import SideMenu from './components/SideMenu/SideMenuContainer';
 
 
@@ -28,6 +29,7 @@ function App() {
       <Windows>
         { isActive('BOOKMARKS') && <BookmarksWindow /> }
         { isActive('TABS') && <TabsWindow /> }
+        { isActive('SEARCH') && <SearchWindow /> }
       </Windows>
     </Wrapper>
   );
