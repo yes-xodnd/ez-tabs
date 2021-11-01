@@ -3,7 +3,7 @@ import bookmarksReducer, {
   getTree, 
   setCurrentFolderNodeId,
   selectNodeDict, 
-  selectParentList
+  selectParentIdList
 } from './bookmarksSlice';
 import { RootState } from '..';
 
@@ -31,7 +31,7 @@ describe('Store Bookmarks slice: Actions', () => {
   });
   
   test('parentListSelector', async () => {
-    const parentList = selectParentList(store.getState() as RootState, '523');
-    expect(parentList.map(node => node.id)).toEqual(['0', '1', '523']);
+    const parentIdList = selectParentIdList(store.getState() as RootState, '523');
+    expect(parentIdList).toEqual(['0', '1', '523']);
   });
 });
