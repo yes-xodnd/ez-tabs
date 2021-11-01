@@ -132,6 +132,17 @@ export const removeChecked = createAsyncThunk<void, void, { state: RootState }>(
 
     dispatch(getTree());
   }
+);
+
+export const moveChecked = createAsyncThunk<void, string, { state: RootState }>(
+  'BOOKMARKS/MOVE_CHECKED',
+  async (parentId, { dispatch, getState }) => {
+    getState()
+      .bookmarks
+      .checkedNodeIds
+      .forEach(id => api.bookmarks.move(id, { parentId }));
+    dispatch(getTree());
+  }
 )
 
 // selectors
