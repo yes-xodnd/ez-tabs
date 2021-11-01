@@ -25,10 +25,20 @@ const NodeList = ({ node, toParentNode }: Props) => {
       }
       {
         !!nodes.length &&
-        nodes.map(childNode => (
+        nodes
+        .filter(childNode => !childNode.url)
+        .map(childNode => (
           <NodeListItem key={childNode.id} node={childNode}/>
         ))
-      }    
+      }
+      {
+        !!nodes.length &&
+        nodes
+        .filter(childNode => childNode.url)
+        .map(childNode => (
+          <NodeListItem key={childNode.id} node={childNode}/>
+        ))
+      }   
     </Wrapper>
   );
 };
