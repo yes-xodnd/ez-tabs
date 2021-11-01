@@ -1,5 +1,5 @@
 import { StyledIcon, WindowTypes } from 'src/constants/types';
-import { Bookmarks, Apps } from '@styled-icons/material-outlined';
+import { Bookmarks, Apps, Search } from '@styled-icons/material-outlined';
 import SideMenu from './SideMenu';
 import { useTypedDispatch } from 'src/hooks/redux';
 import { toggleActive, activateWindowAlone } from 'src/store/modules/intefaceSlice';
@@ -24,11 +24,10 @@ const SideMenuContainer = () => {
     }
   }
 
-
-
   const menuItems: MenuItem[] = [
     createItem('북마크', 'BOOKMARKS', Bookmarks),
     createItem('탭', 'TABS', Apps),
+    createItem('검색', 'SEARCH', Search)
   ];
 
   return (
