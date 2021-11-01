@@ -103,7 +103,7 @@ const Title = styled.div`
 `;
 
 const Hostname = styled.div`
-  grid-column: 2 / span 2;
+  grid-column: 3;
   justify-self: start;
   color: darkgrey;
 `;
