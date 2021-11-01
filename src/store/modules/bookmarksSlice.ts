@@ -70,7 +70,7 @@ export const createFromTabs = createAsyncThunk<void, void, { state: RootState }>
 export const openFolderNode = createAsyncThunk<string[], string, { state: RootState }>(
   name + '/OPEN_FOLDER_NODE',
   (id: string, { getState }) => {
-    const parentListIds = selectParentList(getState(), id).map(node => node.id);
+    const parentListIds = selectParentIdList(getState(), id);
     return parentListIds;
   }
 );
@@ -132,6 +132,17 @@ export const removeChecked = createAsyncThunk<void, void, { state: RootState }>(
 
     dispatch(getTree());
   }
+);
+
+export const moveChecked = createAsyncThunk<void, string, { state: RootState }>(
+  'BOOKMARKS/MOVE_CHECKED',
+  async (parentId, { dispatch, getState }) => {
+    getState()
+      .bookmarks
+      .checkedNodeIds
+      .forEach(id => api.bookmarks.move(id, { parentId }));
+    dispatch(getTree());
+  }
 )
 
 // selectors
@@ -152,22 +163,27 @@ export const selectNodeDict = createSelector(
     return dict;
 });
 
-export const selectParentList = createSelector(
+export const selectParentIdList = createSelector(
   selectNodeDict,
   (_: RootState, id: string) => id,
   (nodeDict, id) => {
     const node = nodeDict[id];
-    let result = [ node ];
+    let result = [ node.id ];
     let { parentId } = node;
     
     while (parentId) {
       const parentNode = nodeDict[parentId];
-      result = [ parentNode, ...result ];
+      result = [ parentNode.id, ...result ];
       parentId = parentNode.parentId;
     }
 
     return result;
   }
+);
+
+export const selectCurrentFolderDepth = createSelector(
+  (state: RootState) => selectParentIdList(state, state.bookmarks.currentFolderNodeId),
+  (parentList) => parentList.length - 1
 );
 
 export const selectCurrentFolderNode = createSelector(

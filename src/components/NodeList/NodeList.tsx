@@ -1,6 +1,6 @@
 import { BookmarkNode } from 'src/constants/types';
 import styled from 'styled-components';
-import NodeListItemContainer from './NodeListItemContainer';
+import NodeListItem from './NodeListItem';
 import { NodeContentContainer } from './NodeListItem';
 import { ArrowUpward } from '@styled-icons/material-outlined';
 import { customScroll } from 'src/style';
@@ -26,7 +26,7 @@ const NodeList = ({ node, toParentNode }: Props) => {
       {
         !!nodes.length &&
         nodes.map(childNode => (
-          <NodeListItemContainer key={childNode.id} node={childNode}/>
+          <NodeListItem key={childNode.id} node={childNode}/>
         ))
       }    
     </Wrapper>

@@ -10,7 +10,7 @@ interface CreateDetails {
   url?: string;
 }
 
-let nodeList = nodes;
+let nodeDataList = nodes;
 let nodeMap: NodeMap = new Map();
 let tree: BookmarkNode[];
 let isUpdated = true;
@@ -21,7 +21,7 @@ const nextId = (() => {
 })();
 
 function createTree() {
-  nodeMap = nodeList.reduce(
+  nodeMap = nodeDataList.reduce(
     (map, node) => map.set(node.id, { ...node }), 
     new Map()
   );
@@ -68,7 +68,7 @@ async function getChildren(id: string) {
 
 async function remove(id: string) {
   if (nodeMap.has(id)) {
-    nodeList = nodeList.filter(node => node.id !== id);
+    nodeDataList = nodeDataList.filter(node => node.id !== id);
   }
 
   isUpdated = true;
@@ -87,7 +87,7 @@ async function removeTree(id: string) {
     if (node.children) queue.concat(node.children);
   }
 
-  nodeList = nodeList.filter(node => !targetIds.includes(node.id));
+  nodeDataList = nodeDataList.filter(node => !targetIds.includes(node.id));
   isUpdated = true;
   return getTree();
 }
@@ -100,7 +100,7 @@ async function create({ url = '', title = '', parentId = '0' }: CreateDetails) {
   if (url) node.url = url;
   else node.children = [];
   
-  nodeList.push(node);
+  nodeDataList.push(node);
   createTree();
 
   const [ res ] = await api.get(id);
@@ -110,12 +110,24 @@ async function create({ url = '', title = '', parentId = '0' }: CreateDetails) {
 async function update(id: string, changes: { url?: string, title?: string }) {
   const { title } = changes;
   
-  const nodeData = nodeList.find(node => node.id === id);
+  const nodeData = nodeDataList.find(node => node.id === id);
   if (nodeData && title) nodeData.title = title;
 
   isUpdated = true;
   const [ node ] = await get(id);
   return node;
+}
+
+async function move(id: string, destination: { index?: number, parentId: string }) {
+  const nodeData = nodeDataList.find(node => node.id === id);
+  
+  if (nodeData) {
+    nodeData.parentId = destination.parentId;
+    isUpdated = true;
+  }
+  
+  const [ node ] = await get(id);
+  return node as BookmarkNode;
 }
 
 const api = {
@@ -126,6 +138,7 @@ const api = {
   remove,
   removeTree,
   update,
+  move,
 };
 
 export default api;

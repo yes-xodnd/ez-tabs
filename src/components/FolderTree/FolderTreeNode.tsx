@@ -1,7 +1,16 @@
+import { useState } from 'react';
 import styled from 'styled-components';
-import { Folder, FolderOpen, ArrowDropDown } from '@styled-icons/material-outlined';
+import { Folder, FolderOpen, ArrowDropDown, ArrowBack } from '@styled-icons/material-outlined';
+
 import { BookmarkNode } from "src/constants/types";
-import { useFolderOpen, useCurrentFolder } from 'src/hooks/FolderTree';
+import { 
+  useTypedSelector,
+  useFolderOpen,
+  useCurrentFolder,
+  useTypedDispatch
+} from 'src/hooks';
+import { moveChecked, selectParentIdList } from 'src/store/modules/bookmarksSlice';
+
 
 interface Props {
   node: BookmarkNode;
@@ -9,15 +18,22 @@ interface Props {
 }
 
 const FolderListNode = ({ node, depth = 0 }: Props) => {
-  const { isCurrentFolder, setCurrentFolder } = useCurrentFolder(node.id);
+  const [ isHovered, setHovered ] = useState(false);
   const { isOpen, toggleOpen } = useFolderOpen(node.id);
+  const { isCurrentFolder, setCurrentFolder } = useCurrentFolder(node.id);
+  const { currentFolderNodeId, checkedNodeIds } = useTypedSelector(state => state.bookmarks);
+  const parentIdList = useTypedSelector(state => selectParentIdList(state, node.id));
+  const dispatch = useTypedDispatch();
 
   return (
     <div>
-      <NodeContentContainer 
+      <NodeContentContainer
         onDoubleClick={() => { toggleOpen(); setCurrentFolder(); }}
+        onMouseEnter={() => { setHovered(true) }}
+        onMouseLeave={() => { setHovered(false) }}
         depth={depth}
         isFocused={isCurrentFolder}>
+
         <Arrow 
           size="16"
           isOpen={isOpen}
@@ -32,6 +48,18 @@ const FolderListNode = ({ node, depth = 0 }: Props) => {
         <Title onClick={setCurrentFolder} title={node.title} >
           { node.title }
         </Title>
+
+        {
+          isHovered &&
+          !!checkedNodeIds.length &&
+          !checkedNodeIds.includes(node.id) &&
+          !parentIdList.includes(currentFolderNodeId) &&
+          <MoveButton 
+            onClick={() => { dispatch(moveChecked(node.id)) }}
+            title={node.title + '로 이동'}
+            size="20"
+            />
+        }
       </NodeContentContainer>
 
       <ChildrenContainer isOpen={isOpen}>
@@ -56,10 +84,11 @@ export default FolderListNode;
   
 const NodeContentContainer = styled.div<{ depth: number, isFocused: boolean }>`
   display: grid;
-  grid-template-columns: 24px 24px auto;
+  grid-template-columns: 24px 24px auto 32px;
+  grid-template-rows: 32px;
   place-items: center center;
   column-gap: 0.5rem;
-  padding: 0.5rem 0;
+  /* padding: 5px 0; */
   padding-left: ${({ depth }) => (depth * 12) + 'px' };
   border-radius: 5px;
   background-color: ${
@@ -69,6 +98,15 @@ const NodeContentContainer = styled.div<{ depth: number, isFocused: boolean }>`
   };
   color: ${({ isFocused }) => isFocused ? 'white' : 'unset'};
   overflow: hidden;
+  font-size: 0.8rem;
+
+  &:hover {
+    cursor: pointer;
+    ${props => props.isFocused
+      ? '' 
+      : `background-color: ${props.theme.colors.hover}`
+    }
+  }
 `;
 
 const Arrow = styled(ArrowDropDown)<{ isOpen: boolean }>`
@@ -92,4 +130,18 @@ const Title = styled.div`
 
 const ChildrenContainer = styled.div<{ isOpen: boolean }>`
   display: ${({ isOpen }) => isOpen ? 'block' : 'none'};
+`;
+
+const MoveButton = styled(ArrowBack)`
+  padding: 3px;
+  border-radius: 100%;
+  border: 1px solid #333333; 
+  color: #333333;
+
+  &:hover {
+    cursor: pointer;
+    border-color: ${props => props.theme.colors.main};
+    background-color: ${props => props.theme.colors.main};
+    color: white;
+  }
 `;

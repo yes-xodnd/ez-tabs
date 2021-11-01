@@ -11,9 +11,9 @@ const targetNode = {
   url: "https://wit.nts-corp.com/",
 };
 
-const targetId = '521';
+const targetNodeId = '521';
 
-describe('Dummy api', () => {
+describe('Bookmarks dummy api', () => {
   test('getTree', async () => {
     const [ root ] = await api.getTree();
     const [ rootCompare ] = await getTree();
@@ -44,21 +44,40 @@ describe('Dummy api', () => {
   });
 
   test('get node with id', async () => {
-    const [ node ] = await api.get(targetId);
+    const [ node ] = await api.get(targetNodeId);
     expect(node).toEqual(targetNode);
   });
 
   test('rename and return updated node', async () => {
     const nextName = 'nextName';
-    const node = await api.update(targetId, { title: nextName });
+    const node = await api.update(targetNodeId, { title: nextName });
     expect(node?.title).toBe(nextName);
+    await api.update(targetNodeId, { title: 'NTS WIT블로그' })
+  });
+
+  
+  test('move', async () => {
+    const parentId = '523';
+    const nextParentId = '2';
+    const node = await api.move(targetNodeId, { parentId: nextParentId }) as BookmarkNode;
+    const [ parentNode ] = await api.get(parentId) as BookmarkNode[];
+    const [ nextParentNode ] = await api.get(nextParentId) as BookmarkNode[];
+
+    expect(node.parentId).toBe('2');
+
+    expect(parentNode.children?.filter(node => node.id === targetNodeId))
+    .toHaveLength(0);
+    expect(nextParentNode.children?.filter(node => node.id === targetNodeId))
+    .toHaveLength(1);
+
+    await api.move(targetNodeId, { parentId });
   });
 
   test('remove node', async () => {
-    let [ node ] = await api.get(targetId) as BookmarkNode[];
-    await api.remove(targetId);
+    let [ node ] = await api.get(targetNodeId) as BookmarkNode[];
+    await api.remove(targetNodeId);
 
-    const [ nodeRemoved ] = await api.get(targetId);
+    const [ nodeRemoved ] = await api.get(targetNodeId);
     const [ parentNode ] = await api.get(node.parentId as string);
 
     expect(nodeRemoved).toBeUndefined();
