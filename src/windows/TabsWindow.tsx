@@ -1,6 +1,5 @@
 import styled from 'styled-components';
-import { WindowTypes } from 'src/constants/types';
-import { useIsActiveWindow, useToggle, useTypedSelector } from 'src/hooks';
+import { useToggle, useTypedSelector } from 'src/hooks';
 import { WindowWrapper, customScroll } from 'src/style';
 
 import WindowHeader from 'src/components/UI/WindowHeader';
@@ -10,33 +9,24 @@ import TabList from 'src/components/Tabs/TabList';
 import ButtonAdd from 'src/components/Tabs/ButtonAdd';
 
 const TabsWindow = () => {
-  const windowType: WindowTypes = 'TABS';
-  
   const [ isListView, toggleView ] = useToggle(true);
   const tabs = useTypedSelector(state => state.tabs.tabs);
-  const isActive = useIsActiveWindow(windowType);
 
   return (
-    <>
-      {
-        isActive &&
-        <Wrapper>
-          <WindowHeader title={'탭'} windowType={windowType} />
-          <Toolbar isListView={isListView} toggleView={toggleView} />
+    <Wrapper>
+      <WindowHeader title='탭' windowType={'TABS'} />
+      <Toolbar isListView={isListView} toggleView={toggleView} />
 
-          <ContentWrapper isListView={isListView}>
-            {
-              isListView
-              ? <TabList tabs={tabs} />
-              : <TabGrid tabs={tabs} />
+      <ContentWrapper isListView={isListView}>
+        {
+          isListView
+          ? <TabList tabs={tabs} />
+          : <TabGrid tabs={tabs} />
+        }
+      </ContentWrapper>
 
-            }
-          </ContentWrapper>
-
-          <ButtonAdd  />
-        </Wrapper>
-      }
-    </>
+      <ButtonAdd  />
+    </Wrapper>
   );
 };
 

@@ -1,8 +1,9 @@
 import { useEffect } from 'react';
 import styled from 'styled-components';
+
 import { getTree } from 'src/store/modules/bookmarksSlice';
 import { getTabs } from 'src/store/modules/tabsSlice';
-import { useTypedDispatch } from './hooks';
+import { useIsActiveWindow, useTypedDispatch } from './hooks';
 import { addTabsChangeListener } from 'src/api';
 
 import BookmarksWindow from './windows/BookmarksWindow';
@@ -12,6 +13,7 @@ import SideMenu from './components/SideMenu/SideMenuContainer';
 
 function App() {
   const dispatch = useTypedDispatch();
+  const isActive = useIsActiveWindow();
   
   useEffect(() => { 
     dispatch(getTree());
@@ -24,8 +26,8 @@ function App() {
       <SideMenu />
 
       <Windows>
-        <BookmarksWindow />
-        <TabsWindow />
+        { isActive('BOOKMARKS') && <BookmarksWindow /> }
+        { isActive('TABS') && <TabsWindow /> }
       </Windows>
     </Wrapper>
   );

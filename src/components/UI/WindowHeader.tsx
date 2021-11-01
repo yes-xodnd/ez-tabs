@@ -11,7 +11,6 @@ interface Props {
 
 const WindowHeader = ({ title, windowType }: Props) => {
   const dispatch = useTypedDispatch();
-  
   const hide = () => { dispatch(deactivateWindow(windowType)); };
   const openFull = () => { dispatch(activateWindowAlone(windowType)); };
   
