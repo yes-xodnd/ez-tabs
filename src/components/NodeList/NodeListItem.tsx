@@ -35,7 +35,7 @@ const NodeListItem = ({ node }: { node: BookmarkNode }) => {
 
   return (
     <NodeContentContainer 
-      onClick={() => { dispatch(toggleCheck(node.id)) }}
+      onClick={() => { !isBaseNode && dispatch(toggleCheck(node.id)) }}
       onDoubleClick={handleDoubleClick}
       >
       <div>
