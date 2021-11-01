@@ -1,15 +1,15 @@
+import { useState } from 'react';
 import styled from 'styled-components';
 import { Tab } from 'src/constants/types';
 import Favicon from 'src/components/UI/Favicon';
 import TabCheckbox from './TabCheckbox';
 import ButtonCloseTab from './ButtonCloseTab';
 import { useToggleCheckTab } from 'src/hooks/Tabs';
-import { useState } from 'react';
+import { getHostname } from 'src/util';
 
 
 const TabListItem = ({ tab }: { tab: Tab }) => {
   const [isHover, setHover] = useState(false);
-  const hostname = (url: string) => new URL(url).hostname;
   const toggleCheck = useToggleCheckTab(tab.id);
 
   return (
@@ -24,7 +24,7 @@ const TabListItem = ({ tab }: { tab: Tab }) => {
       <Title title={tab.title} >{ tab.title }</Title>
       <div>{ isHover && <ButtonCloseTab id={tab.id} /> }</div>
 
-      <Hostname>{ tab.url && hostname(tab.url) }</Hostname>
+      <Hostname>{ tab.url && getHostname(tab.url) }</Hostname>
     </ContentContainer>
   );
 };

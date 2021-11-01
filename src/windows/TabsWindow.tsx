@@ -1,17 +1,19 @@
 import styled from 'styled-components';
 import { WindowTypes } from 'src/constants/types';
-import { useIsActiveWindow, useToggle } from 'src/hooks';
+import { useIsActiveWindow, useToggle, useTypedSelector } from 'src/hooks';
 import { WindowWrapper, customScroll } from 'src/style';
 
 import WindowHeader from 'src/components/UI/WindowHeader';
 import Toolbar from 'src/components/Tabs/TabsToolbar';
-import TabsContainer from 'src/components/Tabs/TabsContainer';
+import TabGrid from 'src/components/Tabs/TabGrid';
+import TabList from 'src/components/Tabs/TabList';
 import ButtonAdd from 'src/components/Tabs/ButtonAdd';
 
 const TabsWindow = () => {
   const windowType: WindowTypes = 'TABS';
-    
+  
   const [ isListView, toggleView ] = useToggle(true);
+  const tabs = useTypedSelector(state => state.tabs.tabs);
   const isActive = useIsActiveWindow(windowType);
 
   return (
@@ -23,7 +25,12 @@ const TabsWindow = () => {
           <Toolbar isListView={isListView} toggleView={toggleView} />
 
           <ContentWrapper isListView={isListView}>
-            <TabsContainer isListView={isListView} />
+            {
+              isListView
+              ? <TabList tabs={tabs} />
+              : <TabGrid tabs={tabs} />
+
+            }
           </ContentWrapper>
 
           <ButtonAdd  />
