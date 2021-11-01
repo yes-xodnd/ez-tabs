@@ -31,20 +31,29 @@ const InputRename = ({ id, title, quitRename }: Props) => {
     if (e.key === 'Escape') {
       quitRename();
     }
-  }
-
+  };
 
   return (
-    <Input 
-      type="text"
-      defaultValue={title}
-      onChange={handleChange}
-      onKeyDown={handleKeyDown}
-      autoFocus />
+    <div>
+      <Label htmlFor={'nodeRenameInput' + id}>새로운 이름을 입력해주세요.</Label>
+      <Input
+        id={'nodeRenameInput' + id}
+        type="text"
+        defaultValue={title}
+        onChange={handleChange}
+        onKeyDown={handleKeyDown}
+        onBlur={quitRename}
+        autoFocus />
+
+    </div>
   );
 };
 
 export default InputRename;
+
+const Label = styled.label`
+  font-size: 0;
+`;
 
 const Input = styled.input`
   height: 1.2rem;
