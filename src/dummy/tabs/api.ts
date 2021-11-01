@@ -4,6 +4,11 @@ import queryResultRaw from './queryResult';
 type Listener = () => void;
 type TabEvent = 'removed' | 'created' | 'moved' | 'replaced' | 'updated';
 
+interface UpdateProperties {
+  active: boolean;
+}
+
+
 interface ListenerList {
   removed: Listener[];
   created: Listener[];
@@ -22,7 +27,7 @@ const listenerList: ListenerList = {
 
 let queryResult = queryResultRaw;
 
-const createAddListener = (listeners: Listener[]) => (listener: Listener): void => {
+const createAddListener = (listeners: Listener[]) => (listener: Listener) => {
   listeners.push(listener);
 }
 
@@ -45,9 +50,19 @@ async function remove(id: number | number[]): Promise<void> {
   }
 }
 
+async function update(id: number, updateProperties: UpdateProperties) {
+  return queryResult.find(tab => tab.id as number === id) as Tab;
+}
+
+async function captureVisibleTab() {
+  return 'dataUrl';
+}
+
 const api = {
+  captureVisibleTab,
   query,
   remove,
+  update,
   onRemoved: createOnEvent('removed'),
   onCreated: createOnEvent('created'),
   onUpdated: createOnEvent('updated'),

@@ -1,10 +1,11 @@
 import { useEffect } from 'react';
-import { onTabsChange } from 'src/api';
-import { getTabs } from 'src/store/modules/tabsSlice';
-import TabList from './TabList';
 import { useTypedDispatch, useTypedSelector } from 'src/hooks';
+import { getTabs } from 'src/store/modules/tabsSlice';
+import { onTabsChange } from 'src/api';
+import TabList from './TabList';
+import TabGrid from './TabGrid';
 
-const TabListContainer = () => {
+const TabsContainer = ({ isListView }: { isListView: boolean }) => {
   const { tabs } = useTypedSelector(state => state.tabs);
   const dispatch = useTypedDispatch();
   
@@ -16,8 +17,14 @@ const TabListContainer = () => {
 
 
   return (
-    <TabList tabs={tabs} />
+    <>
+      {
+        isListView
+        ? <TabList tabs={tabs} />
+        : <TabGrid tabs={tabs} />
+      }
+    </>
   );
 };
 
-export default TabListContainer;
+export default TabsContainer;

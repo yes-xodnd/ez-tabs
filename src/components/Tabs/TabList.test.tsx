@@ -6,7 +6,7 @@ import api from 'src/api';
 let renderResult: RenderResult;
 
 beforeEach(() => {
-  renderResult = render(<TabList tabs={queryResult} addBookmarks={() => {}} />);
+  renderResult = render(<TabList tabs={queryResult} />);
 })
 
 describe('TabList', () => {

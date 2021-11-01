@@ -35,6 +35,7 @@ export const ToolbarWrapper = styled.div`
   border-top: 1px solid lightgrey;
   border-bottom: 1px solid lightgrey;
   box-shadow: 0 2px 2px #efefef;
+  z-index: 2;
 `;
 
 export const ToolbarButton = styled.button`

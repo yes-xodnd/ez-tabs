@@ -1,10 +1,10 @@
 {
-  "name": "bookmark manager",
-  "version": "0.1",
+  "name": "bookmarks & tabs",
+  "version": "1.0",
   "manifest_version": 3,
 
   "action": {
-    "default_title": "open bookmark manager"
+    "default_title": "open manager"
   },
   "background": {
     "service_worker": "background.js"
