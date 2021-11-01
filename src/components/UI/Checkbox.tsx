@@ -2,7 +2,7 @@ import { ChangeEventHandler } from "react";
 
 interface Props {
   isChecked: boolean;
-  handleChange: ChangeEventHandler;
+  handleChange?: ChangeEventHandler;
 }
 
 const Checkbox = ({ isChecked, handleChange }: Props) => {

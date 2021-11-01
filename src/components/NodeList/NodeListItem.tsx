@@ -1,77 +1,81 @@
-import { MouseEventHandler, useState } from 'react';
-import styled from 'styled-components';
-import { MoreVert, Folder } from '@styled-icons/material-outlined';
-
+import { useState } from 'react';
 import { BookmarkNode } from 'src/constants/types';
-import Favicon from 'src/components/UI/Favicon';
-import InputRename from "./InputRename";
-import DropDownContainer from './DropDownContainer';
+import styled from 'styled-components';
+
+import { useTypedDispatch, useTypedSelector } from 'src/hooks';
+import { 
+  selectIsChecked, 
+  toggleCheck, 
+  openFolderNode, 
+  setCurrentFolderNodeId
+ } from 'src/store/modules/bookmarksSlice';
+import { Folder } from '@styled-icons/material-outlined';
 import { getHostname } from 'src/util';
 
-interface Props {
-  node: BookmarkNode;
-  handleDoubleClick: MouseEventHandler;
-  checkbox: JSX.Element;
-}
+import Favicon from 'src/components/UI/Favicon';
+import Checkbox from 'src/components/UI/Checkbox';
+import InputRename from "./InputRename";
+import NodeListItemDropdown from './NodeListItemDropdown';
 
-const NodeListItemLink = ({ node, handleDoubleClick, checkbox }: Props) => {
+const NodeListItem = ({ node }: { node: BookmarkNode }) => {
+  const dispatch = useTypedDispatch();
+  const isChecked = useTypedSelector(state => selectIsChecked(state, node.id));
+  
   const [ isRename, setIsRename ] = useState(false);
-  const [ dropDownVisible, setDropDownVisible ] = useState(false);
   const isBaseNode = ['1', '2'].includes(node.id);
 
+  const handleDoubleClick = () => {
+    if (node.url) {
+      window.open(node.url);
+    } else {
+      dispatch(openFolderNode(node.id));
+      dispatch(setCurrentFolderNodeId(node.id));
+    }
+  };  
+
   return (
-    <div>
-      <NodeContentContainer onDoubleClick={handleDoubleClick}>
-        <div>
-          { !isBaseNode && checkbox }
-        </div>
-
-        {
-          node.url 
-          ? <Favicon url={node.url} snatcher />
-          : <Folder size="16" />
-        }
-        <Title>
-          { 
-          isRename
-          ? <InputRename 
-              id={node.id}
-              title={node.title}
-              quitRename={() => setIsRename(false)}
-              />
-          : <div>{ node.title }</div>
-          }
-        </Title>
-
-        <div>
-          {
-            !isBaseNode &&
-            <MoreVert 
-              size="16"
-              onClick={() => setDropDownVisible(!dropDownVisible)}
-              />    
-          }
-          { 
-            dropDownVisible &&
-            <DropDownContainer 
-              node={node}
-              handleClickRename={() => setIsRename(true)}
-              closeDropDown={() => setDropDownVisible(false)} />
-          }
-        </div>
-        
+    <NodeContentContainer 
+      onClick={() => { dispatch(toggleCheck(node.id)) }}
+      onDoubleClick={handleDoubleClick}
+      >
+      <div>
+        { !isBaseNode && <Checkbox isChecked={isChecked} /> }
+      </div>
+      {
+        node.url 
+        ? <Favicon url={node.url} snatcher />
+        : <Folder size="16" />
+      }
+      <Title>
         { 
-          node.url && 
-          <Hostname title={node.url}>
-            { getHostname(node.url) }
-          </Hostname> 
+        isRename
+        ? <InputRename 
+            id={node.id}
+            title={node.title}
+            quitRename={() => setIsRename(false)}
+            />
+        : <div>{ node.title }</div>
         }
-      </NodeContentContainer>
-    </div>
+      </Title>
+
+      <div>
+        {
+          !isBaseNode &&
+          <NodeListItemDropdown 
+            node={node}
+            handleClickRename={() => setIsRename(true)}
+            />
+        }
+      </div>
+      { 
+        node.url && 
+        <Hostname title={node.url}>{ getHostname(node.url) }</Hostname> 
+      }
+    </NodeContentContainer>
   );
 };
 
-export default NodeListItemLink;
+export default NodeListItem;
 
 export const NodeContentContainer = styled.div`
   display: grid;
@@ -82,7 +86,7 @@ export const NodeContentContainer = styled.div`
   padding: 0.5rem 0;
   border-radius: 5px;
   font-size: 0.8rem;
-  overflow: hidden;
+  /* overflow: hidden; */
 
   &:hover {
     cursor: pointer;

@@ -25,7 +25,6 @@ const Dropdown = ({ menuItems }: Props) => {
 export default Dropdown;
 
 const Wrapper = styled.ul`
-  position: absolute;
   padding: 0;
   border-radius: 5px;
   list-style: none;
@@ -40,6 +39,6 @@ const Item = styled.li`
   
   &:hover {
     cursor: pointer;
-    background-color: lightgrey;
+    background-color: ${props => props.theme.colors.hover};
   }
 `
