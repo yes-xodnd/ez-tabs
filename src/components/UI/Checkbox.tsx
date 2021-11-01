@@ -5,7 +5,7 @@ interface Props {
   handleChange?: ChangeEventHandler;
 }
 
-const Checkbox = ({ isChecked, handleChange }: Props) => {
+const Checkbox = ({ isChecked, handleChange = () => {} }: Props) => {
 
   return (
     <input 
