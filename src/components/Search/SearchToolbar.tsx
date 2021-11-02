@@ -1,37 +1,27 @@
-import { ChangeEventHandler, useState } from "react";
-import { ToolbarWrapper } from "src/style"; 
 import styled from "styled-components";
-import SearchInput from "./SearchInput";
+import { ToolbarWrapper } from "src/style"; 
+import { ViewList } from '@styled-icons/material-outlined';
+import ToolbarButton from "src/components/UI/ToolbarButton";
+import ButtonRemove from 'src/components/Bookmarks/ButtonRemove';
 
-const SearchToolbar = () => {
-  const [ keyword, setKeyword ] = useState('');
-  const handleInputChange: ChangeEventHandler<HTMLInputElement> = e => {
-    setKeyword(e.target.value);
-  }
+interface Props {
+  showAllNodeList: () => void;
+  children?: JSX.Element;
+}
 
-  const search = () => { console.log(keyword) };
+const SearchToolbar = ({ children, showAllNodeList }: Props) => {
 
   return (
-    <ToolbarWrapper>
-      <Label htmlFor="search-input">검색어를 입력하세요</Label>
-      <Input 
-        type="text"
-        id="search-input"
-        autoFocus
-        onChange={handleInputChange}
-        onKeyDown={e => { if (e.key === 'Enter') search() }}
-        />
-      <SearchInput handleClick={search} />
-    </ToolbarWrapper>
+    <Wrapper>
+      { children }
+      <ToolbarButton title="전체 목록" Icon={ViewList} handleClick={showAllNodeList} />
+      <ButtonRemove />
+    </Wrapper>
   );
 };
 
 export default SearchToolbar;
 
-const Label = styled.label`
-  font-size: 0;
-`;
-
-const Input = styled.input`
-  width: 300px;
+const Wrapper = styled(ToolbarWrapper)`
+  justify-content: space-between;
 `;
