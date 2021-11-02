@@ -130,6 +130,11 @@ async function move(id: string, destination: { index?: number, parentId: string 
   return node as BookmarkNode;
 }
 
+async function search(query: string) {
+  console.log('[dev] bookmarks search:', query);
+  return nodes.slice(1, 4);
+}
+
 const api = {
   create,
   get,
@@ -139,6 +144,7 @@ const api = {
   removeTree,
   update,
   move,
+  search,
 };
 
 export default api;
