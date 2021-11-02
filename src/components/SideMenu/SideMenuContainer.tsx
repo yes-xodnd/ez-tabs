@@ -13,16 +13,12 @@ export interface MenuItem {
 
 const SideMenuContainer = () => {
   const dispatch = useTypedDispatch();
-  const createItem = (title: string, type: WindowTypes, Icon: StyledIcon) => {
-
-    return {
-      title,
-      icon: <Icon size="24" />,
-      handleClick: () => { dispatch(toggleActive(type)) },
-      handleDoubleClick: () => { dispatch(activateWindowAlone(type)) }
-
-    }
-  }
+  const createItem = (title: string, type: WindowTypes, Icon: StyledIcon) => ({
+    title,
+    icon: <Icon size="24" />,
+    handleClick: () => { dispatch(toggleActive(type)) },
+    handleDoubleClick: () => { dispatch(activateWindowAlone(type)) }
+  });
 
   const menuItems: MenuItem[] = [
     createItem('북마크', 'BOOKMARKS', Bookmarks),
