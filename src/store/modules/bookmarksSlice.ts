@@ -163,6 +163,14 @@ export const selectNodeDict = createSelector(
     return dict;
 });
 
+export const selectAllNodeList = createSelector(
+  selectNodeDict,
+  (nodeDict) => Object
+    .keys(nodeDict)
+    .map(key => nodeDict[key])
+    .filter(node => node.url)
+);
+
 export const selectParentIdList = createSelector(
   selectNodeDict,
   (_: RootState, id: string) => id,
