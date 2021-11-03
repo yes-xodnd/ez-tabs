@@ -40,6 +40,15 @@ export const setCurrentFolderNodeId = createAction(
   (id: string) => ({ payload: id })
 );
 
+export const createFolder = createAsyncThunk<void, chrome.bookmarks.BookmarkCreateArg, { state: RootState }>(
+  'BOOOKMARKS/CREATE_FOLDER',
+  async ({ title, parentId = '0' }, { getState, dispatch }) => {
+    await api.bookmarks.create({ title, parentId: parentId });
+      
+    dispatch(getTree());
+  }
+)
+
 export const createFromTabs = createAsyncThunk<void, void, { state: RootState }>(
   name + '/CREATE_FROM_TABS',
   async (_, { dispatch, getState }) => {
