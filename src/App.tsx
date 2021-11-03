@@ -43,9 +43,10 @@ const Wrapper = styled.div`
 `;
 
 const Windows = styled.div`
+  flex-grow: 2;
+  padding: 1.5rem 5%;
+
   display: flex;
   justify-content: center;
   gap: 1rem;
-  width: 100%;
-  padding: 1.5rem 2rem;
 `
