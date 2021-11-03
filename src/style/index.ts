@@ -2,7 +2,8 @@ import styled, { css } from 'styled-components';
 
 export const WindowWrapper = styled.div`
   flex-grow: 2;
-  min-width: 400px;
+  min-width: 500px;
+  max-width: 800px;
   border-radius: 5px;
   background-color: white;
   box-shadow: 2px 2px 10px lightgrey;
