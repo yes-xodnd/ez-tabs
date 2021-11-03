@@ -57,7 +57,7 @@ const FolderListNode = ({ node, depth = 0 }: Props) => {
           <MoveButton 
             onClick={() => { dispatch(moveChecked(node.id)) }}
             title={node.title + '로 이동'}
-            size="20"
+            size="16"
             />
         }
       </NodeContentContainer>
@@ -83,12 +83,14 @@ const FolderListNode = ({ node, depth = 0 }: Props) => {
 export default FolderListNode;
   
 const NodeContentContainer = styled.div<{ depth: number, isFocused: boolean }>`
+  position: relative;
+
   display: grid;
-  grid-template-columns: 24px 24px auto 32px;
+  grid-template-columns: 20px 20px auto 20px;
   grid-template-rows: 32px;
   place-items: center center;
-  column-gap: 0.5rem;
-  /* padding: 5px 0; */
+  column-gap: 5px;
+
   padding-left: ${({ depth }) => (depth * 12) + 'px' };
   border-radius: 5px;
   background-color: ${
@@ -118,7 +120,8 @@ const Arrow = styled(ArrowDropDown)<{ isOpen: boolean }>`
 
 const Title = styled.div`
   justify-self: start;
-  max-width: 100%;
+  width: 100%;
+  /* max-width: 100%; */
   font-size: 0.8rem;
   white-space: nowrap;
   overflow: hidden;
@@ -133,7 +136,9 @@ const ChildrenContainer = styled.div<{ isOpen: boolean }>`
 `;
 
 const MoveButton = styled(ArrowBack)`
-  padding: 3px;
+  position: absolute;
+  right: 5px;
+  padding: 2px;
   border-radius: 100%;
   border: 1px solid #333333; 
   color: #333333;

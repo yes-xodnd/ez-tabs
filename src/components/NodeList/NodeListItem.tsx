@@ -86,7 +86,6 @@ export const NodeContentContainer = styled.div`
   padding: 0.5rem 0;
   border-radius: 5px;
   font-size: 0.8rem;
-  /* overflow: hidden; */
 
   &:hover {
     cursor: pointer;
@@ -96,7 +95,8 @@ export const NodeContentContainer = styled.div`
 
 const Title = styled.div`
   justify-self: start;
-  max-width: 100%;
+  width: 100%;
+  max-width: 364px;
   height: 1.2rem;
   white-space: nowrap;
   overflow: hidden;
