@@ -14,12 +14,11 @@ const TabGrid = ({ tabs }: { tabs: Tab[] }) => {
 export default TabGrid;
 
 const GridContainer = styled.div`
-  padding: 1.5rem 1rem;
+  width: 760px;
   
   display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(230px, 300px));
-  column-gap: 1rem;
-  row-gap: 1.2rem;
+  grid-template-columns: repeat(auto-fill, 240px);
+  gap: 10px;
   justify-items: center;
   justify-content: center;
 `;
