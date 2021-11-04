@@ -6,17 +6,17 @@ import { ArrowUpward } from '@styled-icons/material-outlined';
 import { customScroll } from 'src/style';
 
 interface Props {
-  node: BookmarkNode | undefined;
+  currentFolderNode: BookmarkNode | undefined;
   toParentNode: () => void;
 }
 
-const NodeList = ({ node, toParentNode }: Props) => {
-  const nodes = node?.children || [];
+const NodeList = ({ currentFolderNode, toParentNode }: Props) => {
+  const nodes = currentFolderNode?.children || [];
 
   return (
     <Wrapper>
       {
-        node?.parentId && 
+        currentFolderNode?.parentId && 
         <NodeContentContainer onClick={toParentNode}>
           <ArrowUpward size="16" />
           <div></div>
@@ -26,17 +26,17 @@ const NodeList = ({ node, toParentNode }: Props) => {
       {
         !!nodes.length &&
         nodes
-        .filter(childNode => !childNode.url)
-        .map(childNode => (
-          <NodeListItem key={childNode.id} node={childNode}/>
+        .filter(node => !node.url)
+        .map(node => (
+          <NodeListItem node={node} key={node.id} />
         ))
       }
       {
         !!nodes.length &&
         nodes
-        .filter(childNode => childNode.url)
-        .map(childNode => (
-          <NodeListItem key={childNode.id} node={childNode}/>
+        .filter(node => node.url)
+        .map(node => (
+          <NodeListItem node={node} key={node.id} />
         ))
       }   
     </Wrapper>
