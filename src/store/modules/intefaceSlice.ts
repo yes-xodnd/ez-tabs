@@ -5,6 +5,7 @@ import { RootState } from "..";
 interface interfaceState {
   visibleWindows: WindowTypes[];
   isPopup: boolean;
+  activeWindow: WindowTypes | null;
 }
 
 const isPopup = window.location.hash === '#popup';
@@ -12,6 +13,7 @@ const isPopup = window.location.hash === '#popup';
 const initialState: interfaceState = {
   visibleWindows: isPopup ? [ 'TABS' ] : [ 'BOOKMARKS', 'TABS' ],
   isPopup,
+  activeWindow: null
 };
 
 const prepareWindowType = (type: WindowTypes) => ({ payload: type });
@@ -31,15 +33,20 @@ export const toggleActive = createAsyncThunk<void, WindowTypes, { state: RootSta
 export const openWindow = createAction(
   'OPEN_WINDOW',
   prepareWindowType
-)
+);
 
 export const closeWindow = createAction(
   'CLOSE_WINDOW',
   prepareWindowType
-)
+);
 
-export const activateWindowAlone = createAction(
+export const openWindowAlone = createAction(
   'OPEN_WINDOW_ALONE',
+  prepareWindowType
+);
+
+export const activateWindow = createAction(
+  'ACTIVATE_WINDOW',
   prepareWindowType
 );
 
@@ -53,7 +60,10 @@ const slice = createSlice({
     builder
       .addCase(
         openWindow,
-        (state, action) => { state.visibleWindows.push(action.payload); }
+        (state, action) => { 
+          state.visibleWindows.push(action.payload);
+          state.activeWindow = action.payload;
+        }
       )
       .addCase(
         closeWindow,
@@ -63,8 +73,15 @@ const slice = createSlice({
         }
       )
       .addCase(
-        activateWindowAlone,
-        (state, action) => { state.visibleWindows = [ action.payload ]; }
+        openWindowAlone,
+        (state, action) => { 
+          state.visibleWindows = [ action.payload ];
+          state.activeWindow = action.payload;
+        }
+      )
+      .addCase(
+        activateWindow,
+        (state, action) => { state.activeWindow = action.payload; }
       )
   }
 });
