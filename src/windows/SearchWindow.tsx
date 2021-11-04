@@ -1,8 +1,7 @@
 import { ChangeEventHandler, useState, useEffect, useRef } from "react";
 import { WindowWrapper } from "src/style";
 
-import { BookmarkNode } from "src/constants/types";
-import { useTypedSelector } from "src/hooks";
+import { useTypedSelector, useTypedDispatch } from "src/hooks";
 import { selectAllNodeList } from 'src/store/modules/bookmarksSlice';
 import { debounce } from "src/util";
 import api from "src/api";
@@ -11,21 +10,25 @@ import WindowHeader from 'src/components/UI/WindowHeader';
 import SearchInput from 'src/components/Search/SearchInput';
 import SearchToolbar from 'src/components/Search/SearchToolbar';
 import SearchResult from 'src/components/Search/SearchResult';
+import { uncheckAll } from 'src/store/modules/bookmarksSlice';
 
 const SearchWindow = () => {
-  const allNodeList = useTypedSelector(selectAllNodeList)
+  const allNodeList = useTypedSelector(selectAllNodeList);
+  const dispatch = useTypedDispatch();
+
   const [ keyword, setKeyword ] = useState('');
-  const [ nodes, setNodes ] = useState<BookmarkNode[]>(allNodeList);
+  const [ nodes, setNodes ] = useState(allNodeList);
 
   const searchRef = useRef(debounce((keyword: string) => {
     api.bookmarks.search(keyword).then(setNodes);
-  }, 300));
+  }, 500));
 
   useEffect(() => {
-    keyword
-    ? searchRef.current(keyword)
-    : setNodes(allNodeList);
-  }, [ keyword, allNodeList ]);
+    if (keyword) searchRef.current(keyword);
+    else setNodes(allNodeList);
+    
+    dispatch(uncheckAll());
+  }, [ keyword, allNodeList, dispatch ]);
 
   const handleInputChange: ChangeEventHandler<HTMLInputElement> = (e) => {
     setKeyword(e.target.value);
