@@ -4,10 +4,8 @@
   "manifest_version": 3,
 
   "action": {
-    "default_title": "open manager"
-  },
-  "background": {
-    "service_worker": "background.js"
+    "default_title": "open manager",
+    "default_popup": "index.html#popup"
   },
   "chrome_url_overrides": {
     "bookmarks": "index.html"
