@@ -9,15 +9,19 @@ interface Props {
 }
 
 const WindowWrapper = ({ windowType, children }: Props) => {
-  const { visibleWindows } = useTypedSelector(state => state.interfaces);
+  const { visibleWindows, activeWindow } = useTypedSelector(state => state.interfaces);
   const isVisible = visibleWindows.includes(windowType);
   const dispatch = useTypedDispatch();
+  
+  const handleClick = () => {
+    if (activeWindow !== windowType) dispatch(activateWindow(windowType));
+  }
 
   return (
     <>
     {
       isVisible &&
-      <Wrapper onClick={() => { dispatch(activateWindow(windowType)); }}>
+      <Wrapper onClick={handleClick}>
         { children }
       </Wrapper>
     }
