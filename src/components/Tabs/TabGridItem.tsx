@@ -75,6 +75,7 @@ const Body = styled.div`
 
 const Title = styled.div`
   line-height: 1.3rem;
+  word-wrap: break-word;
 `;
 
 const HostName = styled.div`
