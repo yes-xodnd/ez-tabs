@@ -3,44 +3,47 @@ import { WindowTypes } from 'src/constants/types';
 import { RootState } from "..";
 
 interface interfaceState {
-  activeWindows: WindowTypes[];
+  visibleWindows: WindowTypes[];
+  isPopup: boolean;
 }
+
+const isPopup = window.location.hash === '#popup';
 
 const initialState: interfaceState = {
-  activeWindows: [ 'BOOKMARKS', 'TABS' ],
-}
+  visibleWindows: isPopup ? [ 'TABS' ] : [ 'BOOKMARKS', 'TABS' ],
+  isPopup,
+};
 
 const prepareWindowType = (type: WindowTypes) => ({ payload: type });
-
 
 // actions
 export const toggleActive = createAsyncThunk<void, WindowTypes, { state: RootState }>(
   'TOGGLE_ACTIVE',
   (type: WindowTypes, { getState, dispatch }) => {
-    const isActive = selectIsActiveWindow(getState(), type);
+    const isActive = selectIsVisibleWindow(getState(), type);
 
     isActive
-    ? dispatch(deactivateWindow(type))
-    : dispatch(activateWindow(type));
+    ? dispatch(closeWindow(type))
+    : dispatch(openWindow(type));
   }
 );
 
-export const activateWindow = createAction(
-  'ACTIVATE_WINDOW',
+export const openWindow = createAction(
+  'OPEN_WINDOW',
   prepareWindowType
 )
 
-export const deactivateWindow = createAction(
-  'DEACTIVATE_WINDOW',
+export const closeWindow = createAction(
+  'CLOSE_WINDOW',
   prepareWindowType
 )
 
 export const activateWindowAlone = createAction(
-  'ACTIVATE_WINDOW_ALONE',
+  'OPEN_WINDOW_ALONE',
   prepareWindowType
 );
 
-const selectIsActiveWindow = (state: RootState, type: WindowTypes) => state.interfaces.activeWindows.includes(type);
+const selectIsVisibleWindow = (state: RootState, type: WindowTypes) => state.interfaces.visibleWindows.includes(type);
 
 const slice = createSlice({
   name: 'interface',
@@ -49,19 +52,19 @@ const slice = createSlice({
   extraReducers: builder => {
     builder
       .addCase(
-        activateWindow,
-        (state, action) => { state.activeWindows.push(action.payload); }
+        openWindow,
+        (state, action) => { state.visibleWindows.push(action.payload); }
       )
       .addCase(
-        deactivateWindow,
+        closeWindow,
         (state, action) => { 
-          state.activeWindows = state.activeWindows
+          state.visibleWindows = state.visibleWindows
             .filter(item => item !== action.payload);
         }
       )
       .addCase(
         activateWindowAlone,
-        (state, action) => { state.activeWindows = [ action.payload ]; }
+        (state, action) => { state.visibleWindows = [ action.payload ]; }
       )
   }
 });
