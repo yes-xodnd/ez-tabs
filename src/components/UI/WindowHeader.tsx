@@ -1,8 +1,8 @@
-import styled from "styled-components";
+import styled, { DefaultTheme } from "styled-components";
 import { Fullscreen, Close } from '@styled-icons/material-outlined';
 import { WindowTypes } from 'src/constants/types';
 import { useTypedDispatch, useTypedSelector } from 'src/hooks';
-import { closeWindow, activateWindowAlone } from 'src/store/modules/intefaceSlice';
+import { closeWindow, openWindowAlone } from 'src/store/modules/intefaceSlice';
 
 interface Props {
   title: string;
@@ -11,9 +11,10 @@ interface Props {
 
 const WindowHeader = ({ title, windowType }: Props) => {
   const dispatch = useTypedDispatch();
-  const { isPopup }  = useTypedSelector(state => state.interfaces);
+  const { isPopup, activeWindow }  = useTypedSelector(state => state.interfaces);
+  const isActive = windowType === activeWindow;
 
-  const openAlone = () => { dispatch(activateWindowAlone(windowType)); };
+  const openAlone = () => { dispatch(openWindowAlone(windowType)); };
   const openInNewTab = () => { 
     chrome && chrome.tabs
     .create({ url: 'chrome://bookmarks' })
@@ -24,7 +25,7 @@ const WindowHeader = ({ title, windowType }: Props) => {
   const close = () => { dispatch(closeWindow(windowType)); };
   
   return (
-    <Header onDoubleClick={open}>
+    <Header onDoubleClick={open} isActive={isActive} isPopup={isPopup}>
       <Title>{ title }</Title>
       <ButtonList>
         <Button title="최대로 보기" onClick={open} >
@@ -43,9 +44,18 @@ const WindowHeader = ({ title, windowType }: Props) => {
 
 export default WindowHeader;
 
-const Header = styled.header`
+const Header = styled.header<{ isPopup: boolean, isActive: boolean, theme: DefaultTheme }>`
   position: relative;
   padding: 0.5rem 1rem;
+
+  ${props => (!props.isPopup && props.isActive) && `
+    background-image: linear-gradient(
+      100deg, 
+      ${props.theme.colors.mainDark},
+      ${props.theme.colors.main}
+    );
+    color: white;
+  `}
 `;
 
 const Title = styled.div`
@@ -62,6 +72,7 @@ const Button = styled.button`
   display: flex;
   justify-content: center;
   align-items: center;
+  color: inherit;
 
   &:hover {
     cursor: pointer;
