@@ -4,6 +4,10 @@ export const WindowWrapper = styled.div`
   flex-grow: 2;
   min-width: 500px;
   max-width: 800px;
+
+  display: flex;
+  flex-direction: column;
+
   border-radius: 5px;
   background-color: white;
   box-shadow: 2px 2px 10px lightgrey;
@@ -12,15 +16,11 @@ export const WindowWrapper = styled.div`
 
 export const customScroll = css`
   &::-webkit-scrollbar {
-    width: 0.5rem;
+    width: 10px;
   }
 
   &::-webkit-scrollbar-thumb {
-    background-color: darkgrey;
-
-    &:hover {
-      background-color: royalblue;
-    }
+    background-color: ${props => props.theme.colors.main};
   }
 
   &::-webkit-scrollbar-track {
