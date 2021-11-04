@@ -13,7 +13,7 @@ const NodeListContainer = () => {
 
   return (
     <NodeList 
-      node={currentFolderNode}
+      currentFolderNode={currentFolderNode}
       toParentNode={toParentNode}
       />
   );
