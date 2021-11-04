@@ -3,33 +3,34 @@ import styled from 'styled-components';
 
 import { getTree } from 'src/store/modules/bookmarksSlice';
 import { getTabs } from 'src/store/modules/tabsSlice';
-import { useIsActiveWindow, useTypedDispatch } from './hooks';
+import { useIsVisibleWindow, useTypedDispatch, useTypedSelector } from './hooks';
 import { addTabsChangeListener } from 'src/api';
 
 import BookmarksWindow from './windows/BookmarksWindow';
 import TabsWindow from './windows/TabsWindow';
 import SearchWindow from './windows/SearchWindow';
-import SideMenu from './components/SideMenu/SideMenuContainer';
-
+import Menubar from './components/Menubar/MenuContainer';
 
 function App() {
   const dispatch = useTypedDispatch();
-  const isActive = useIsActiveWindow();
+  const isVisible = useIsVisibleWindow();
+  const { isPopup } = useTypedSelector(state => state.interfaces);
   
   useEffect(() => { 
     dispatch(getTree());
     dispatch(getTabs());
-    addTabsChangeListener(() => dispatch(getTabs()));  
+    addTabsChangeListener(() => dispatch(getTabs()));
   }, [dispatch]);
 
-  return (
-    <Wrapper className="App">
-      <SideMenu />
 
-      <Windows>
-        { isActive('BOOKMARKS') && <BookmarksWindow /> }
-        { isActive('TABS') && <TabsWindow /> }
-        { isActive('SEARCH') && <SearchWindow /> }
+  return (
+    <Wrapper className="App" isPopup={isPopup}>
+      <Menubar isPopup={isPopup} />
+      
+      <Windows isPopup={isPopup}>
+        { isVisible('BOOKMARKS') && <BookmarksWindow /> }
+        { isVisible('TABS') && <TabsWindow /> }
+        { isVisible('SEARCH') && <SearchWindow /> }
       </Windows>
     </Wrapper>
   );
@@ -37,16 +38,22 @@ function App() {
 
 export default App;
 
-const Wrapper = styled.div`
-  display: flex;
+const Wrapper = styled.div<{ isPopup: boolean }>`
+  ${props => !props.isPopup && 'display: flex;'} 
   height: 100%;
 `;
 
-const Windows = styled.div`
+const Windows = styled.div<{ isPopup: boolean }>`
   flex-grow: 2;
+  height: 100%;
   padding: 1.5rem 5%;
 
   display: flex;
   justify-content: center;
   gap: 1rem;
+
+  ${props => props.isPopup && `
+    padding: 0;
+    max-height: 560px;
+  `}
 `
