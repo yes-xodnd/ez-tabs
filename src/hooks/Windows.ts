@@ -1,8 +1,8 @@
 import { useTypedSelector } from 'src/hooks';
 import { WindowTypes } from 'src/constants/types';
 
-export const useIsActiveWindow = () => {
-  const { activeWindows } = useTypedSelector(state => state.interfaces);
+export const useIsVisibleWindow = () => {
+  const { visibleWindows } = useTypedSelector(state => state.interfaces);
 
-  return (windowType: WindowTypes) => activeWindows.includes(windowType);
+  return (windowType: WindowTypes) => visibleWindows.includes(windowType);
 };
