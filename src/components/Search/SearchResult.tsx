@@ -15,6 +15,7 @@ const SearchResult = ({ nodes }: { nodes: BookmarkNode[] }) => {
 export default SearchResult;
 
 const Wrapper = styled.div`
+  flex-grow: 2;
   max-height: 100%;
   padding: 1rem;
   overflow-y: auto;

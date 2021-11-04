@@ -39,7 +39,7 @@ const Wrapper = styled(WindowWrapper)`
 
 const ContentWrapper = styled.div<{ isListView: boolean }>`
   flex-grow: 2;
-  padding: 1rem;
+  padding: 15px;
   overflow-y: auto;
   border-bottom: 1px solid lightgrey;
   background-color: ${props => props.isListView ? 'white' : props.theme.colors.hover};

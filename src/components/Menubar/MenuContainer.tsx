@@ -1,22 +1,25 @@
 import { StyledIcon, WindowTypes } from 'src/constants/types';
 import { Bookmarks, Apps, Search } from '@styled-icons/material-outlined';
-import SideMenu from './SideMenu';
+import Menubar from './Menubar';
 import { useTypedDispatch } from 'src/hooks/redux';
 import { toggleActive, activateWindowAlone } from 'src/store/modules/intefaceSlice';
 
 export interface MenuItem {
-  icon: JSX.Element;
+  Icon: StyledIcon;
   title: string;
   handleClick: () => void;
   handleDoubleClick: () => void;
 }
 
-const SideMenuContainer = () => {
+const MenubarContainer = ({ isPopup }: { isPopup: boolean }) => {
   const dispatch = useTypedDispatch();
-  const createItem = (title: string, type: WindowTypes, Icon: StyledIcon) => ({
+
+  const createItem = (title: string, type: WindowTypes, Icon: StyledIcon): MenuItem => ({
+    Icon,
     title,
-    icon: <Icon size="24" />,
-    handleClick: () => { dispatch(toggleActive(type)) },
+    handleClick: isPopup 
+      ? () => { dispatch(activateWindowAlone(type)) }
+      : () => { dispatch(toggleActive(type)) },
     handleDoubleClick: () => { dispatch(activateWindowAlone(type)) }
   });
 
@@ -27,8 +30,8 @@ const SideMenuContainer = () => {
   ];
 
   return (
-    <SideMenu menuItems={menuItems} />
+    <Menubar menuItems={menuItems} isPopup={isPopup} />
   );
 };
 
-export default SideMenuContainer;
+export default MenubarContainer;

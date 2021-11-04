@@ -69,16 +69,18 @@ async function getChildren(id: string) {
 async function remove(id: string) {
   if (nodeMap.has(id)) {
     nodeDataList = nodeDataList.filter(node => node.id !== id);
+    isUpdated = true;
   }
 
-  isUpdated = true;
   return getTree();
 }
 
 async function removeTree(id: string) {
-  const node = nodeMap.get(id) as BookmarkNode;
+  const node = nodeMap.get(id);
   const targetIds: string[] = [];
   let queue = [ node ];
+  
+  if (!node) return getTree();
   
   while (queue.length) {
     const node = queue.shift() as BookmarkNode;

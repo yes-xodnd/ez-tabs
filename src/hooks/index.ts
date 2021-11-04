@@ -1,7 +1,7 @@
 import { useState } from 'react';
 import { useTypedDispatch, useTypedSelector } from './redux';
 import { useFolderOpen, useCurrentFolder } from './FolderTree';
-import { useIsActiveWindow } from './Windows';
+import { useIsVisibleWindow } from './Windows';
 
 const useToggle = (initState: boolean): [ boolean, () => void ] => {
   const [ state, setState ] = useState(initState);
@@ -15,5 +15,5 @@ export {
   useTypedSelector,
   useFolderOpen,
   useCurrentFolder,
-  useIsActiveWindow,
+  useIsVisibleWindow,
 };

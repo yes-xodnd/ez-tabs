@@ -1,8 +1,8 @@
 import styled from "styled-components";
 import { Fullscreen, Close } from '@styled-icons/material-outlined';
 import { WindowTypes } from 'src/constants/types';
-import { useTypedDispatch } from 'src/hooks';
-import { deactivateWindow, activateWindowAlone } from 'src/store/modules/intefaceSlice';
+import { useTypedDispatch, useTypedSelector } from 'src/hooks';
+import { closeWindow, activateWindowAlone } from 'src/store/modules/intefaceSlice';
 
 interface Props {
   title: string;
@@ -11,20 +11,31 @@ interface Props {
 
 const WindowHeader = ({ title, windowType }: Props) => {
   const dispatch = useTypedDispatch();
-  const hide = () => { dispatch(deactivateWindow(windowType)); };
-  const openFull = () => { dispatch(activateWindowAlone(windowType)); };
+  const { isPopup }  = useTypedSelector(state => state.interfaces);
+
+  const openAlone = () => { dispatch(activateWindowAlone(windowType)); };
+  const openInNewTab = () => { 
+    chrome && chrome.tabs
+    .create({ url: 'chrome://bookmarks' })
+    .then(tab => { tab.id && chrome.tabs.reload(tab.id) });
+  };
+
+  const open = isPopup ? openInNewTab : openAlone;
+  const close = () => { dispatch(closeWindow(windowType)); };
   
   return (
-    <Header>
+    <Header onDoubleClick={open}>
       <Title>{ title }</Title>
       <ButtonList>
-        <Button title="최대로 보기"  onClick={openFull} >
+        <Button title="최대로 보기" onClick={open} >
           <Fullscreen size="20"/>
         </Button>
-
-        <Button title="닫기" onClick={hide} >
-          <Close size="20"/>
-        </Button>
+        { 
+          !isPopup &&
+          <Button title="닫기" onClick={close} >
+            <Close size="20"/>
+          </Button>
+        }
       </ButtonList>
     </Header>
   );

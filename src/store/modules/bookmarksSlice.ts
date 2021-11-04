@@ -6,7 +6,6 @@ import {
 } from '@reduxjs/toolkit';
 import { BookmarkNode } from 'src/constants/types';
 import { selectCheckedTabs } from './tabsSlice';
-import { activateWindow } from './intefaceSlice';
 import { RootState } from 'src/store';
 import api from 'src/api';
 
@@ -70,7 +69,6 @@ export const createFromTabs = createAsyncThunk<void, void, { state: RootState }>
     }
 
     await dispatch(getTree());
-    dispatch(activateWindow('BOOKMARKS'));
     dispatch(setCurrentFolderNodeId(FolderNode.id));
     dispatch(openFolderNode(FolderNode.id));
   }
@@ -130,15 +128,16 @@ export const removeChecked = createAsyncThunk<void, void, { state: RootState }>(
   name + '/REMOVE_CHECKED',
   async (_, { getState, dispatch }) => {
     const { checkedNodeIds } = getState().bookmarks;
+
     for (const id of checkedNodeIds) {
       const [ node ] = await api.bookmarks.get(id);
-      if (!node) continue;
+      if (!node) return;
 
-      (node.children) 
-      ? await api.bookmarks.removeTree(id)
-      : await api.bookmarks.remove(id);
+      node.url 
+      ? await api.bookmarks.remove(id)
+      : await api.bookmarks.removeTree(id);
     }
-
+    
     dispatch(getTree());
   }
 );

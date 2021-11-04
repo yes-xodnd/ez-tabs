@@ -32,7 +32,12 @@ export const removeChecked = createAsyncThunk<void, void, { state: RootState }>(
   'TABS/REMOVE_CHECKED',
   async (_, { getState }) => {
     const { checkedTabIds } = getState().tabs;
-    await api.tabs.remove(checkedTabIds);
+    if (chrome) {
+      const currentTab = await chrome.tabs.getCurrent();
+      await api.tabs.remove(checkedTabIds.filter(id => id !== currentTab.id));
+    } else {
+      await api.tabs.remove(checkedTabIds);
+    }
   }
 );
 
