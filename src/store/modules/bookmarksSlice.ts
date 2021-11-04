@@ -5,7 +5,7 @@ import {
   createSelector 
 } from '@reduxjs/toolkit';
 import { BookmarkNode } from 'src/constants/types';
-import { selectCheckedTabs } from './tabsSlice';;
+import { selectCheckedTabs } from './tabsSlice';
 import { RootState } from 'src/store';
 import api from 'src/api';
 
