@@ -1,11 +1,11 @@
 import { ChangeEventHandler, useState, useEffect, useRef } from "react";
-import { WindowWrapper } from "src/style";
 
 import { useTypedSelector, useTypedDispatch } from "src/hooks";
 import { selectAllNodeList } from 'src/store/modules/bookmarksSlice';
 import { debounce } from "src/util";
 import api from "src/api";
 
+import WindowWrapper from "src/components/UI/WindowWrapper";
 import WindowHeader from 'src/components/UI/WindowHeader';
 import SearchInput from 'src/components/Search/SearchInput';
 import SearchToolbar from 'src/components/Search/SearchToolbar';
@@ -35,7 +35,7 @@ const SearchWindow = () => {
   }
 
   return (
-    <WindowWrapper>
+    <WindowWrapper windowType="SEARCH" >
       <WindowHeader title="검색" windowType="SEARCH" />
       <SearchToolbar showAllNodeList={() => setNodes(allNodeList)}>
         <SearchInput handleInputChange={handleInputChange}  />

@@ -1,9 +1,13 @@
 import { useEffect } from 'react';
 import styled from 'styled-components';
 
+import {
+  useTypedDispatch,
+  useTypedSelector,
+  useKeyboard
+} from './hooks';
 import { getTree } from 'src/store/modules/bookmarksSlice';
 import { getTabs } from 'src/store/modules/tabsSlice';
-import { useIsVisibleWindow, useTypedDispatch, useTypedSelector } from './hooks';
 import { addTabsChangeListener } from 'src/api';
 
 import BookmarksWindow from './windows/BookmarksWindow';
@@ -13,7 +17,6 @@ import Menubar from './components/Menubar/MenuContainer';
 
 function App() {
   const dispatch = useTypedDispatch();
-  const isVisible = useIsVisibleWindow();
   const { isPopup } = useTypedSelector(state => state.interfaces);
   
   useEffect(() => { 
@@ -22,15 +25,16 @@ function App() {
     addTabsChangeListener(() => dispatch(getTabs()));
   }, [dispatch]);
 
+  useKeyboard();
 
   return (
     <Wrapper className="App" isPopup={isPopup}>
       <Menubar isPopup={isPopup} />
       
       <Windows isPopup={isPopup}>
-        { isVisible('BOOKMARKS') && <BookmarksWindow /> }
-        { isVisible('TABS') && <TabsWindow /> }
-        { isVisible('SEARCH') && <SearchWindow /> }
+        <BookmarksWindow />
+        <TabsWindow />
+        <SearchWindow />
       </Windows>
     </Wrapper>
   );

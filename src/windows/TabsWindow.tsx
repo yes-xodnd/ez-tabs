@@ -1,7 +1,8 @@
 import styled from 'styled-components';
 import { useToggle, useTypedSelector } from 'src/hooks';
-import { WindowWrapper, customScroll } from 'src/style';
+import { customScroll } from 'src/style';
 
+import WindowWrapper from 'src/components/UI/WindowWrapper';
 import WindowHeader from 'src/components/UI/WindowHeader';
 import Toolbar from 'src/components/Tabs/TabsToolbar';
 import TabGrid from 'src/components/Tabs/TabGrid';
@@ -13,8 +14,8 @@ const TabsWindow = () => {
   const tabs = useTypedSelector(state => state.tabs.tabs);
 
   return (
-    <Wrapper>
-      <WindowHeader title='탭' windowType={'TABS'} />
+    <WindowWrapper windowType="TABS">
+      <WindowHeader title='탭' windowType="TABS" />
       <Toolbar isListView={isListView} toggleView={toggleView} />
 
       <ContentWrapper isListView={isListView}>
@@ -26,16 +27,11 @@ const TabsWindow = () => {
       </ContentWrapper>
 
       <ButtonAdd  />
-    </Wrapper>
+    </WindowWrapper>
   );
 };
 
 export default TabsWindow;
-
-const Wrapper = styled(WindowWrapper)`
-  display: flex;
-  flex-direction: column;
-`;
 
 const ContentWrapper = styled.div<{ isListView: boolean }>`
   flex-grow: 2;
