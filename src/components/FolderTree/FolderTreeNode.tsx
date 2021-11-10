@@ -9,7 +9,7 @@ import {
   useCurrentFolder,
   useTypedDispatch
 } from 'src/hooks';
-import { moveChecked, selectParentIdList } from 'src/store/modules/bookmarksSlice';
+import { moveChecked } from 'src/store/modules/bookmarksSlice';
 
 
 interface Props {
@@ -21,8 +21,9 @@ const FolderListNode = ({ node, depth = 0 }: Props) => {
   const [ isHovered, setHovered ] = useState(false);
   const { isOpen, toggleOpen } = useFolderOpen(node.id);
   const { isCurrentFolder, setCurrentFolder } = useCurrentFolder(node.id);
-  const { currentFolderNodeId, checkedNodeIds } = useTypedSelector(state => state.bookmarks);
-  const parentIdList = useTypedSelector(state => selectParentIdList(state, node.id));
+  const isNotChecked = useTypedSelector(state => 
+    !!state.bookmarks.checkedNodeIds.length && !state.bookmarks.checkedNodeIds.includes(node.id)
+  );
   const dispatch = useTypedDispatch();
 
   return (
@@ -51,9 +52,8 @@ const FolderListNode = ({ node, depth = 0 }: Props) => {
 
         {
           isHovered &&
-          !!checkedNodeIds.length &&
-          !checkedNodeIds.includes(node.id) &&
-          !parentIdList.includes(currentFolderNodeId) &&
+          isNotChecked &&
+          !isCurrentFolder &&
           <MoveButton 
             onClick={() => { dispatch(moveChecked(node.id)) }}
             title={node.title + '로 이동'}

@@ -4,7 +4,7 @@ import styled from "styled-components";
 import FolderListNode from "./FolderTreeNode";
 
 const FolderTree = () => {
-  const { rootNode } = useTypedSelector(state => state.bookmarks);
+  const rootNode = useTypedSelector(state => state.bookmarks.rootNode);
 
   return (
     <Wrapper>
