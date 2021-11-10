@@ -3,10 +3,8 @@ import { closeFolderNode, openFolderNode, setCurrentFolderNodeId } from "src/sto
 
 
 const useFolderOpen = (id: string): { isOpen: boolean, toggleOpen: () => void } => {
-  const { openFolderNodeIds } = useTypedSelector(({ bookmarks }) => bookmarks);
+  const isOpen = useTypedSelector(({ bookmarks }) => bookmarks.openFolderNodeIds.includes(id));
   const dispatch = useTypedDispatch();
-
-  const isOpen = openFolderNodeIds.includes(id);
   const toggleOpen = () => {
     isOpen
     ? dispatch(closeFolderNode(id))
@@ -20,10 +18,8 @@ const useCurrentFolder = (id: string): {
   isCurrentFolder: boolean,
   setCurrentFolder: () => void
 } => { 
-  const { currentFolderNodeId } = useTypedSelector(({ bookmarks }) => bookmarks);
+  const isCurrentFolder = useTypedSelector(({ bookmarks }) => bookmarks.currentFolderNodeId === id);
   const dispatch = useTypedDispatch();
-
-  const isCurrentFolder = currentFolderNodeId === id;
   const setCurrentFolder = () => dispatch(setCurrentFolderNodeId(id));
   
   return { isCurrentFolder, setCurrentFolder };
