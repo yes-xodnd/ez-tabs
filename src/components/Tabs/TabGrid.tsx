@@ -6,7 +6,7 @@ const TabGrid = ({ tabs }: { tabs: Tab[] }) => {
 
   return (
     <GridContainer>
-      { tabs.map(tab => <TabGridItem tab={tab} key={tab.url} />)}
+      { tabs.map((tab, index) => <TabGridItem tab={tab} index={index} key={tab.url} />)}
     </GridContainer>
   );
 };

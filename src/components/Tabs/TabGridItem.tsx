@@ -1,43 +1,67 @@
-import { Tab } from 'src/constants/types';
-import styled from 'styled-components';
+import { useEffect, useRef, memo } from 'react';
+import styled, { DefaultTheme } from 'styled-components';
 
-import { useCloseTab, useToggleCheckTab } from 'src/hooks/Tabs';
+import { Tab } from 'src/constants/types';
+import { useTypedDispatch, useTypedSelector } from 'src/hooks';
+import { setTabIndex, toggleCheck, closeTab } from 'src/store/modules/tabsSlice';
+import api from 'src/api';
 
 import Favicon from 'src/components/UI/Favicon';
 import TabCheckbox from './TabCheckbox';
 import Button from 'src/components/UI/Button';
-import api from 'src/api';
 
-const TabGridItem = ({ tab }: { tab: Tab }) => {
-  const toggleCheck = useToggleCheckTab(tab.id);
-  const closeTab = useCloseTab(tab.id);
-  const openTab = () => { tab.id && api.tabs.update(tab.id, { active: true }); };
+interface Props {
+  tab: Tab;
+  index: number;
+}
+
+const TabGridItem = ({ tab, index }: Props) => {
+  const isFocused = useTypedSelector(state => state.tabs.tabIndex === index);
+  const ref = useRef<HTMLDivElement>(null);
+  
+  useEffect(() => {
+    ref.current?.scrollIntoView({ block: 'center' });
+  }, [ isFocused ]);
+  
+  const dispatch = useTypedDispatch();
+  const close = () => { tab.id && dispatch(closeTab(tab.id)) };
+  const open = () => { tab.id && api.tabs.update(tab.id, { active: true }); };
+  
+  const handleClick = () => {
+    dispatch(setTabIndex(index));
+    tab.id && dispatch(toggleCheck(tab.id));
+  }
 
   return (
-    <Wrapper>
-      <Header onClick={toggleCheck}>
+    <Wrapper 
+      ref={ref} 
+      isFocused={isFocused}
+      onClick={handleClick}
+      >
+      <Header>
         <Favicon url={tab.favIconUrl} size="16" />
         <HostName title={tab.url} >{ tab.url && new URL(tab.url).hostname }</HostName>
         <TabCheckbox id={tab.id} prevent />
       </Header>
       
-      <Body onDoubleClick={openTab}>
+      <Body onDoubleClick={open}>
         <Title title={tab.title}>{ tab.title }</Title>
       </Body>
 
       <Footer>
-        <Button content='이동' handleClick={openTab}  />
-        <Button content='닫기' handleClick={closeTab} buttonType="DANGER" />
+        <Button content='이동' handleClick={open}  />
+        <Button content='닫기' handleClick={close} buttonType="DANGER" />
       </Footer>
     </Wrapper>
   );
 };
 
-export default TabGridItem;
 
-const Wrapper = styled.div`
+export default memo(TabGridItem);
+
+const Wrapper = styled.div<{ isFocused: boolean, theme: DefaultTheme }>`
   border-radius: 5px;
-  border: 1px solid lightgrey;
+  border: 2px solid lightgrey;
   width: 100%;
 
   display: flex;
@@ -49,7 +73,12 @@ const Wrapper = styled.div`
   
   &:hover {
     box-shadow: 2px 2px 5px lightgrey;
+    cursor: pointer;
   }
+
+  ${props => props.isFocused && `
+    border-color: ${props.theme.colors.main}
+  `}
 `;
 
 const Header = styled.div`
@@ -61,11 +90,6 @@ const Header = styled.div`
   grid-template-rows: repeat(auto-fill, 24px);
   place-items: center center;
   gap: 7px;
-
-
-  &:hover {
-    cursor: pointer;
-  }
 `;
 
 const Body = styled.div`
