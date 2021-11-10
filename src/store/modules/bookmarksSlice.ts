@@ -197,11 +197,6 @@ export const selectParentIdList = createSelector(
   }
 );
 
-export const selectCurrentFolderDepth = createSelector(
-  (state: RootState) => selectParentIdList(state, state.bookmarks.currentFolderNodeId),
-  (parentList) => parentList.length - 1
-);
-
 export const selectCurrentFolderNode = createSelector(
   selectNodeDict,
   (state: RootState) => state.bookmarks.currentFolderNodeId,
