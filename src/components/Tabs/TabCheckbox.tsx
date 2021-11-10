@@ -8,17 +8,15 @@ interface Props {
 }
 
 const TabCheckbox = ({ id, prevent = false }: Props) => {
-  const { checkedTabIds } = useTypedSelector(state => state.tabs);
+  const isChecked = useTypedSelector(state => 
+    !!id && state.tabs.checkedTabIds.includes(id));
   const dispatch = useTypedDispatch();
-  
-  const isChecked = !!id && checkedTabIds.includes(id);
-  const handleChange = () => {
-    if (prevent) return;
-    id && dispatch(toggleCheck(id));
-  }
 
   return (
-    <Checkbox isChecked={isChecked} handleChange={handleChange}  />
+    <Checkbox 
+      isChecked={isChecked} 
+      handleChange={() => { !prevent && id && dispatch(toggleCheck(id)) }}
+      />
   );
 };
 
