@@ -1,8 +1,8 @@
 import { StyledIcon, WindowTypes } from 'src/constants/types';
 import { Bookmarks, Apps, Search } from '@styled-icons/material-outlined';
-import Menubar from './Menubar';
 import { useTypedDispatch } from 'src/hooks/redux';
-import { toggleActive, activateWindowAlone } from 'src/store/modules/intefaceSlice';
+import { toggleActive, openWindowAlone } from 'src/store/modules/intefaceSlice';
+import Menubar from './Menubar';
 
 export interface MenuItem {
   Icon: StyledIcon;
@@ -18,9 +18,9 @@ const MenubarContainer = ({ isPopup }: { isPopup: boolean }) => {
     Icon,
     title,
     handleClick: isPopup 
-      ? () => { dispatch(activateWindowAlone(type)) }
+      ? () => { dispatch(openWindowAlone(type)) }
       : () => { dispatch(toggleActive(type)) },
-    handleDoubleClick: () => { dispatch(activateWindowAlone(type)) }
+    handleDoubleClick: () => { dispatch(openWindowAlone(type)) }
   });
 
   const menuItems: MenuItem[] = [

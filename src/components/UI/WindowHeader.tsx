@@ -2,7 +2,8 @@ import styled, { DefaultTheme } from "styled-components";
 import { Fullscreen, Close } from '@styled-icons/material-outlined';
 import { WindowTypes } from 'src/constants/types';
 import { useTypedDispatch, useTypedSelector } from 'src/hooks';
-import { closeWindow, openWindowAlone } from 'src/store/modules/intefaceSlice';
+import { closeWindow, openWindowAlone, selectIsActiveWindow } from 'src/store/modules/intefaceSlice';
+import { memo } from "react";
 
 interface Props {
   title: string;
@@ -11,8 +12,8 @@ interface Props {
 
 const WindowHeader = ({ title, windowType }: Props) => {
   const dispatch = useTypedDispatch();
-  const { isPopup, activeWindow }  = useTypedSelector(state => state.interfaces);
-  const isActive = windowType === activeWindow;
+  const isPopup  = useTypedSelector(state => state.interfaces.isPopup);
+  const isActive = useTypedSelector(selectIsActiveWindow(windowType));
 
   const openAlone = () => { dispatch(openWindowAlone(windowType)); };
   const openInNewTab = () => { 
@@ -42,7 +43,7 @@ const WindowHeader = ({ title, windowType }: Props) => {
   );
 };
 
-export default WindowHeader;
+export default memo(WindowHeader);
 
 const Header = styled.header<{ isPopup: boolean, isActive: boolean, theme: DefaultTheme }>`
   position: relative;

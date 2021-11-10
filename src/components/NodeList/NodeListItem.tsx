@@ -1,6 +1,7 @@
 import { useState } from 'react';
-import { BookmarkNode } from 'src/constants/types';
 import styled from 'styled-components';
+import { BookmarkNode } from 'src/constants/types';
+import { Folder } from '@styled-icons/material-outlined';
 
 import { useTypedDispatch, useTypedSelector } from 'src/hooks';
 import { 
@@ -9,7 +10,6 @@ import {
   openFolderNode, 
   setCurrentFolderNodeId
  } from 'src/store/modules/bookmarksSlice';
-import { Folder } from '@styled-icons/material-outlined';
 import { getHostname } from 'src/util';
 
 import Favicon from 'src/components/UI/Favicon';

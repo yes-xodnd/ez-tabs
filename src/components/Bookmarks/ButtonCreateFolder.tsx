@@ -4,7 +4,7 @@ import { createFolder } from 'src/store/modules/bookmarksSlice';
 import ToolbarButton from "../UI/ToolbarButton";
 
 const ButtonAddFolder = () => {
-  const { currentFolderNodeId } = useTypedSelector(state => state.bookmarks);
+  const currentFolderNodeId = useTypedSelector(state => state.bookmarks.currentFolderNodeId);
   const dispatch = useTypedDispatch();
 
   const handleClick = () => {

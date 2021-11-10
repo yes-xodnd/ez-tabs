@@ -1,7 +1,7 @@
 import { ToolbarWrapper } from "src/style";
 import ButtonToggleView from "./ButtonToggleVIew";
 import ButtonCheckAll from "./ButtonCheckAll";
-import ButtonRemoveCheckedTabs from "./ButtonRemoveCheckedTabs";
+import ButtonCloseCheckedTabs from "./ButtonCloseCheckedTabs";
 
 interface Props {
   isListView: boolean;
@@ -13,7 +13,7 @@ const Toolbar = ({ isListView, toggleView }: Props) => {
   return (
     <ToolbarWrapper>
       <ButtonCheckAll />
-      <ButtonRemoveCheckedTabs />
+      <ButtonCloseCheckedTabs />
       <ButtonToggleView isListView={isListView} toggleView={toggleView} />
     </ToolbarWrapper>
   );
