@@ -1,6 +1,7 @@
-import { toggleCheck } from "src/store/modules/tabsSlice";
+import { closeCheckedTabs, toggleCheck } from "src/store/modules/tabsSlice";
 import { useTypedDispatch } from ".";
 import { closeTab } from "src/store/modules/tabsSlice";
+import { throttle } from "src/util";
 
 export const useToggleCheckTab = (id: number | undefined) => {
   const dispatch = useTypedDispatch();
@@ -11,5 +12,10 @@ export const useToggleCheckTab = (id: number | undefined) => {
 export const useCloseTab = (id: number | undefined) => {
   const dispatch = useTypedDispatch();
   
-  return () => { id && dispatch(closeTab(id)); };
+  return throttle(() => { id && dispatch(closeTab(id)); }, 1000);
+}
+
+export const useCloseCheckedTabs = () => {
+  const dispatch = useTypedDispatch();  
+  return throttle(() => { dispatch(closeCheckedTabs()) }, 1000);
 }
