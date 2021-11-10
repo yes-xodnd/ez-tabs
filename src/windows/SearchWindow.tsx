@@ -38,10 +38,9 @@ const SearchWindow = () => {
     <WindowWrapper windowType="SEARCH" >
       <WindowHeader title="검색" windowType="SEARCH" />
       <SearchToolbar showAllNodeList={() => setNodes(allNodeList)}>
-        <SearchInput handleInputChange={handleInputChange}  />
+        <SearchInput value={keyword} handleInputChange={handleInputChange}  />
       </SearchToolbar>
       <SearchResult nodes={nodes} />
-      
     </WindowWrapper>
   );
 };
