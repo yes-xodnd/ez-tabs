@@ -1,39 +1,74 @@
-import { useState } from 'react';
-import styled from 'styled-components';
+import { useState, useEffect, useRef, memo } from 'react';
+import styled, { DefaultTheme } from 'styled-components';
 import { Tab } from 'src/constants/types';
+
+import { toggleCheck, setTabIndex } from 'src/store/modules/tabsSlice';
+import { useTypedDispatch, useTypedSelector } from 'src/hooks';
+import { getHostname } from 'src/util';
+
 import Favicon from 'src/components/UI/Favicon';
 import TabCheckbox from './TabCheckbox';
 import ButtonCloseTab from './ButtonCloseTab';
-import { useToggleCheckTab } from 'src/hooks/Tabs';
-import { getHostname } from 'src/util';
 
+interface Props {
+  tab: Tab;
+  index: number;
+}
 
-const TabListItem = ({ tab }: { tab: Tab }) => {
-  const [isHover, setHover] = useState(false);
-  const toggleCheck = useToggleCheckTab(tab.id);
+const TabListItem = ({ tab, index }: Props) => {
+  const isFocused = useTypedSelector(state => state.tabs.tabIndex === index);
+  const isChecked = useTypedSelector(state => tab.id && state.tabs.checkedTabIds.includes(tab.id));
+  const ref = useRef<HTMLDivElement>(null);
 
-  return (
-    <ContentContainer 
-      onClick={toggleCheck}
+  const [ isHover, setHover ] = useState(false);
+  const dispatch = useTypedDispatch();
+
+  useEffect(() => {
+    (isChecked || isFocused) && ref.current?.scrollIntoView({ block: 'center' }); 
+  }, [ isFocused, isChecked ]);
+
+  const handleClick = () => {
+    tab.id && dispatch(toggleCheck(tab.id));
+    dispatch(setTabIndex(index));
+  }
+
+  return ( 
+
+    <ContentContainer
+      ref={ref}
+      onClick={handleClick}
       onMouseEnter={() => setHover(true)}
       onMouseOver={() => setHover(true)}
       onMouseLeave={() => setHover(false)}
+      isFocused={isFocused}
       >
-      <TabCheckbox id={tab.id} prevent />
-      <Favicon url={ tab.favIconUrl } />
-      <Title title={tab.title} >{ tab.title }</Title>
-      <div>{ isHover && <ButtonCloseTab id={tab.id} /> }</div>
+      <Content tab={tab} />
 
-      <Hostname>{ tab.url && getHostname(tab.url) }</Hostname>
+      <ButtonWrapper>
+        { isHover && <ButtonCloseTab id={tab.id} /> }
+      </ButtonWrapper>
     </ContentContainer>
   );
 };
 
+const Content = memo(({ tab }: { tab: Tab }) => {
+
+  return (
+    <>
+      <TabCheckbox id={tab.id} prevent />
+      <Favicon url={ tab.favIconUrl } />
+      <Title title={tab.title} >{ tab.title }</Title>
+      <Hostname>{ tab.url && getHostname(tab.url) }</Hostname>
+    </>
+  );
+})
+
 export default TabListItem;
 
-const ContentContainer = styled.div`
+const ContentContainer = styled.div<{ isFocused: boolean, theme: DefaultTheme }>`
+  position: relative;
   display: grid;
-  grid-template-columns: 24px 24px auto 32px;
+  grid-template-columns: 24px 24px auto;
   grid-template-rows: 24px auto;
   place-items: center center;
   column-gap: 0.5rem;
@@ -41,6 +76,7 @@ const ContentContainer = styled.div`
   
   padding: 0.5rem 0;
   border-radius: 5px;
+  border: 1px solid transparent;
   background: white;
   font-size: 0.8rem;
   overflow-x: hidden;
@@ -49,6 +85,10 @@ const ContentContainer = styled.div`
     cursor: pointer;
     background-color: ${props => props.theme.colors.hover};
   }
+
+  ${props => props.isFocused && `
+    border-color: ${props.theme.colors.main}
+  `}
 `;
 
 const Title = styled.div`
@@ -62,4 +102,9 @@ const Hostname = styled.div`
   grid-column: 3;
   justify-self: start;
   color: darkgrey;
+`;
+
+const ButtonWrapper = styled.div`
+  position: absolute;
+  right: 10px;
 `;

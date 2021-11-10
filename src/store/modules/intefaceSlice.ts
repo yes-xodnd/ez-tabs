@@ -13,7 +13,7 @@ const isPopup = window.location.hash === '#popup';
 const initialState: interfaceState = {
   visibleWindows: isPopup ? [ 'TABS' ] : [ 'BOOKMARKS', 'TABS' ],
   isPopup,
-  activeWindow: null
+  activeWindow: isPopup ? 'TABS' : null
 };
 
 const prepareWindowType = (type: WindowTypes) => ({ payload: type });
@@ -50,7 +50,9 @@ export const activateWindow = createAction(
   prepareWindowType
 );
 
-const selectIsVisibleWindow = (state: RootState, type: WindowTypes) => state.interfaces.visibleWindows.includes(type);
+export const selectIsVisibleWindow = (state: RootState, type: WindowTypes) => state.interfaces.visibleWindows.includes(type);
+
+export const selectIsActiveWindow = (type: WindowTypes) => (state: RootState) => state.interfaces.activeWindow === type;
 
 const slice = createSlice({
   name: 'interface',
@@ -70,6 +72,10 @@ const slice = createSlice({
         (state, action) => { 
           state.visibleWindows = state.visibleWindows
             .filter(item => item !== action.payload);
+          
+          if (state.activeWindow === action.payload) {
+            state.activeWindow = null;
+          }
         }
       )
       .addCase(
