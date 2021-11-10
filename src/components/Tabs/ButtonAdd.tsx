@@ -1,22 +1,20 @@
 import { BookmarkBorder } from '@styled-icons/material-outlined';
 import { useTypedDispatch, useTypedSelector } from 'src/hooks';
 import { createFromTabs } from 'src/store/modules/bookmarksSlice';
-import { clear } from 'src/store/modules/tabsSlice';
+import { clearCheck } from 'src/store/modules/tabsSlice';
 import { openWindow } from 'src/store/modules/intefaceSlice';
 import styled from 'styled-components';
 
 const ButtonAdd = () => {
-  const { checkedTabIds } = useTypedSelector(state => state.tabs);
-  const { isPopup } = useTypedSelector(state => state.interfaces);
+  const disabled = useTypedSelector(state => !state.tabs.checkedTabIds.length);
+  const isPopup = useTypedSelector(state => state.interfaces.isPopup);
   const dispatch = useTypedDispatch();
-
-  const disabled = !checkedTabIds.length;
 
   const handleClick = () => { 
     if (disabled) return;
     
     dispatch(createFromTabs());
-    dispatch(clear());
+    dispatch(clearCheck());
     !isPopup && dispatch(openWindow('BOOKMARKS'));
   };
 
