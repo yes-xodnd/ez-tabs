@@ -6,7 +6,15 @@ const TabList = ({ tabs }: { tabs: Tab[] }) => {
 
   return (
     <Wrapper>
-      { tabs.map(tab => <TabListItem tab={tab} key={tab.url} />) }
+      { 
+        tabs.map((tab, index) => (
+          <TabListItem 
+            tab={tab} 
+            key={tab.url}
+            index={index}
+            />
+        )) 
+      }
     </Wrapper>
   );
 };
