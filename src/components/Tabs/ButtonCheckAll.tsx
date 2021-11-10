@@ -1,7 +1,7 @@
 import { CheckBox, CheckBoxOutlineBlank } from '@styled-icons/material-outlined';
 import ToolbarButton from "src/components/UI/ToolbarButton";
 import { useTypedDispatch, useTypedSelector } from 'src/hooks';
-import { checkAll, clear, selectAllChecked } from 'src/store/modules/tabsSlice';
+import { checkAll, clearCheck, selectAllChecked } from 'src/store/modules/tabsSlice';
 
 
 const ButtonCheckAll = () => {
@@ -9,7 +9,7 @@ const ButtonCheckAll = () => {
   const dispatch = useTypedDispatch();
 
   const handleClick = () => {
-    isAllChecked ? dispatch(clear()) : dispatch(checkAll());
+    isAllChecked ? dispatch(clearCheck()) : dispatch(checkAll());
   };
 
   return (
