@@ -1,14 +1,5 @@
-import { useEffect } from 'react';
 import styled from 'styled-components';
-
-import {
-  useTypedDispatch,
-  useTypedSelector,
-  useKeyboard
-} from './hooks';
-import { getTree } from 'src/store/modules/bookmarksSlice';
-import { getTabs } from 'src/store/modules/tabsSlice';
-import { addTabsChangeListener } from 'src/api';
+import { useTypedSelector, useInitData } from './hooks';  
 
 import BookmarksWindow from './windows/BookmarksWindow';
 import TabsWindow from './windows/TabsWindow';
@@ -16,19 +7,11 @@ import SearchWindow from './windows/SearchWindow';
 import Menubar from './components/Menubar/MenuContainer';
 
 function App() {
-  const dispatch = useTypedDispatch();
-  const { isPopup } = useTypedSelector(state => state.interfaces);
-  
-  useEffect(() => { 
-    dispatch(getTree());
-    dispatch(getTabs());
-    addTabsChangeListener(() => dispatch(getTabs()));
-  }, [dispatch]);
-
-  useKeyboard();
+  useInitData();
+  const isPopup = useTypedSelector(state => state.interfaces.isPopup);
 
   return (
-    <Wrapper className="App" isPopup={isPopup}>
+    <Wrapper isPopup={isPopup}>
       <Menubar isPopup={isPopup} />
       
       <Windows isPopup={isPopup}>
