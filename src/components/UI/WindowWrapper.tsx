@@ -1,7 +1,7 @@
 import styled from "styled-components";
 import { WindowTypes } from "src/constants/types";
 import { useTypedDispatch, useTypedSelector } from "src/hooks";
-import { activateWindow, selectIsVisibleWindow } from "src/store/modules/intefaceSlice";
+import { activateWindow, selectIsVisibleWindow } from "src/store/modules/windowsSlice";
 import { useHotkeys } from 'src/hooks/hotkeys';
 
 interface Props {

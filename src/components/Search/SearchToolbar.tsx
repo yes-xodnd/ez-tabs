@@ -3,13 +3,10 @@ import { ToolbarWrapper } from "src/style";
 import { ViewList } from '@styled-icons/material-outlined';
 import ToolbarButton from "src/components/UI/ToolbarButton";
 import ButtonRemove from 'src/components/Bookmarks/ButtonRemove';
+import { useShowAllNodeList } from "src/hooks";
 
-interface Props {
-  showAllNodeList: () => void;
-  children?: JSX.Element;
-}
-
-const SearchToolbar = ({ children, showAllNodeList }: Props) => {
+const SearchToolbar = ({ children }: React.PropsWithChildren<{}>) => {
+  const showAllNodeList = useShowAllNodeList();
 
   return (
     <Wrapper>

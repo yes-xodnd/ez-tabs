@@ -1,7 +1,7 @@
 import { StyledIcon, WindowTypes } from 'src/constants/types';
 import { Bookmarks, Apps, Search } from '@styled-icons/material-outlined';
 import { useTypedDispatch } from 'src/hooks/redux';
-import { toggleActive, openWindowAlone } from 'src/store/modules/intefaceSlice';
+import { toggleActive, openWindowAlone } from 'src/store/modules/windowsSlice';
 import Menubar from './Menubar';
 
 export interface MenuItem {

@@ -2,7 +2,7 @@ import styled, { DefaultTheme } from "styled-components";
 import { Fullscreen, Close } from '@styled-icons/material-outlined';
 import { WindowTypes } from 'src/constants/types';
 import { useTypedDispatch, useTypedSelector } from 'src/hooks';
-import { closeWindow, openWindowAlone, selectIsActiveWindow } from 'src/store/modules/intefaceSlice';
+import { closeWindow, openWindowAlone, selectIsActiveWindow } from 'src/store/modules/windowsSlice';
 import { memo } from "react";
 
 interface Props {

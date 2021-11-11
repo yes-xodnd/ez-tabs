@@ -5,14 +5,17 @@ import { getTabs } from 'src/store/modules/tabsSlice';
 import { addTabsChangeListener } from 'src/api';
 
 import { useTypedDispatch, useTypedSelector } from './redux';
-import { useFolderOpen, useCurrentFolder } from './FolderTree';
 
-const useToggle = (initState: boolean): [ boolean, () => void ] => {
+export { useFolderOpen, useCurrentFolder } from './FolderTree';
+export { useSearch, useShowAllNodeList } from './search';
+export { useTypedDispatch, useTypedSelector };
+
+export const useToggle = (initState: boolean): [ boolean, () => void ] => {
   const [ state, setState ] = useState(initState);
   return [ state, () => setState(!state) ];
 }
 
-const useInitData = () => {
+export const useInitData = () => {
   const dispatch = useTypedDispatch();
   
   useEffect(() => { 
@@ -21,12 +24,3 @@ const useInitData = () => {
     addTabsChangeListener(() => dispatch(getTabs()));
   }, [ dispatch ]);
 }
-
-export {
-  useInitData,
-  useToggle,
-  useTypedDispatch,
-  useTypedSelector,
-  useFolderOpen,
-  useCurrentFolder,
-};

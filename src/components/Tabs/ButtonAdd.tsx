@@ -2,7 +2,7 @@ import { BookmarkBorder } from '@styled-icons/material-outlined';
 import { useTypedDispatch, useTypedSelector } from 'src/hooks';
 import { createFromTabs } from 'src/store/modules/bookmarksSlice';
 import { clearCheck } from 'src/store/modules/tabsSlice';
-import { openWindow } from 'src/store/modules/intefaceSlice';
+import { openWindow } from 'src/store/modules/windowsSlice';
 import styled from 'styled-components';
 
 const ButtonAdd = () => {

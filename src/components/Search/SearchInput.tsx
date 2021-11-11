@@ -3,10 +3,10 @@ import styled, { DefaultTheme } from "styled-components";
 
 interface Props {
   value: string;
-  handleInputChange: ChangeEventHandler;
+  handleChange: ChangeEventHandler;
 }
 
-const SearchInput = ({ value, handleInputChange }: Props) => {
+const SearchInput = ({ value, handleChange }: Props) => {
 
   return (
     <Wrapper>
@@ -15,7 +15,7 @@ const SearchInput = ({ value, handleInputChange }: Props) => {
         type="text"
         id="search-input"
         value={value}
-        onChange={handleInputChange}
+        onChange={handleChange}
         placeholder="검색어를 입력하세요"
         autoFocus
         />
