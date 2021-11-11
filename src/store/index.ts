@@ -1,7 +1,7 @@
 import { configureStore, combineReducers } from '@reduxjs/toolkit';
 import bookmarks from './modules/bookmarksSlice';
 import tabs from './modules/tabsSlice';
-import serach from './modules/searchSlice';
+import search from './modules/searchSlice';
 import interfaces from './modules/windowsSlice';
 import logger from 'redux-logger';
 
