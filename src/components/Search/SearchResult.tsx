@@ -1,13 +1,15 @@
-import NodeListItem from 'src/components/NodeList/NodeListItem';
-import { BookmarkNode } from 'src/constants/types';
+import { useTypedSelector } from 'src/hooks';
 import { customScroll } from 'src/style';
 import styled from 'styled-components';
+import SearchResultItem from './SearchResultItem';
 
-const SearchResult = ({ nodes }: { nodes: BookmarkNode[] }) => {
+const SearchResult = () => {
+  const nodeList = useTypedSelector(state => state.search.nodeList);
 
   return (
     <Wrapper>
-      { nodes.map(node => <NodeListItem node={node} key={node.id} />) }
+      { nodeList.map((node, index) => 
+        <SearchResultItem { ...{ node, index, key: node.id } } />) }
     </Wrapper>
   );
 };
