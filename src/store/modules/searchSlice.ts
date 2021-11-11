@@ -1,22 +1,29 @@
-import { createAction, createAsyncThunk, createSlice } from "@reduxjs/toolkit";
+import { createAction, createAsyncThunk, createSlice, createSelector } from "@reduxjs/toolkit";
 import { BookmarkNode } from 'src/constants/types';
 import { RootState } from "..";
-import { selectAllNodeList } from "./bookmarksSlice";
-
+import { selectAllNodeList, remove, toggleCheck } from "./bookmarksSlice";
 
 interface SearchState {
   nodeList: BookmarkNode[];
-  nodeIndex: number;
+  focusIndex: number;
 }
 
 const initialState: SearchState = {
   nodeList: [],
-  nodeIndex: -1,
+  focusIndex: -1
 };
 
 export const setNodeList = createAction(
   'SEARCH/SET_NODE_LIST',
   (nodeList: BookmarkNode[]) => ({ payload: nodeList })
+);
+
+export const showAllNodeList = createAsyncThunk<void, void, { state: RootState }>(
+  'SEARCH/SHOW_ALL_NODE_LIST',
+  (_, { getState, dispatch }) => {
+    const allNodeList = selectAllNodeList(getState());
+    dispatch(setNodeList(allNodeList));
+  }
 )
 
 export const setNodeIndex = createAction(
@@ -24,9 +31,31 @@ export const setNodeIndex = createAction(
   (index: number) => ({ payload: index })
 );
 
-export const moveNodeIndex = createAction(
+export const moveFocusIndex = createAction(
   'SEARCH/MOVE_NODE_INDEX',
   (diff: 1 | -1) => ({ payload: diff })
+);
+
+export const removeFocusNode = createAsyncThunk<void, void, { state: RootState }>(
+  'SEARCH/REMOVE_FOCUS_NODE',
+  (_, { getState, dispatch }) => {
+    const { nodeList, focusIndex } = getState().search;
+    dispatch(remove(nodeList[focusIndex]));
+  }
+);
+
+export const toggleFocusNode = createAsyncThunk<void, void, { state: RootState }>(
+  'SEARCH/TOGGLE_FOCUS_NODE',
+  (_, { getState, dispatch }) => {
+    const { id } = selectFocusNode(getState());
+    dispatch(toggleCheck(id));
+  }
+);
+
+const selectFocusNode = createSelector(
+  (state: RootState) => state.search.nodeList,
+  (state: RootState) => state.search.focusIndex,
+  (nodeList, focusIndex) => nodeList[focusIndex]
 )
 
 const slice = createSlice({
@@ -36,21 +65,24 @@ const slice = createSlice({
   extraReducers: builder => {
     builder
       .addCase(
-        setNodeIndex,
-        (state, action) => { state.nodeIndex = action.payload; }
-      )
-      .addCase(
-        moveNodeIndex,
-        (state, action) => {
-          const nextIndex = state.nodeIndex + action.payload;
-          if (nextIndex > -1 && nextIndex < state.nodeList.length) {
-            state.nodeIndex = nextIndex;
-          }
+        setNodeList,
+        (state, action) => { 
+          state.nodeList = action.payload;
+          state.focusIndex = -1;
         }
       )
       .addCase(
-        setNodeList,
-        (state, action) => { state.nodeList = action.payload; }
+        setNodeIndex,
+        (state, action) => { state.focusIndex = action.payload; }
+      )
+      .addCase(
+        moveFocusIndex,
+        (state, action) => {
+          const nextIndex = state.focusIndex + action.payload;
+          if (nextIndex > -1 && nextIndex < state.nodeList.length) {
+            state.focusIndex = nextIndex;
+          }
+        }
       )
   }
 })
