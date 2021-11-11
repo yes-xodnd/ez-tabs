@@ -4,7 +4,7 @@ import { useTypedDispatch, useTypedSelector } from 'src/hooks';
 import { checkAll, uncheckAll, selectIsAllChecked } from 'src/store/modules/bookmarksSlice';
 
 const ButtonSelectAll = () => {
-  const { currentFolderNodeId } = useTypedSelector(state => state.bookmarks);
+  const currentFolderNodeId = useTypedSelector(state => state.bookmarks.currentFolderNodeId);
   const isAllChecked = useTypedSelector(selectIsAllChecked);
   const dispatch = useTypedDispatch();
 
