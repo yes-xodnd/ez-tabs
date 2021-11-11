@@ -17,7 +17,12 @@ import Checkbox from 'src/components/UI/Checkbox';
 import InputRename from "./InputRename";
 import NodeListItemDropdown from './NodeListItemDropdown';
 
-const NodeListItem = ({ node }: { node: BookmarkNode }) => {
+interface Props {
+  node: BookmarkNode;
+  isFocused?: boolean;
+}
+
+const NodeListItem = ({ node, isFocused = false }: Props) => {
   const dispatch = useTypedDispatch();
   const isChecked = useTypedSelector(state => selectIsChecked(state, node.id));
   
@@ -37,6 +42,7 @@ const NodeListItem = ({ node }: { node: BookmarkNode }) => {
     <NodeContentContainer 
       onClick={() => { !isBaseNode && dispatch(toggleCheck(node.id)) }}
       onDoubleClick={handleDoubleClick}
+      isFocused={isFocused}
       >
       <div>
         { !isBaseNode && <Checkbox isChecked={isChecked} /> }
@@ -77,7 +83,7 @@ const NodeListItem = ({ node }: { node: BookmarkNode }) => {
 
 export default NodeListItem;
 
-export const NodeContentContainer = styled.div`
+export const NodeContentContainer = styled.div<{ isFocused?: boolean }>`
   display: grid;
   grid-template-columns: 24px 24px auto 32px;
   place-items: center center;
@@ -85,7 +91,12 @@ export const NodeContentContainer = styled.div`
   row-gap: 5px;
   padding: 0.5rem 0;
   border-radius: 5px;
+  border: 1px solid transparent;
   font-size: 0.8rem;
+
+  ${props => props.isFocused && `
+    border-color: ${props.theme.colors.main};
+  `}
 
   &:hover {
     cursor: pointer;
