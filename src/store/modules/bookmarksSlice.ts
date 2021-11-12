@@ -127,18 +127,20 @@ export const uncheckAll = createAction(name + '/CHECK_CLEAR');
 export const removeChecked = createAsyncThunk<void, void, { state: RootState }>(
   name + '/REMOVE_CHECKED',
   async (_, { getState, dispatch }) => {
+    
     const { checkedNodeIds } = getState().bookmarks;
-
+    
     for (const id of checkedNodeIds) {
       const [ node ] = await api.bookmarks.get(id);
       if (!node) return;
-
+      
       node.url 
       ? await api.bookmarks.remove(id)
       : await api.bookmarks.removeTree(id);
     }
     
     dispatch(getTree());
+    dispatch(uncheckAll());
   }
 );
 
