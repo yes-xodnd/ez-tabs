@@ -33,10 +33,9 @@ export const toggleCheck = createAction(
 export const closeCheckedTabs = createAsyncThunk<void, void, { state: RootState }>(
   'TABS/REMOVE_CHECKED',
   async (_, { getState, dispatch }) => {
-    const { checkedTabIds, tabs } = getState().tabs;
-    const idSet = new Set(tabs.map(tab => tab.id));
-    api.tabs.remove(checkedTabIds.filter(id => idSet.has(id)));
+    const tabIds = getState().tabs.checkedTabIds.slice();
     dispatch(clearCheck());
+    api.tabs.remove(tabIds);
   }
 );
 
@@ -47,21 +46,24 @@ export const closeTab = createAsyncThunk(
   }
 );
 
-export const closeFocusedTab = createAsyncThunk<void, void, { state: RootState }>(
-  'TABS/CLOSE_FOCUSED_TABS',
+export const closeTabHotkey = createAsyncThunk<void, void, { state: RootState }>(
+  'TABS/CLOSE_TAB_HOTKEY',
   async (_, { dispatch, getState }) => {
+    const { checkedTabIds } = getState().tabs;
     const targetId = selectFocusedId(getState());
-    targetId && dispatch(closeTab(targetId));
+
+    if (checkedTabIds.length) dispatch(closeCheckedTabs());
+    else targetId && dispatch(closeTab(targetId));
   }
 )
 
-export const moveTabIndex = createAction(
-  'TABS/MOVE_TAB_INDEX',
+export const moveFocusIndex = createAction(
+  'TABS/MOVE_FOCUS_INDEX',
   (diff: -1 | 1) => ({ payload: diff })
 );
 
-export const setTabIndex = createAction(
-  'TABS/SET_TAB_INDEX',
+export const setFocusIndex = createAction(
+  'TABS/SET_FOCUS_INDEX',
   (index: number) => ({ payload: index })
 );
 
@@ -123,7 +125,7 @@ const slice = createSlice({
         }
       )
       .addCase(
-        moveTabIndex,
+        moveFocusIndex,
         (state, action) => {
           const nextIndex = state.tabIndex + action.payload;
           if (nextIndex >= state.tabs.length || nextIndex < 0) return;
@@ -131,7 +133,7 @@ const slice = createSlice({
         }
       )
       .addCase(
-        setTabIndex,
+        setFocusIndex,
         (state, action) => { state.tabIndex = action.payload; }
       )
   }
