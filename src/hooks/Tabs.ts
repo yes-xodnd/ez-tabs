@@ -19,11 +19,11 @@ export const useCloseTab = (id: number | undefined) => {
 
 export const useCloseCheckedTabs = () => {
   const dispatch = useTypedDispatch();  
-  
+
   return throttle(() => { dispatch(closeCheckedTabs()) }, 1000);
 }
 
-export const useTabsKeyHanders = () => {
+export const useTabsKeyHandlers = () => {
   const dispatch = useTypedDispatch();
 
   const keyHandlers = useMemo(() =>({
