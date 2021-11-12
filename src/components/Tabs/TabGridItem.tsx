@@ -2,13 +2,15 @@ import { useEffect, useRef, memo } from 'react';
 import styled, { DefaultTheme } from 'styled-components';
 
 import { Tab } from 'src/constants/types';
-import { useTypedDispatch, useTypedSelector } from 'src/hooks';
-import { setTabIndex, toggleCheck, closeTab } from 'src/store/modules/tabsSlice';
+import { useScrollCenterFocused, useTypedDispatch, useTypedSelector } from 'src/hooks';
+import { setFocusIndex, toggleCheck, closeTab } from 'src/store/modules/tabsSlice';
 import api from 'src/api';
 
 import Favicon from 'src/components/UI/Favicon';
 import TabCheckbox from './TabCheckbox';
 import Button from 'src/components/UI/Button';
+
+
 
 interface Props {
   tab: Tab;
@@ -17,18 +19,14 @@ interface Props {
 
 const TabGridItem = ({ tab, index }: Props) => {
   const isFocused = useTypedSelector(state => state.tabs.tabIndex === index);
-  const ref = useRef<HTMLDivElement>(null);
-  
-  useEffect(() => {
-    ref.current?.scrollIntoView({ block: 'center' });
-  }, [ isFocused ]);
+  const ref = useScrollCenterFocused<HTMLDivElement>(isFocused);
   
   const dispatch = useTypedDispatch();
   const close = () => { tab.id && dispatch(closeTab(tab.id)) };
   const open = () => { tab.id && api.tabs.update(tab.id, { active: true }); };
   
   const handleClick = () => {
-    dispatch(setTabIndex(index));
+    dispatch(setFocusIndex(index));
     tab.id && dispatch(toggleCheck(tab.id));
   }
 
