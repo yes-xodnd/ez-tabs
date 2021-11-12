@@ -1,4 +1,4 @@
-import { KeyboardEvent, KeyboardEventHandler, useCallback, useRef } from "react";
+import { KeyboardEvent, KeyboardEventHandler, useCallback, useEffect, useRef } from "react";
 import { throttle } from "src/util";
 
 const isExceptionTag = (tagName: string): boolean => (
@@ -15,7 +15,6 @@ export const useHotkeys = <T extends { [key: string]: () => void }>(keyHandlers:
     const target = e.target as HTMLElement;
     const key = e.key;  
     
-    if (e.repeat) return;
     if (target && target.tagName && isExceptionTag(target.tagName)) return;
 
     executeHandler(key);
@@ -26,4 +25,14 @@ export const useHotkeys = <T extends { [key: string]: () => void }>(keyHandlers:
   const handleKeyDown: KeyboardEventHandler = e => throttledInput.current(e);
 
   return handleKeyDown;
+}
+
+export const useScrollCenterFocused = <T extends HTMLElement>(isFocused: boolean) => {
+  const ref = useRef<T>(null);
+
+  useEffect(() => {
+    if (isFocused) ref.current?.scrollIntoView?.({ block: 'center' });
+  }, [ isFocused ]);
+
+  return ref;
 }
