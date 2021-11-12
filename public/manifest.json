@@ -1,6 +1,6 @@
 {
-  "name": "bookmarks & tabs",
-  "version": "1.0",
+  "name": "EZ Tabs: Tabs & Bookmarks Manager",
+  "version": "1.0.0",
   "manifest_version": 3,
 
   "action": {
