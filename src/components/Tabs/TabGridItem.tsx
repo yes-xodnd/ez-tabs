@@ -1,4 +1,4 @@
-import { useEffect, useRef, memo } from 'react';
+import { memo } from 'react';
 import styled, { DefaultTheme } from 'styled-components';
 
 import { Tab } from 'src/constants/types';
