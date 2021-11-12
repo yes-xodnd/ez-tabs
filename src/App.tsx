@@ -15,8 +15,8 @@ function App() {
       <Menubar isPopup={isPopup} />
       
       <Windows isPopup={isPopup}>
-        <BookmarksWindow />
         <TabsWindow />
+        <BookmarksWindow />
         <SearchWindow />
       </Windows>
     </Wrapper>

@@ -24,8 +24,8 @@ const MenubarContainer = ({ isPopup }: { isPopup: boolean }) => {
   });
 
   const menuItems: MenuItem[] = [
-    createItem('북마크', 'BOOKMARKS', Bookmarks),
     createItem('탭', 'TABS', Apps),
+    createItem('북마크', 'BOOKMARKS', Bookmarks),
     createItem('검색', 'SEARCH', Search)
   ];
 
