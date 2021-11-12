@@ -1,7 +1,5 @@
-import { useMemo } from 'react';
 import styled from 'styled-components';
-import { moveTabIndex, closeFocusedTab, toggleCheckFocused } from 'src/store/modules/tabsSlice';
-import { useToggle, useTypedDispatch, useTypedSelector } from 'src/hooks';
+import { useToggle, useTypedSelector, useTabsKeyHandlers } from 'src/hooks';
 import { customScroll } from 'src/style';
 
 
@@ -15,15 +13,8 @@ import ButtonAdd from 'src/components/Tabs/ButtonAdd';
 
 const TabsWindow = () => {
   const tabs = useTypedSelector(state => state.tabs.tabs);
+  const keyHandlers = useTabsKeyHandlers();
   const [ isListView, toggleView ] = useToggle(true);
-  const dispatch = useTypedDispatch()
-
-  const keyHandlers = useMemo(() =>({
-    ArrowUp: () => dispatch(moveTabIndex(-1)),
-    ArrowDown: () => dispatch(moveTabIndex(1)),
-    Enter: () => dispatch(toggleCheckFocused()),
-    Delete: () => dispatch(closeFocusedTab())
-  }), [ dispatch ]);
 
   return (
     
