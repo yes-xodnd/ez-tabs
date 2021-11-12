@@ -1,9 +1,9 @@
-import { useState, useEffect, useRef, memo } from 'react';
+import { useState, memo } from 'react';
 import styled, { DefaultTheme } from 'styled-components';
 import { Tab } from 'src/constants/types';
 
-import { toggleCheck, setTabIndex } from 'src/store/modules/tabsSlice';
-import { useTypedDispatch, useTypedSelector } from 'src/hooks';
+import { toggleCheck, setFocusIndex } from 'src/store/modules/tabsSlice';
+import { useScrollCenterFocused, useTypedDispatch, useTypedSelector } from 'src/hooks';
 import { getHostname } from 'src/util';
 
 import Favicon from 'src/components/UI/Favicon';
@@ -17,19 +17,14 @@ interface Props {
 
 const TabListItem = ({ tab, index }: Props) => {
   const isFocused = useTypedSelector(state => state.tabs.tabIndex === index);
-  const isChecked = useTypedSelector(state => tab.id && state.tabs.checkedTabIds.includes(tab.id));
-  const ref = useRef<HTMLDivElement>(null);
+  const ref = useScrollCenterFocused<HTMLDivElement>(isFocused);
 
   const [ isHover, setHover ] = useState(false);
   const dispatch = useTypedDispatch();
 
-  useEffect(() => {
-    (isChecked || isFocused) && ref.current?.scrollIntoView({ block: 'center' }); 
-  }, [ isFocused, isChecked ]);
-
   const handleClick = () => {
     tab.id && dispatch(toggleCheck(tab.id));
-    dispatch(setTabIndex(index));
+    dispatch(setFocusIndex(index));
   }
 
   return ( 
