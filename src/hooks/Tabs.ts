@@ -2,6 +2,8 @@ import { closeCheckedTabs, toggleCheck } from "src/store/modules/tabsSlice";
 import { useTypedDispatch } from ".";
 import { closeTab } from "src/store/modules/tabsSlice";
 import { throttle } from "src/util";
+import { useMemo } from "react";
+import { moveFocusIndex, closeTabHotkey, toggleCheckFocused } from 'src/store/modules/tabsSlice';
 
 export const useToggleCheckTab = (id: number | undefined) => {
   const dispatch = useTypedDispatch();
@@ -17,5 +19,19 @@ export const useCloseTab = (id: number | undefined) => {
 
 export const useCloseCheckedTabs = () => {
   const dispatch = useTypedDispatch();  
+  
   return throttle(() => { dispatch(closeCheckedTabs()) }, 1000);
+}
+
+export const useTabsKeyHanders = () => {
+  const dispatch = useTypedDispatch();
+
+  const keyHandlers = useMemo(() =>({
+    ArrowUp: () => dispatch(moveFocusIndex(-1)),
+    ArrowDown: () => dispatch(moveFocusIndex(1)),
+    Enter: () => dispatch(toggleCheckFocused()),
+    Delete: () => dispatch(closeTabHotkey())
+  }), [ dispatch ]);
+
+  return keyHandlers;
 }
