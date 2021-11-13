@@ -3,19 +3,17 @@ import { MenuItem } from "./MenuContainer";
 
 interface Props {
   menuItems: MenuItem[];
-  isPopup: boolean;
 }
 
-const Menubar = ({ menuItems, isPopup }: Props) => {
+const Menubar = ({ menuItems }: Props) => {
 
   const MenuItem = ({ item }: { item: MenuItem }) => {
-    const { title, Icon, handleClick, handleDoubleClick } = item;
+    const { title, Icon, handleClick } = item;
 
     return (
       <ListItem 
         title={title} 
         onClick={handleClick} 
-        onDoubleClick={handleDoubleClick} 
         >
         <Icon size="24" />
       </ListItem>
@@ -23,17 +21,15 @@ const Menubar = ({ menuItems, isPopup }: Props) => {
   }
 
   return (
-    <List isPopup={isPopup}>
-      { menuItems.map((item, index) => <MenuItem item={item} key={index} />) }
+    <List>
+      { menuItems.map(item => <MenuItem item={item} key={item.title} />) }
     </List>
   );
 };
 
 export default Menubar;
 
-const List = styled.ul<{ isPopup: boolean }>`
-  ${props => props.isPopup ? 'display: flex' : 'height: 100%'};
-
+const List = styled.ul`
   margin: 0;
   padding: 0;
 

@@ -7,9 +7,6 @@
     "default_title": "open manager",
     "default_popup": "index.html#popup"
   },
-  "chrome_url_overrides": {
-    "bookmarks": "index.html"
-  },
   "permissions": [
     "bookmarks",
     "tabs"
