@@ -7,7 +7,7 @@ import { addTabsChangeListener } from 'src/api';
 import { useTypedDispatch, useTypedSelector } from './redux';
 
 export { useFolderOpen, useCurrentFolder } from './FolderTree';
-export { useSearch, useShowAllNodeList } from './search';
+export { useSearch, useShowAllNodeList, useSearchKeyHandlers } from './search';
 export { useTabsKeyHandlers, useCloseCheckedTabs, useCloseTab, useToggleCheckTab } from './Tabs';
 export { useHotkeys, useScrollCenterFocused } from './hotkeys';
 export { useTypedDispatch, useTypedSelector };

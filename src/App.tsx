@@ -3,7 +3,6 @@ import { useTypedSelector, useInitData } from './hooks';
 
 import BookmarksWindow from './windows/BookmarksWindow';
 import TabsWindow from './windows/TabsWindow';
-import SearchWindow from './windows/SearchWindow';
 import Menubar from './components/Menubar/MenuContainer';
 
 function App() {
@@ -17,7 +16,6 @@ function App() {
       <Windows isPopup={isPopup}>
         <TabsWindow />
         <BookmarksWindow />
-        <SearchWindow />
       </Windows>
     </Wrapper>
   );

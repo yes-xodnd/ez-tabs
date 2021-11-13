@@ -13,7 +13,7 @@ export interface ParentNode extends BookmarkNode {
 
 export type Tab = chrome.tabs.Tab;
 export type QueryInfo = chrome.tabs.QueryInfo;
-export type WindowTypes = 'BOOKMARKS' | 'TABS' | 'SEARCH';
+export type WindowTypes = 'BOOKMARKS' | 'TABS';
 
 export type StyledIcon = typeof GridView;
 export type ButtonTypes = 'NORMAL' | 'DANGER';
