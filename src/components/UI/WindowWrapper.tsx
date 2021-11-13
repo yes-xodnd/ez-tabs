@@ -1,7 +1,7 @@
 import styled from "styled-components";
 import { WindowTypes } from "src/constants/types";
 import { useTypedDispatch, useTypedSelector } from "src/hooks";
-import { activateWindow, selectIsVisibleWindow } from "src/store/modules/windowsSlice";
+import { activateWindow, selectIsVisibleWindow, selectIsActiveWindow } from "src/store/modules/windowsSlice";
 import { useHotkeys } from 'src/hooks/hotkeys';
 import { useEffect, useRef } from "react";
 
@@ -14,9 +14,11 @@ interface Props {
 const WindowWrapper = ({ windowType, children, keyHandlers = {} }: Props) => {
   const dispatch = useTypedDispatch();
   const handleKeyDown = useHotkeys(keyHandlers);
-  const handleClick = () => { dispatch(activateWindow(windowType)); }
+  const isActive = useTypedSelector(selectIsActiveWindow(windowType));
   const isVisible = useTypedSelector(state => selectIsVisibleWindow(state, windowType));
   const ref = useRef<HTMLDivElement>(null);
+
+  const handleClick = () => !isActive && dispatch(activateWindow(windowType));
 
   useEffect(() => { ref.current?.focus(); }, []);
 
