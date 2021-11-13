@@ -1,39 +1,30 @@
-import { ChangeEventHandler, useEffect, useMemo, useRef, useState } from 'react';
-import { BookmarkNode } from 'src/constants/types';
+import { ChangeEventHandler, useMemo, useRef } from 'react';
 import { useTypedSelector, useTypedDispatch } from 'src/hooks';
-import { selectAllNodeList } from 'src/store/modules/bookmarksSlice';
+import { setView } from 'src/store/modules/bookmarksSlice';
 import { setNodeList, showAllNodeList, moveFocusIndex, removeFocusNode, toggleFocusNode } from 'src/store/modules/searchSlice';
 import { debounce } from 'src/util';
 import api from 'src/api';
 
 export const useSearch = () => {
   const dispatch = useTypedDispatch();
-  const allNodeList = useTypedSelector(selectAllNodeList);
-  const [ value, setValue ] = useState<string>('');
+  const isSearchView = useTypedSelector(state => state.bookmarks.view === 'SEARCH');
 
-  const searchRef = useRef(debounce((query: string, allNodeList: BookmarkNode[]) => {
-    if (query === '') {
-      dispatch(setNodeList(allNodeList));
-      return;
-    }
-
+  const searchRef = useRef(debounce((query: string) => {
     api.bookmarks.search(query)
     .then(res => dispatch(setNodeList(res)));
   }, 500));
-
-  // keeps nodeList updated in searchSlice
-  useEffect(() => {
-    dispatch(setNodeList(allNodeList));
-  }, [ allNodeList, dispatch ]);
-
-  // search
-  useEffect(() => { searchRef.current(value, allNodeList); }, [ value, allNodeList ]);
   
   const handleChange: ChangeEventHandler<HTMLInputElement> = e => {
-    setValue(e.target.value);
+    const { value } = e.target;
+
+    if (!isSearchView) dispatch(setView('SEARCH'));
+    
+    value
+    ? searchRef.current(value)
+    : dispatch(setView('TREE'));
   }
   
-  return { value, handleChange };
+  return handleChange;
 } 
 
 export const useShowAllNodeList = () => {
