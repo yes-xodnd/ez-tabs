@@ -1,32 +1,31 @@
 import styled from "styled-components";
 import { WindowTypes } from "src/constants/types";
-import { useTypedDispatch, useTypedSelector } from "src/hooks";
-import { activateWindow, selectIsVisibleWindow, selectIsActiveWindow } from "src/store/modules/windowsSlice";
+import { useTypedSelector } from "src/hooks";
+import { selectIsVisibleWindow } from "src/store/modules/windowsSlice";
 import { useHotkeys } from 'src/hooks/hotkeys';
 import { useEffect, useRef } from "react";
 
 interface Props {
   windowType: WindowTypes;
-  children?: JSX.Element | JSX.Element[];
   keyHandlers?: { [key: string]: () => void }
 }
 
-const WindowWrapper = ({ windowType, children, keyHandlers = {} }: Props) => {
-  const dispatch = useTypedDispatch();
+const WindowWrapper = ({ windowType, children, keyHandlers = {} }: React.PropsWithChildren<Props>) => {
   const handleKeyDown = useHotkeys(keyHandlers);
-  const isActive = useTypedSelector(selectIsActiveWindow(windowType));
-  const isVisible = useTypedSelector(state => selectIsVisibleWindow(state, windowType));
+  const isVisible = useTypedSelector(selectIsVisibleWindow(windowType));
   const ref = useRef<HTMLDivElement>(null);
 
-  const handleClick = () => !isActive && dispatch(activateWindow(windowType));
-
-  useEffect(() => { ref.current?.focus(); }, []);
+  useEffect(() => { isVisible && ref.current?.focus(); }, [ isVisible ]);
 
   return (
     <>
     {
       isVisible &&   
-      <Wrapper onClick={handleClick} tabIndex={-1} onKeyDown={handleKeyDown} ref={ref} >
+      <Wrapper 
+        ref={ref}
+        onKeyDown={handleKeyDown} 
+        tabIndex={-1}
+        >
           { children }
       </Wrapper>
     }
@@ -38,8 +37,8 @@ export default WindowWrapper;
 
 export const Wrapper = styled.div`
   flex-grow: 2;
-  min-width: 500px;
-  max-width: 800px;
+  width: 600px;
+  max-width: 600px;
 
   display: flex;
   flex-direction: column;
