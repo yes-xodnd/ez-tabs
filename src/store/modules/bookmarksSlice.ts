@@ -14,13 +14,15 @@ interface BookmarksState {
   currentFolderNodeId: string;
   openFolderNodeIds: string[];
   checkedNodeIds: string[];
+  view: 'TREE' | 'SEARCH';
 }
 
 const initialState: BookmarksState = {
   rootNode: {} as BookmarkNode,
   currentFolderNodeId: "0",
   openFolderNodeIds: [],
-  checkedNodeIds: []
+  checkedNodeIds: [],
+  view: 'TREE',
 };
 
 const name = 'BOOKMARKS';
@@ -153,7 +155,11 @@ export const moveChecked = createAsyncThunk<void, string, { state: RootState }>(
       .forEach(id => api.bookmarks.move(id, { parentId }));
     dispatch(getTree());
   }
-)
+);
+
+export const setView = createAction(
+  'BOOKMARKS_SET_VIEW', 
+  (type: 'TREE' | 'SEARCH') => ({ payload: type }));
 
 // selectors
 const selectRootNode = (state: RootState): BookmarkNode => state.bookmarks.rootNode;
@@ -262,6 +268,10 @@ const bookmarksSlice = createSlice({
       .addCase(
         uncheckAll,
         state => { state.checkedNodeIds = []; }
+      )
+      .addCase(
+        setView,
+        (state, action) => { state.view = action.payload; }
       )
   }
 });
