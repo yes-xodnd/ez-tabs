@@ -1,12 +1,8 @@
-import { ChangeEventHandler } from "react";
 import styled, { DefaultTheme } from "styled-components";
+import { useSearch } from 'src/hooks';
 
-interface Props {
-  value: string;
-  handleChange: ChangeEventHandler;
-}
-
-const SearchInput = ({ value, handleChange }: Props) => {
+const SearchInput = () => {
+  const handleChange = useSearch();
 
   return (
     <Wrapper>
@@ -14,10 +10,8 @@ const SearchInput = ({ value, handleChange }: Props) => {
       <Input 
         type="text"
         id="search-input"
-        value={value}
         onChange={handleChange}
         placeholder="검색어를 입력하세요"
-        autoFocus
         />
     </Wrapper>
   );
