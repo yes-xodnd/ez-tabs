@@ -3,7 +3,7 @@ import { useTypedDispatch, useTypedSelector } from 'src/hooks';
 import { createFolder } from 'src/store/modules/bookmarksSlice';
 import ToolbarButton from "../UI/ToolbarButton";
 
-const ButtonAddFolder = () => {
+const ButtonCreateFolder = () => {
   const currentFolderNodeId = useTypedSelector(state => state.bookmarks.currentFolderNodeId);
   const dispatch = useTypedDispatch();
 
@@ -19,5 +19,5 @@ const ButtonAddFolder = () => {
   );
 };
 
-export default ButtonAddFolder;
+export default ButtonCreateFolder;
 
