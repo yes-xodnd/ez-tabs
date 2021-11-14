@@ -5,6 +5,7 @@ import ToolbarButton from "../UI/ToolbarButton";
 
 const ButtonCreateFolder = () => {
   const currentFolderNodeId = useTypedSelector(state => state.bookmarks.currentFolderNodeId);
+  const disabled = useTypedSelector(state => state.bookmarks.view === 'SEARCH');
   const dispatch = useTypedDispatch();
 
   const handleClick = () => {
@@ -15,7 +16,12 @@ const ButtonCreateFolder = () => {
   }
 
   return (
-    <ToolbarButton title={'새 폴더'} Icon={CreateNewFolder} handleClick={handleClick} />
+    <ToolbarButton 
+      title={'새 폴더'}
+      Icon={CreateNewFolder}
+      handleClick={handleClick}
+      disabled={disabled}
+      />
   );
 };
 
