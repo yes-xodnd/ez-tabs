@@ -3,22 +3,27 @@ import styled from 'styled-components';
 
 interface Props {
   title: string;
-  handleClick: () => void;
   Icon: StyledIcon;
+  handleClick: () => void;
+  disabled?: boolean;
 }
 
-const ToolbarButton = ({ title, handleClick, Icon }: Props) => {
+const ToolbarButton = ({ title, handleClick, Icon, disabled = false }: Props) => {
   return (
-    <Wrapper title={title} onClick={handleClick}>
+    <Wrapper 
+      title={title} 
+      onClick={() => !disabled && handleClick()}
+      disabled={disabled}
+      >
       <Icon size="16" />
-      <div>{ title }</div>
+      {/* <div>{ title }</div> */}
     </Wrapper>
   );
 };
 
 export default ToolbarButton;
 
-export const Wrapper = styled.button`
+export const Wrapper = styled.button<{ disabled: boolean }>`
   display: flex;
   align-items: center;
   gap: 3px;
@@ -28,10 +33,15 @@ export const Wrapper = styled.button`
   font-size: 0.8rem;
   background-color: white;
   color: #333333;
-  
-  &:hover {
-    cursor: pointer;
-    background-color: ${props => props.theme.colors.main};
-    color: white;
-  }  
+
+  ${props => props.disabled
+  ? 'background-color: #efefef;'
+  : `
+    &:hover {
+      cursor: pointer;
+      background-color: ${props.theme.colors.main};
+      color: white;
+    } 
+  `
+  }
 `

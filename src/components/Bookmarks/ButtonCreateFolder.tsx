@@ -3,8 +3,9 @@ import { useTypedDispatch, useTypedSelector } from 'src/hooks';
 import { createFolder } from 'src/store/modules/bookmarksSlice';
 import ToolbarButton from "../UI/ToolbarButton";
 
-const ButtonAddFolder = () => {
+const ButtonCreateFolder = () => {
   const currentFolderNodeId = useTypedSelector(state => state.bookmarks.currentFolderNodeId);
+  const disabled = useTypedSelector(state => state.bookmarks.view === 'SEARCH');
   const dispatch = useTypedDispatch();
 
   const handleClick = () => {
@@ -15,9 +16,14 @@ const ButtonAddFolder = () => {
   }
 
   return (
-    <ToolbarButton title={'새 폴더'} Icon={CreateNewFolder} handleClick={handleClick} />
+    <ToolbarButton 
+      title={'새 폴더'}
+      Icon={CreateNewFolder}
+      handleClick={handleClick}
+      disabled={disabled}
+      />
   );
 };
 
-export default ButtonAddFolder;
+export default ButtonCreateFolder;
 

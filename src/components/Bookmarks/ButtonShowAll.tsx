@@ -1,4 +1,4 @@
-import Button from 'src/components/UI/Button';
+import ToolbarButton from 'src/components/UI/ToolbarButton';
 import { ViewList } from '@styled-icons/material-outlined';
 import { useTypedDispatch } from 'src/hooks';
 import { showAllNodeList } from 'src/store/modules/searchSlice';
@@ -9,8 +9,8 @@ import { setView } from 'src/store/modules/bookmarksSlice';
 const ButtonShowAll = () => {
   const dispatch = useTypedDispatch();
 
-  const buttonProps: React.ComponentProps<typeof Button> = useMemo(() => ({
-    content: '전체 목록',
+  const buttonProps: React.ComponentProps<typeof ToolbarButton> = useMemo(() => ({
+    title: '전체 목록',
     handleClick: () => {
       dispatch(showAllNodeList());
       dispatch(setView('SEARCH'));
@@ -19,7 +19,7 @@ const ButtonShowAll = () => {
   }), [ dispatch ]);
 
   return (
-    <Button { ...buttonProps } />
+    <ToolbarButton { ...buttonProps } />
   )
   
 };
