@@ -22,5 +22,5 @@ const List = styled.ul`
   list-style: none;
   background-image: linear-gradient(120deg, #1d242ed2, #212527);
   color: white;
-  font-size: 0.8rem;
+  font-size: 13px;
 `;
