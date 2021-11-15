@@ -10,7 +10,7 @@ const TabList = ({ tabs }: { tabs: Tab[] }) => {
         tabs.map((tab, index) => (
           <TabListItem 
             tab={tab} 
-            key={tab.url}
+            key={tab.id}
             index={index}
             />
         )) 

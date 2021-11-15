@@ -15,6 +15,7 @@ interface BookmarksState {
   openFolderNodeIds: string[];
   checkedNodeIds: string[];
   view: 'TREE' | 'SEARCH';
+  focusIndex: number;
 }
 
 const initialState: BookmarksState = {
@@ -23,6 +24,7 @@ const initialState: BookmarksState = {
   openFolderNodeIds: [],
   checkedNodeIds: [],
   view: 'TREE',
+  focusIndex: -1,
 };
 
 const name = 'BOOKMARKS';
@@ -159,7 +161,72 @@ export const moveChecked = createAsyncThunk<void, string, { state: RootState }>(
 
 export const setView = createAction(
   'BOOKMARKS_SET_VIEW', 
-  (type: 'TREE' | 'SEARCH') => ({ payload: type }));
+  (type: 'TREE' | 'SEARCH') => ({ payload: type })
+);
+
+export const setFocusIndex = createAction(
+  'BOOKMARKS/SET_FOCUS',
+  (index: number) => ({ payload: index })
+);
+
+export const moveFocusIndex = createAsyncThunk<void, 1 | -1, { state: RootState }>(
+  'BOOKMARKS/MOVE_FOCUS_INDEX',
+  (diff: 1 | -1, { getState, dispatch }) => {
+    const nextIndex = getState().bookmarks.focusIndex + diff;
+    const length = selectCurrentFolderNode(getState()).children?.length || 0;
+
+    if (nextIndex >= -1 && nextIndex < length) {
+      dispatch(setFocusIndex(nextIndex));
+    }
+  }
+);
+
+export const toParentNode = createAsyncThunk<void, void, { state: RootState }>(
+  'BOOKMARKS/TO_PARENT_NODE',
+  (_, { getState, dispatch }) => {
+    const parentId = selectCurrentFolderNode(getState()).parentId;
+    parentId && dispatch(setCurrentFolderNodeId(parentId));
+  }
+)
+
+export const onSelect = createAsyncThunk<void, void, { state: RootState }>(
+  'BOOKMARKS/ON_SELECT',
+  (_, { getState, dispatch }) => {
+    const index = getState().bookmarks.focusIndex;
+
+    if (index === -1) {
+      dispatch(toParentNode());
+      return;
+    }
+
+    const node = selectFocusNode(getState());
+    if (!node || !node.id) return;
+
+    node.url
+    ? dispatch(toggleCheck(node.id))
+    : dispatch(setCurrentFolderNodeId(node.id));
+  }
+);
+
+export const onDelete = createAsyncThunk<void, void, { state: RootState }>(
+  'BOOKMARKS/ON_DELETE',
+  (_, { getState, dispatch }) => {
+    if (getState().bookmarks.checkedNodeIds.length) {
+      dispatch(removeChecked());
+    } else {
+      const node = selectFocusNode(getState());
+      node && dispatch(remove(node));
+    }
+  }
+);
+
+export const openFocusNodeUrl = createAsyncThunk<void, void, { state: RootState }>(
+  'BOOKMARKS/OPEN_FOCUS_NODE_URL',
+  (_, { getState }) => {
+    const url = selectFocusNode(getState())?.url;
+    url && window.open(url);
+  }
+);
 
 // selectors
 const selectRootNode = (state: RootState): BookmarkNode => state.bookmarks.rootNode;
@@ -219,6 +286,11 @@ export const selectIsAllChecked = (state: RootState) => {
   return selectCurrentFolderNode(state)?.children?.length === state.bookmarks.checkedNodeIds.length;
 }
 
+export const selectFocusNode = (state: RootState): BookmarkNode | undefined => {
+  const index = state.bookmarks.focusIndex;
+  return selectCurrentFolderNode(state).children?.[index];
+}
+
 // slice
 const bookmarksSlice = createSlice({
   name,
@@ -235,6 +307,7 @@ const bookmarksSlice = createSlice({
         (state, action) => { 
           state.currentFolderNodeId = action.payload;
           state.checkedNodeIds = [];
+          state.focusIndex = -1;
         }
       )
       .addCase(
@@ -271,7 +344,14 @@ const bookmarksSlice = createSlice({
       )
       .addCase(
         setView,
-        (state, action) => { state.view = action.payload; }
+        (state, action) => { 
+          state.view = action.payload;
+          state.checkedNodeIds = [];
+        }
+      )
+      .addCase(
+        setFocusIndex,
+        (state, action) => { state.focusIndex = action.payload }
       )
   }
 });

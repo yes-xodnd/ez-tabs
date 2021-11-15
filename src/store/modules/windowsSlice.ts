@@ -17,6 +17,8 @@ export const openWindow = createAction(
   prepareWindowType
 );
 
+export const toggleWindow = createAction('WINDOWS/TOGGLE_WINDOW');
+
 export const selectIsVisibleWindow = (type: WindowTypes) => (state: RootState) => state.interfaces.visibleWindow === type;
 
 const slice = createSlice({
@@ -29,6 +31,14 @@ const slice = createSlice({
         openWindow,
         (state, action) => { 
           state.visibleWindow = action.payload;
+        }
+      )
+      .addCase(
+        toggleWindow,
+        state => { 
+          state.visibleWindow = state.visibleWindow === 'BOOKMARKS'
+            ? 'TABS'
+            : 'BOOKMARKS';
         }
       )
   }
