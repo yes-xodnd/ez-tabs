@@ -1,6 +1,6 @@
 import styled from "styled-components";
 import { Close } from '@styled-icons/material-outlined';
-import { useCloseTab } from "src/hooks/Tabs";
+import { useCloseTab } from "src/hooks/tabs";
 
 
 const ButtonCloseTab = ({ id }: { id: number | undefined }) => {
