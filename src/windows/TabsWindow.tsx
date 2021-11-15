@@ -4,7 +4,6 @@ import { customScroll } from 'src/style';
 
 
 import WindowWrapper from 'src/components/UI/WindowWrapper';
-import WindowHeader from 'src/components/UI/WindowHeader';
 import Toolbar from 'src/components/Tabs/TabsToolbar';
 import TabGrid from 'src/components/Tabs/TabGrid';
 import TabList from 'src/components/Tabs/TabList';
@@ -19,7 +18,6 @@ const TabsWindow = () => {
   return (
     
     <WindowWrapper windowType="TABS" keyHandlers={keyHandlers}>
-      <WindowHeader title='탭' windowType="TABS" />
       <Toolbar isListView={isListView} toggleView={toggleView} />
       <ContentWrapper isListView={isListView}>
         {

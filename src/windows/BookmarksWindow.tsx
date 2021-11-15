@@ -2,7 +2,6 @@ import styled from 'styled-components';
 import { useSearchKeyHandlers, useTypedSelector } from 'src/hooks';
 
 import WindowWrapper from 'src/components/UI/WindowWrapper';
-import WindowHeader from 'src/components/UI/WindowHeader';
 import Toolbar from 'src/components/Bookmarks/BookmarksToolbar';
 import FolderTree from 'src/components/FolderTree/FolderTree';
 import NodeListContainer from 'src/components/NodeList/NodeListContainer';
@@ -21,7 +20,6 @@ const BookmarksWindow = () => {
 
   return (
     <WindowWrapper windowType={'BOOKMARKS'} keyHandlers={keyHandlers}>
-      <WindowHeader title='북마크' windowType={'BOOKMARKS'}/>
       <Toolbar />
       {
         view === 'SEARCH'

@@ -44,7 +44,6 @@ export const Wrapper = styled.div`
   flex-direction: column;
   height: 100%;
 
-  border-radius: 5px;
   background-color: white;
   box-shadow: 2px 2px 10px lightgrey;
   overflow: hidden;
