@@ -25,7 +25,11 @@ const MenubarItem = ({ title, type, Icon }: MenubarItemProps) => {
 export default MenubarItem;
 
 const ListItem = styled.li<{ isActive: boolean }>`
-  padding: 8px 16px;
+  height: 33px;
+  padding: 0 16px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
 
   ${props => props.isActive && `
     background-color: #00000086;
