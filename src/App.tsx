@@ -4,7 +4,6 @@ import { useInitData, useHotkeys, useCombinedKeyHandlers, useAutoFocusRef } from
 import BookmarksWindow from './windows/BookmarksWindow';
 import TabsWindow from './windows/TabsWindow';
 import Menubar from './components/Menubar/Menubar';
-import { useEffect, useRef } from 'react';
 
 function App() {
   useInitData();
