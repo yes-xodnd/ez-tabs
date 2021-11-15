@@ -45,7 +45,8 @@ export const useGlobalKeyHandlers = () => {
   const dispatch = useTypedDispatch();
 
   return useMemo(() => ({
-    PageDown: () => dispatch(toggleWindow())
+    'Ctrl+PageUp': () => dispatch(toggleWindow()),
+    'Ctrl+PageDown': () => dispatch(toggleWindow()),
   }), [ dispatch ]);
 }
 
