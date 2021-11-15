@@ -1,5 +1,5 @@
 import styled from 'styled-components';
-import { useInitData } from './hooks';  
+import { useGlobalHotkeys, useInitData, useGlobalKeyHandlers } from './hooks';  
 
 import BookmarksWindow from './windows/BookmarksWindow';
 import TabsWindow from './windows/TabsWindow';
@@ -7,6 +7,8 @@ import Menubar from './components/Menubar/MenuContainer';
 
 function App() {
   useInitData();
+  const keyHandlers = useGlobalKeyHandlers();
+  useGlobalHotkeys(keyHandlers);
 
   return (
     <Wrapper>
