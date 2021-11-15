@@ -1,24 +1,26 @@
-import { KeyboardEvent, KeyboardEventHandler, useCallback, useEffect, useRef } from "react";
-import { throttle } from "src/util";
+import { KeyboardEvent as ReactKeyboardEvent, KeyboardEventHandler, useEffect, useMemo, useRef } from "react";
+import { toggleWindow } from 'src/store/modules/windowsSlice';
+import { once, throttle } from "src/util";
+import { useTypedDispatch } from "./redux";
+
+type Handler = (e?: ReactKeyboardEvent) => void;
+type HandlerMap = { [key: string]: Handler };
 
 const isExceptionTag = (tagName: string): boolean => (
   ['INPUT', 'TEXTAREA', 'SELECT'].includes(tagName)
 );
 
-export const useHotkeys = <T extends { [key: string]: () => void }>(keyHandlers: T) => {
+export const useHotkeys = <T extends HandlerMap>(keyHandlers: T) => {
 
-  const executeHandler = useCallback((key: string) => {
-    if (keyHandlers[key]) keyHandlers[key]()
-  }, [ keyHandlers ]);
+  const handlerRef = useRef<HandlerMap>({});
+  handlerRef.current = keyHandlers;
 
-  const throttledInput = useRef(throttle((e: KeyboardEvent) => {
+  const throttledInput = useRef(throttle((e: ReactKeyboardEvent) => {
     const target = e.target as HTMLElement;
     const key = e.key;  
     
     if (target && target.tagName && isExceptionTag(target.tagName)) return;
-
-    executeHandler(key);
-    e.stopPropagation();
+    handlerRef.current[key] && handlerRef.current[key](e);
     
   }, 100));
    
@@ -36,3 +38,25 @@ export const useScrollCenterFocused = <T extends HTMLElement>(isFocused: boolean
 
   return ref;
 }
+
+export const useGlobalKeyHandlers = () => {
+  const dispatch = useTypedDispatch();
+
+  return useMemo(() => ({
+    PageDown: () => dispatch(toggleWindow())
+  }), [ dispatch ]);
+}
+
+export const useGlobalHotkeys = once((handlers: HandlerMap) => {
+  useEffect(() => {
+    const handleKeyDown = throttle(({ key }: KeyboardEvent) => {
+      handlers[key] && handlers[key]();
+    }, 100);
+
+    window.addEventListener('keydown', handleKeyDown);
+
+    return () => {
+      window.removeEventListener('keydown', handleKeyDown);
+    }
+  }, [ handlers ]);
+})
