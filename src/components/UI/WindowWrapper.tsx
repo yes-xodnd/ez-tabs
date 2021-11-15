@@ -2,16 +2,13 @@ import styled from "styled-components";
 import { WindowTypes } from "src/constants/types";
 import { useTypedSelector } from "src/hooks";
 import { selectIsVisibleWindow } from "src/store/modules/windowsSlice";
-import { useHotkeys } from 'src/hooks/hotkeys';
 import { useEffect, useRef } from "react";
 
 interface Props {
   windowType: WindowTypes;
-  keyHandlers?: { [key: string]: () => void }
 }
 
-const WindowWrapper = ({ windowType, children, keyHandlers = {} }: React.PropsWithChildren<Props>) => {
-  const handleKeyDown = useHotkeys(keyHandlers);
+const WindowWrapper = ({ windowType, children }: React.PropsWithChildren<Props>) => {
   const isVisible = useTypedSelector(selectIsVisibleWindow(windowType));
   const ref = useRef<HTMLDivElement>(null);
 
@@ -21,11 +18,7 @@ const WindowWrapper = ({ windowType, children, keyHandlers = {} }: React.PropsWi
     <>
     {
       isVisible &&   
-      <Wrapper 
-        ref={ref}
-        onKeyDown={handleKeyDown} 
-        tabIndex={-1}
-        >
+      <Wrapper ref={ref}>
           { children }
       </Wrapper>
     }

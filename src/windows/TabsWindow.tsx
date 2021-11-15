@@ -1,5 +1,5 @@
 import styled from 'styled-components';
-import { useToggle, useTypedSelector, useTabsKeyHandlers } from 'src/hooks';
+import { useToggle, useTypedSelector } from 'src/hooks';
 import { customScroll } from 'src/style';
 
 
@@ -12,12 +12,11 @@ import ButtonAdd from 'src/components/Tabs/ButtonAdd';
 
 const TabsWindow = () => {
   const tabs = useTypedSelector(state => state.tabs.tabs);
-  const keyHandlers = useTabsKeyHandlers();
   const [ isListView, toggleView ] = useToggle(true);
 
   return (
     
-    <WindowWrapper windowType="TABS" keyHandlers={keyHandlers}>
+    <WindowWrapper windowType="TABS">
       <Toolbar isListView={isListView} toggleView={toggleView} />
       <ContentWrapper isListView={isListView}>
         {
