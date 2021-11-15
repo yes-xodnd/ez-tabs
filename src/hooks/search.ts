@@ -1,7 +1,7 @@
 import { ChangeEventHandler, useMemo, useRef } from 'react';
 import { useTypedSelector, useTypedDispatch } from 'src/hooks';
 import { setView } from 'src/store/modules/bookmarksSlice';
-import { setNodeList, showAllNodeList, moveFocusIndex, removeFocusNode, toggleFocusNode } from 'src/store/modules/searchSlice';
+import { setNodeList, showAllNodeList, moveFocusIndex, removeHotkey, toggleCheckFocusNode } from 'src/store/modules/searchSlice';
 import { debounce } from 'src/util';
 import api from 'src/api';
 
@@ -38,8 +38,8 @@ export const useSearchKeyHandlers = () => {
   const handlers = useMemo(() => ({
     ArrowUp: () => dispatch(moveFocusIndex(-1)),
     ArrowDown: () => dispatch(moveFocusIndex(1)),
-    Delete: () => dispatch(removeFocusNode()),
-    Enter: () => dispatch(toggleFocusNode()),
+    Delete: () => dispatch(removeHotkey()),
+    ' ': () => dispatch(toggleCheckFocusNode()),
   }), [ dispatch ]);
 
   return handlers;
