@@ -1,10 +1,21 @@
-import { activateFocusedTab, closeCheckedTabs, toggleCheck, toggleCheckAll,moveFocusIndex, closeFocusTab, toggleCheckFocused, clearCheck, setFocusIndexEnd } from "src/store/modules/tabsSlice";
-import { useTypedDispatch } from ".";
-import { closeTab } from "src/store/modules/tabsSlice";
-import { throttle } from "src/util";
 import { useMemo } from "react";
+import { 
+  activateFocusedTab,
+  closeCheckedTabs,
+  toggleCheck,
+  toggleCheckAll,
+  moveFocusIndex,
+  closeTab,
+  closeFocusTab,
+  toggleCheckFocused,
+  clearCheck,
+  setFocusIndexEnd
+} from "src/store/modules/tabsSlice";
 import { createFromTabs } from "src/store/modules/bookmarksSlice";
 import { openWindow } from "src/store/modules/windowsSlice";
+import { useTypedDispatch } from ".";
+import { throttle } from "src/util";
+import { tabsKeyMap as keyMap } from 'src/constants/keyMap';
 
 export const useToggleCheckTab = (id: number | undefined) => {
   const dispatch = useTypedDispatch();
@@ -39,16 +50,21 @@ export const useTabsKeyHandlers = () => {
   const snapshotTabs = useSnapshotTabs();
 
   const keyHandlers = useMemo(() =>({
-    'ArrowUp': () => dispatch(moveFocusIndex(-1)),
-    'ArrowDown': () => dispatch(moveFocusIndex(1)),
-    ' ': () => dispatch(toggleCheckFocused()),
-    'Enter': () => dispatch(activateFocusedTab()),
-    'Delete': () => dispatch(closeFocusTab()),
-    'Ctrl+a': () => dispatch(toggleCheckAll()),
-    'Ctrl+Delete': () => dispatch(closeCheckedTabs()),
-    'Ctrl+Enter': snapshotTabs,
-    'Home': () => dispatch(setFocusIndexEnd('START')),
-    'End': () => dispatch(setFocusIndexEnd('END')),
+    // List
+    [keyMap.MOVE_TOP]: () => dispatch(moveFocusIndex(-1)),
+    [keyMap.MOVE_DOWN]: () => dispatch(moveFocusIndex(1)),
+    [keyMap.MOVE_TOP]: () => dispatch(setFocusIndexEnd('START')),
+    [keyMap.MOVE_BOTTOM]: () => dispatch(setFocusIndexEnd('END')),
+
+    // ListItem
+    [keyMap.CHECK]: () => dispatch(toggleCheckFocused()),
+    [keyMap.OPEN_FOCUSED_TAB]: () => dispatch(activateFocusedTab()),
+    [keyMap.CLOSE_FOCUSED_TAB]: () => dispatch(closeFocusTab()),
+
+    // Toolbar
+    [keyMap.CHECK_ALL]: () => dispatch(toggleCheckAll()),
+    [keyMap.CLOSE_CHECKED_TABS]: () => dispatch(closeCheckedTabs()),
+    [keyMap.SAVE_SNAPSHOT]: snapshotTabs,
   }), [ dispatch, snapshotTabs ]);
 
   return keyHandlers;
