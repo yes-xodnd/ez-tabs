@@ -1,4 +1,4 @@
-import { BookmarkBorder } from '@styled-icons/material-outlined';
+import { Save } from '@styled-icons/material-outlined';
 import { useTypedSelector } from 'src/hooks';
 import ToolbarButton from '../UI/ToolbarButton';
 import { useSnapshotTabs } from 'src/hooks/tabs';
@@ -10,9 +10,9 @@ const ButtonSnapshot = () => {
 
   return (
     <ToolbarButton
-      title='북마크에 스냅샷 저장 (Ctrl+Enter)'
+      title='save checked tabs in bookmark (Ctrl+Enter)'
       handleClick={handleClick}
-      Icon={BookmarkBorder}
+      Icon={Save}
       disabled={disabled}
       />
   );
