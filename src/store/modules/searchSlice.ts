@@ -1,7 +1,7 @@
 import { createAction, createAsyncThunk, createSlice, createSelector } from "@reduxjs/toolkit";
 import { BookmarkNode } from 'src/constants/types';
 import { RootState } from "..";
-import { selectAllNodeList, remove, toggleCheck } from "./bookmarksSlice";
+import { selectAllNodeList, remove, toggleCheck, removeChecked } from "./bookmarksSlice";
 
 interface SearchState {
   nodeList: BookmarkNode[];
@@ -10,7 +10,7 @@ interface SearchState {
 
 const initialState: SearchState = {
   nodeList: [],
-  focusIndex: -1
+  focusIndex: -1,
 };
 
 export const setNodeList = createAction(
@@ -24,9 +24,9 @@ export const showAllNodeList = createAsyncThunk<void, void, { state: RootState }
     const allNodeList = selectAllNodeList(getState());
     dispatch(setNodeList(allNodeList));
   }
-)
+);
 
-export const setNodeIndex = createAction(
+export const setFocusIndex = createAction(
   'SEARCH/SET_NODE_INDEX',
   (index: number) => ({ payload: index })
 );
@@ -36,19 +36,28 @@ export const moveFocusIndex = createAction(
   (diff: 1 | -1) => ({ payload: diff })
 );
 
-export const removeFocusNode = createAsyncThunk<void, void, { state: RootState }>(
-  'SEARCH/REMOVE_FOCUS_NODE',
+export const removeHotkey = createAsyncThunk<void, void, { state: RootState }>(
+  'SEARCH/REMOVE_HOTKEY',
   (_, { getState, dispatch }) => {
-    const { nodeList, focusIndex } = getState().search;
-    dispatch(remove(nodeList[focusIndex]));
+    const {checkedNodeIds} = getState().bookmarks;
+
+    if (checkedNodeIds.length) {
+      dispatch(setNodeList(selectFilteredNodeList(getState(), checkedNodeIds)));
+      dispatch(removeChecked());
+    } else {
+      const node = selectFocusNode(getState());
+      dispatch(setNodeList(selectFilteredNodeList(getState(), [ node.id ])));
+      dispatch(remove(node));
+    }
   }
 );
 
-export const toggleFocusNode = createAsyncThunk<void, void, { state: RootState }>(
+export const toggleCheckFocusNode = createAsyncThunk<void, void, { state: RootState }>(
   'SEARCH/TOGGLE_FOCUS_NODE',
   (_, { getState, dispatch }) => {
-    const { id } = selectFocusNode(getState());
-    dispatch(toggleCheck(id));
+    const node = selectFocusNode(getState());
+    console.log(node);
+    node.id && dispatch(toggleCheck(node.id));
   }
 );
 
@@ -56,7 +65,11 @@ const selectFocusNode = createSelector(
   (state: RootState) => state.search.nodeList,
   (state: RootState) => state.search.focusIndex,
   (nodeList, focusIndex) => nodeList[focusIndex]
-)
+);
+
+const selectFilteredNodeList = (state: RootState, idList: string[]) => {
+  return state.search.nodeList.filter(node => !idList.includes(node.id));
+};
 
 const slice = createSlice({
   name: 'SEARCH',
@@ -72,7 +85,7 @@ const slice = createSlice({
         }
       )
       .addCase(
-        setNodeIndex,
+        setFocusIndex,
         (state, action) => { state.focusIndex = action.payload; }
       )
       .addCase(
