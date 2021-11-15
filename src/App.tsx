@@ -1,5 +1,5 @@
 import styled from 'styled-components';
-import { useGlobalHotkeys, useInitData, useGlobalKeyHandlers } from './hooks';  
+import { useInitData, useHotkeys, useCombinedKeyHandlers } from './hooks';
 
 import BookmarksWindow from './windows/BookmarksWindow';
 import TabsWindow from './windows/TabsWindow';
@@ -7,11 +7,11 @@ import Menubar from './components/Menubar/Menubar';
 
 function App() {
   useInitData();
-  const keyHandlers = useGlobalKeyHandlers();
-  useGlobalHotkeys(keyHandlers);
+  const keyHandlers = useCombinedKeyHandlers();
+  const handleKeyDown = useHotkeys(keyHandlers);
 
   return (
-    <Wrapper>
+    <Wrapper tabIndex={-1} onKeyDown={handleKeyDown} >
       <Menubar />
       <TabsWindow />
       <BookmarksWindow />
