@@ -1,4 +1,4 @@
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useRef } from 'react';
 
 import { getTree } from 'src/store/modules/bookmarksSlice';
 import { getTabs } from 'src/store/modules/tabsSlice';
@@ -15,7 +15,7 @@ export { useTypedDispatch, useTypedSelector };
 export const useToggle = (initState: boolean): [ boolean, () => void ] => {
   const [ state, setState ] = useState(initState);
   return [ state, () => setState(!state) ];
-}
+};
 
 export const useInitData = () => {
   const dispatch = useTypedDispatch();
@@ -25,4 +25,11 @@ export const useInitData = () => {
     dispatch(getTabs());
     addTabsChangeListener(() => dispatch(getTabs()));
   }, [ dispatch ]);
+};
+
+export const useAutoFocusRef = <T extends HTMLElement>() => {
+  const ref = useRef<T>(null);
+  
+  useEffect(() => { ref.current?.focus(); }, [ ref.current ]);
+  return ref;
 }
