@@ -75,6 +75,14 @@ export const toggleCheckFocused = createAsyncThunk<void, void, { state: RootStat
   }
 );
 
+export const activateFocusedTab = createAsyncThunk<void, void, { state: RootState }>(
+  'TABS/ACTIVATE_FOCUSED_TAB',
+  (_, { getState }) => {
+    const id = selectFocusedId(getState());
+    id && api.tabs.update(id, { active: true });
+  }
+)
+
 // selectors
 export const selectAllChecked = ({ tabs }: RootState) => {
   return tabs.tabs.length === tabs.checkedTabIds.length;
@@ -84,6 +92,8 @@ export const selectFocusedId = createSelector(
    (state: RootState) => state.tabs,
    ({ tabs, tabIndex }) => tabs[tabIndex]?.id
 );
+
+export const selecFocusedNode = ({ tabs }: RootState) => tabs.tabs[tabs.tabIndex];
 
 const slice = createSlice({
   name: 'tabs',
@@ -95,7 +105,9 @@ const slice = createSlice({
         getTabs.fulfilled,
         (state, action) => { 
           state.tabs = action.payload; 
-          state.tabIndex = -1;
+          if (state.tabIndex >= state.tabs.length) {
+            state.tabIndex = state.tabs.length - 1;
+          }
         }
       )
       .addCase(
