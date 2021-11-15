@@ -4,12 +4,7 @@ import { BookmarkNode } from 'src/constants/types';
 import { Folder } from '@styled-icons/material-outlined';
 
 import { useTypedDispatch, useTypedSelector, useScrollCenterFocused } from 'src/hooks';
-import { 
-  selectIsChecked, 
-  toggleCheck, 
-  openFolderNode, 
-  setCurrentFolderNodeId
- } from 'src/store/modules/bookmarksSlice';
+import { selectIsChecked, openFolderNode, setCurrentFolderNodeId } from 'src/store/modules/bookmarksSlice';
  import { getHostname } from 'src/util';
  
 import Favicon from 'src/components/UI/Favicon';
@@ -19,16 +14,17 @@ import NodeListItemDropdown from './NodeListItemDropdown';
 
 interface Props {
   node: BookmarkNode;
-  isFocused?: boolean;
+  isFocused: boolean;
+  isBaseNode?: boolean;
+  handleClick: () => void;
 }
 
-const NodeListItem = ({ node, isFocused = false }: Props) => {
+const NodeListItem = ({ node, isFocused, isBaseNode = false, handleClick }: Props) => {
   const dispatch = useTypedDispatch();
   const isChecked = useTypedSelector(state => selectIsChecked(state, node.id));
   const ref = useScrollCenterFocused<HTMLDivElement>(isFocused);
   
   const [ isRename, setIsRename ] = useState(false);
-  const isBaseNode = ['1', '2'].includes(node.id);
 
   const handleDoubleClick = () => {
     if (node.url) {
@@ -42,7 +38,7 @@ const NodeListItem = ({ node, isFocused = false }: Props) => {
   return (
     <NodeContentContainer 
       ref={ref}
-      onClick={() => { !isBaseNode && dispatch(toggleCheck(node.id)) }}
+      onClick={handleClick}
       onDoubleClick={handleDoubleClick}
       isFocused={isFocused}
       >

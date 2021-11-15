@@ -1,42 +1,36 @@
 import { BookmarkNode } from 'src/constants/types';
 import styled from 'styled-components';
-import NodeListItem from './NodeListItem';
-import { NodeContentContainer } from './NodeListItem';
-import { ArrowUpward } from '@styled-icons/material-outlined';
 import { customScroll } from 'src/style';
+import NodeListItemContainer from './NodeListItemContainer';
+import ButtonToParentNode from './ButtonToParentNode';
 
 interface Props {
   currentFolderNode: BookmarkNode | undefined;
-  toParentNode: () => void;
 }
 
-const NodeList = ({ currentFolderNode, toParentNode }: Props) => {
+const NodeList = ({ currentFolderNode }: Props) => {
   const nodes = currentFolderNode?.children || [];
 
   return (
     <Wrapper>
       {
         currentFolderNode?.parentId && 
-        <NodeContentContainer onClick={toParentNode}>
-          <ArrowUpward size="16" />
-          <div></div>
-          <div>상위 폴더</div>
-        </NodeContentContainer>
+        <ButtonToParentNode />
       }
       {
         !!nodes.length &&
         nodes
         .filter(node => !node.url)
-        .map(node => (
-          <NodeListItem node={node} key={node.id} />
+        .map((node, index) => (
+          <NodeListItemContainer node={node} index={index} key={node.id} />
         ))
       }
       {
         !!nodes.length &&
         nodes
         .filter(node => node.url)
-        .map(node => (
-          <NodeListItem node={node} key={node.id} />
+        .map((node, index) => (
+          <NodeListItemContainer node={node} index={index} key={node.id} />
         ))
       }   
     </Wrapper>
