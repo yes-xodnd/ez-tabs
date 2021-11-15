@@ -6,10 +6,10 @@ import { addTabsChangeListener } from 'src/api';
 
 import { useTypedDispatch, useTypedSelector } from './redux';
 
-export { useFolderOpen, useCurrentFolder } from './FolderTree';
+export { useFolderOpen, useCurrentFolder } from './bookmarks';
 export { useSearch, useShowAllNodeList, useSearchKeyHandlers } from './search';
 export { useTabsKeyHandlers, useCloseCheckedTabs, useCloseTab, useToggleCheckTab } from './Tabs';
-export { useHotkeys, useScrollCenterFocused } from './hotkeys';
+export { useHotkeys, useScrollCenterFocused, useGlobalKeyHandlers, useGlobalHotkeys } from './hotkeys';
 export { useTypedDispatch, useTypedSelector };
 
 export const useToggle = (initState: boolean): [ boolean, () => void ] => {
