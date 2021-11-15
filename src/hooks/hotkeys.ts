@@ -19,12 +19,12 @@ export const useHotkeys = <T extends HandlerMap>(keyHandlers: T) => {
 
   const throttledInput = useRef(throttle((e: ReactKeyboardEvent) => {
     const target = e.target as HTMLElement;
-    const key = e.key;  
+    const key = (e.ctrlKey ? 'Ctrl+' : '') +  e.key;
     
     if (target && target.tagName && isExceptionTag(target.tagName)) return;
     handlerRef.current[key] && handlerRef.current[key](e);
     
-  }, 100));
+  }, 50));
    
   const handleKeyDown: KeyboardEventHandler = e => throttledInput.current(e);
 
