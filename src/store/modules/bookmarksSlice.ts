@@ -16,6 +16,7 @@ interface BookmarksState {
   checkedNodeIds: string[];
   view: 'TREE' | 'SEARCH';
   focusIndex: number;
+  renameNodeId: string;
 }
 
 const initialState: BookmarksState = {
@@ -25,6 +26,7 @@ const initialState: BookmarksState = {
   checkedNodeIds: [],
   view: 'TREE',
   focusIndex: -1,
+  renameNodeId: '',
 };
 
 const name = 'BOOKMARKS';
@@ -245,6 +247,26 @@ export const openFocusNodeUrl = createAsyncThunk<void, void, { state: RootState 
   }
 );
 
+export const setRenameNodeId = createAction(
+  'BOOKMARKS/SET_RENAME_NODE_ID',
+  (id: string) => ({ payload: id })
+);
+
+export const resetRenameNodeId = createAction('BOOKMARKS/RESET_RENAME_NODE_ID');
+
+export const setRenameNodeIdFocused = createAsyncThunk<void, void, { state: RootState }>(
+  'BOOKMARKS/SET_RENAME_NODE_ID_FOCUSED',
+  (_, { dispatch, getState }) => {
+    if (getState().bookmarks.renameNodeId) {
+      dispatch(resetRenameNodeId());
+    } else {
+      const id = selectFocusNode(getState())?.id;
+      id && dispatch(setRenameNodeId(id));
+    }
+
+  }
+)
+
 // selectors
 const selectRootNode = (state: RootState): BookmarkNode => state.bookmarks.rootNode;
 
@@ -320,6 +342,7 @@ const bookmarksSlice = createSlice({
         (state, action) => { 
           state.rootNode = action.payload;
           state.focusIndex = -1;
+          state.renameNodeId = '';
         }
       )
       .addCase(
@@ -328,6 +351,7 @@ const bookmarksSlice = createSlice({
           state.currentFolderNodeId = action.payload;
           state.checkedNodeIds = [];
           state.focusIndex = -1;
+          state.renameNodeId = '';
         }
       )
       .addCase(
@@ -372,6 +396,20 @@ const bookmarksSlice = createSlice({
       .addCase(
         setFocusIndex,
         (state, action) => { state.focusIndex = action.payload }
+      )
+      .addCase(
+        setRenameNodeId, 
+        (state, action) => {
+          if (state.renameNodeId === action.payload) {
+            state.renameNodeId = '';
+          } else {
+            state.renameNodeId = action.payload;
+          }
+        }
+      )
+      .addCase(
+        resetRenameNodeId,
+        (state) => { state.renameNodeId = ''; } 
       )
   }
 });
