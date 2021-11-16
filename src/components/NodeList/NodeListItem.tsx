@@ -4,7 +4,7 @@ import { BookmarkNode } from 'src/constants/types';
 import { Folder } from '@styled-icons/material-outlined';
 
 import { useTypedDispatch, useTypedSelector, useScrollCenterFocused } from 'src/hooks';
-import { selectIsChecked, openFolderNode, setCurrentFolderNodeId } from 'src/store/modules/bookmarksSlice';
+import { selectIsChecked, setCurrentFolderNodeId } from 'src/store/modules/bookmarksSlice';
  import { getHostname } from 'src/util';
  
 import Favicon from 'src/components/UI/Favicon';
@@ -30,7 +30,6 @@ const NodeListItem = ({ node, isFocused, isBaseNode = false, handleClick }: Prop
     if (node.url) {
       window.open(node.url);
     } else {
-      dispatch(openFolderNode(node.id));
       dispatch(setCurrentFolderNodeId(node.id));
     }
   };
@@ -43,7 +42,7 @@ const NodeListItem = ({ node, isFocused, isBaseNode = false, handleClick }: Prop
       isFocused={isFocused}
       >
       <div>
-        { !isBaseNode && <Checkbox isChecked={isChecked} /> }
+        { !isBaseNode && !!node.url && <Checkbox isChecked={isChecked} /> }
       </div>
       {
         node.url 
