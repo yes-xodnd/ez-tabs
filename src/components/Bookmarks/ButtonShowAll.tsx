@@ -10,7 +10,7 @@ const ButtonShowAll = () => {
   const dispatch = useTypedDispatch();
 
   const buttonProps: React.ComponentProps<typeof ToolbarButton> = useMemo(() => ({
-    title: '전체 목록',
+    title: 'show all bookmarks list (Ctrl + Enter)',
     handleClick: () => {
       dispatch(showAllNodeList());
       dispatch(setView('SEARCH'));
