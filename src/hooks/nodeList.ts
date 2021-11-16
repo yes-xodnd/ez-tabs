@@ -9,7 +9,7 @@ export const useCurrentFolderNode = () => {
   const view = useTypedSelector(state => state.bookmarks.view);
 
   useEffect(() => {
-    dispatch(setNodeList(currentFolderNode.children || []));
+    if (view === 'TREE') dispatch(setNodeList(currentFolderNode.children || []));
   }, [ currentFolderNode, view, dispatch ]);
 
   return currentFolderNode;
