@@ -3,12 +3,7 @@ import styled from 'styled-components';
 import { Folder, FolderOpen, ArrowDropDown, ArrowBack } from '@styled-icons/material-outlined';
 
 import { BookmarkNode } from "src/constants/types";
-import { 
-  useTypedSelector,
-  useFolderOpen,
-  useCurrentFolder,
-  useTypedDispatch
-} from 'src/hooks';
+import { useFolderOpen, useCurrentFolder, useTypedDispatch, useTypedSelector } from 'src/hooks';
 import { moveChecked } from 'src/store/modules/bookmarksSlice';
 
 
@@ -21,9 +16,7 @@ const FolderListNode = ({ node, depth = 0 }: Props) => {
   const [ isHovered, setHovered ] = useState(false);
   const { isOpen, toggleOpen } = useFolderOpen(node.id);
   const { isCurrentFolder, setCurrentFolder } = useCurrentFolder(node.id);
-  const isNotChecked = useTypedSelector(state => 
-    !!state.bookmarks.checkedNodeIds.length && !state.bookmarks.checkedNodeIds.includes(node.id)
-  );
+  const isChecked = useTypedSelector(state => state.nodeList.checkedNodeIds.length);
   const dispatch = useTypedDispatch();
 
   return (
@@ -52,7 +45,7 @@ const FolderListNode = ({ node, depth = 0 }: Props) => {
 
         {
           isHovered &&
-          isNotChecked &&
+          isChecked &&
           !isCurrentFolder &&
           <MoveButton 
             onClick={() => { dispatch(moveChecked(node.id)) }}
