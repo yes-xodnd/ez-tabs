@@ -15,3 +15,24 @@ export const tabsKeyMap = {
   SAVE_SNAPSHOT: 'Ctrl+Enter',
   CHECK_ALL: 'Ctrl+a'
 };
+
+export const treeKeyMap = {
+  // List
+  MOVE_DOWN: 'ArrowDown',
+  MOVE_UP: 'ArrowUp',
+  MOVE_TOP: 'Home',
+  MOVE_BOTTOM: 'End',
+  
+  // ListItem
+  CHECK: ' ',
+  DELETE_NODE: 'Delete',
+  TO_PARENT_NODE: 'BackSpace',
+  OPEN_URL: 'Enter',
+
+  // Toolbar
+  NEW_FOLDER: 'Ctrl+Insert',
+  CHECK_ALL: 'Ctrl+a',
+  DELETE_CHECKED_NODES: 'Ctrl+Delete',
+  SHOW_ALL: 'Ctrl+Enter',
+  FOCUS_SEARCHBAR: 'Shift+F'
+};
