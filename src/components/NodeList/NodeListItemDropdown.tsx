@@ -22,8 +22,8 @@ const NodeListItemDropdown = ({ node, handleClickRename }: Props) => {
   }
   
   const menuItems = [
-    createItem('수정', handleClickRename),
-    createItem('삭제', () => dispatch(remove(node))),
+    createItem('rename (F2)', handleClickRename),
+    createItem('remove (Delete)', () => dispatch(remove(node))),
   ];
 
   return (
