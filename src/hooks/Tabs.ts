@@ -51,7 +51,7 @@ export const useTabsKeyHandlers = () => {
 
   const keyHandlers = useMemo(() =>({
     // List
-    [keyMap.MOVE_TOP]: () => dispatch(moveFocusIndex(-1)),
+    [keyMap.MOVE_UP]: () => dispatch(moveFocusIndex(-1)),
     [keyMap.MOVE_DOWN]: () => dispatch(moveFocusIndex(1)),
     [keyMap.MOVE_TOP]: () => dispatch(setFocusIndexEnd('START')),
     [keyMap.MOVE_BOTTOM]: () => dispatch(setFocusIndexEnd('END')),

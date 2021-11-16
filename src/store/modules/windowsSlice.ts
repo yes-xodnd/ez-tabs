@@ -1,8 +1,6 @@
 import { createAsyncThunk, createSlice } from "@reduxjs/toolkit";
 import { WindowTypes } from 'src/constants/types';
 import { RootState } from "..";
-import { uncheckAll as uncheckBookmarks } from "./bookmarksSlice";
-import { uncheckAll as uncheckTabs } from "./tabsSlice";
 
 interface interfaceState {
   visibleWindow: WindowTypes;
@@ -15,8 +13,6 @@ const initialState: interfaceState = {
 export const openWindow = createAsyncThunk<WindowTypes, WindowTypes, {}>(
   'WINODWS/OPEN_WINDOW',
   (type, { dispatch }) => {
-    dispatch(uncheckBookmarks());
-    dispatch(uncheckTabs());
     return type;
   }
 );

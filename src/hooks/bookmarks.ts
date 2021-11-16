@@ -5,19 +5,22 @@ import {
   closeFolderNode, 
   openFolderNode, 
   setCurrentFolderNodeId, 
-  moveFocusIndex, 
-  onSelect, 
   toParentNode, 
-  openFocusNodeUrl, 
-  setFocusIndexEnd, 
   createFolder, 
-  toggleCheckAll, 
-  removeChecked, 
-  removeFocusNode,
   setView,
-  setRenameNodeIdFocused
 } from "src/store/modules/bookmarksSlice";
-import { showAllNodeList } from "src/store/modules/searchSlice";
+
+import {
+  moveFocusIndex,
+  setFocusIndexEnd,
+  openUrlFocused,
+  toggleCheckFocused,
+  toggleCheckAll, 
+  removeFocused,
+  removeChecked, 
+  toggleRenameFocused,
+  showAllNodeList,
+} from 'src/store/modules/nodeListSlice';
 
 export const useFolderOpen = (id: string): { isOpen: boolean, toggleOpen: () => void } => {
   const isOpen = useTypedSelector(({ bookmarks }) => bookmarks.openFolderNodeIds.includes(id));
@@ -50,23 +53,23 @@ export const useShowAll = () => {
   };
 };
 
-export const useTreeKeyHandlers = () => {
+export const useBookmarksKeyHandlers = () => {
   const dispatch = useTypedDispatch();
   const showAll = useShowAll();
 
   return useMemo(() => ({
     // List
-    [keyMap.MOVE_UP]: () => dispatch(moveFocusIndex(-1)),
-    [keyMap.MOVE_DOWN]: () => dispatch(moveFocusIndex(1)),
-    [keyMap.MOVE_TOP]: () => dispatch(setFocusIndexEnd('START')),
-    [keyMap.MOVE_BOTTOM]: () => dispatch(setFocusIndexEnd('END')),
+    [keyMap.MOVE_UP]: () => dispatch(moveFocusIndex('UP')),
+    [keyMap.MOVE_DOWN]: () => dispatch(moveFocusIndex('DOWN')),
+    [keyMap.MOVE_TOP]: () => dispatch(setFocusIndexEnd('TOP')),
+    [keyMap.MOVE_BOTTOM]: () => dispatch(setFocusIndexEnd('BOTTOM')),
 
     // ListItem
-    [keyMap.OPEN_URL]: () => dispatch(openFocusNodeUrl()),
-    [keyMap.CHECK]: () => dispatch(onSelect()), 
-    [keyMap.DELETE_NODE]: () => dispatch(removeFocusNode()),
+    [keyMap.OPEN_URL]: () => dispatch(openUrlFocused()),
+    [keyMap.CHECK]: () => dispatch(toggleCheckFocused()), 
+    [keyMap.DELETE_NODE]: () => dispatch(removeFocused()),
     [keyMap.TO_PARENT_NODE]: () => dispatch(toParentNode()),
-    [keyMap.RENAME]: () => dispatch(setRenameNodeIdFocused()),
+    [keyMap.RENAME]: () => dispatch(toggleRenameFocused()),
 
     // Toolbar
     [keyMap.NEW_FOLDER]: () => dispatch(createFolder()),

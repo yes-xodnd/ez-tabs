@@ -1,7 +1,7 @@
 import ToolbarButton from 'src/components/UI/ToolbarButton';
 import { ViewList } from '@styled-icons/material-outlined';
 import { useTypedDispatch } from 'src/hooks';
-import { showAllNodeList } from 'src/store/modules/searchSlice';
+import { showAllNodeList } from 'src/store/modules/nodeListSlice';
 import { useMemo } from 'react';
 import { setView } from 'src/store/modules/bookmarksSlice';
 
