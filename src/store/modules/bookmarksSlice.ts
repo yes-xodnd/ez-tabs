@@ -38,16 +38,21 @@ export const getTree = createAsyncThunk(
   }
 );
 
-export const setCurrentFolderNodeId = createAction(
+export const setCurrentFolderNodeId = createAsyncThunk<string, string, { state: RootState }>(
   name + '/SET_CURRENT_FOLDER_NODE_ID',
-  (id: string) => ({ payload: id })
+  (id: string, { dispatch }) => {
+    dispatch(openFolderNode(id));
+
+    return id;
+  }
 );
 
-export const createFolder = createAsyncThunk<void, chrome.bookmarks.BookmarkCreateArg, { state: RootState }>(
+export const createFolder = createAsyncThunk<void, void, { state: RootState }>(
   'BOOOKMARKS/CREATE_FOLDER',
-  async ({ title, parentId = '0' }, { getState, dispatch }) => {
-    await api.bookmarks.create({ title, parentId: parentId });
-      
+  async (_, { getState, dispatch }) => {
+    const parentId = getState().bookmarks.currentFolderNodeId;
+    await api.bookmarks.create({ parentId });
+
     dispatch(getTree());
   }
 )
@@ -120,31 +125,35 @@ export const checkAll = createAsyncThunk<string[], void, { state: RootState }>(
     return node.children?.map(node => node.id) || [];
   }
 );
+export const uncheckAll = createAction(name + '/CHECK_CLEAR');
+
+export const toggleCheckAll = createAsyncThunk<void, void, { state: RootState }>(
+  'BOOKMARKS/TOGGLE_CHECK_ALL',
+  (_, { getState, dispatch }) => {
+    selectIsAllChecked(getState())
+    ? dispatch(uncheckAll()) 
+    : dispatch(checkAll());
+  }
+)
 
 export const toggleCheck = createAction(
   name + '/TOGGLE_CHECK',
   (id: string) => ({ payload: id })
 );
 
-export const uncheckAll = createAction(name + '/CHECK_CLEAR');
 
 export const removeChecked = createAsyncThunk<void, void, { state: RootState }>(
   name + '/REMOVE_CHECKED',
   async (_, { getState, dispatch }) => {
     
-    const { checkedNodeIds } = getState().bookmarks;
+    const ids = getState().bookmarks.checkedNodeIds.slice();
+    dispatch(uncheckAll());
     
-    for (const id of checkedNodeIds) {
-      const [ node ] = await api.bookmarks.get(id);
-      if (!node) return;
-      
-      node.url 
-      ? await api.bookmarks.remove(id)
-      : await api.bookmarks.removeTree(id);
+    for (const id of ids) {
+      await api.bookmarks.remove(id);
     }
     
     dispatch(getTree());
-    dispatch(uncheckAll());
   }
 );
 
@@ -168,6 +177,18 @@ export const setFocusIndex = createAction(
   'BOOKMARKS/SET_FOCUS',
   (index: number) => ({ payload: index })
 );
+
+export const setFocusIndexEnd = createAsyncThunk<void, 'START' | 'END', { state: RootState }>(
+  'BOOKMARKS/SET_FOCUS_INDEX_END',
+  (target, { getState, dispatch }) => {
+    const length = selectCurrentFolderNode(getState()).children?.length || 0;
+    if (!length) return;
+
+    target === 'START'
+      ? dispatch(setFocusIndex(0))
+      : dispatch(setFocusIndex(length - 1));
+  }
+)
 
 export const moveFocusIndex = createAsyncThunk<void, 1 | -1, { state: RootState }>(
   'BOOKMARKS/MOVE_FOCUS_INDEX',
@@ -208,15 +229,11 @@ export const onSelect = createAsyncThunk<void, void, { state: RootState }>(
   }
 );
 
-export const onDelete = createAsyncThunk<void, void, { state: RootState }>(
+export const removeFocusNode = createAsyncThunk<void, void, { state: RootState }>(
   'BOOKMARKS/ON_DELETE',
   (_, { getState, dispatch }) => {
-    if (getState().bookmarks.checkedNodeIds.length) {
-      dispatch(removeChecked());
-    } else {
-      const node = selectFocusNode(getState());
-      node && dispatch(remove(node));
-    }
+    const node = selectFocusNode(getState());
+    node && dispatch(remove(node));
   }
 );
 
@@ -300,10 +317,13 @@ const bookmarksSlice = createSlice({
     builder
       .addCase(
         getTree.fulfilled,
-        (state, action) => { state.rootNode = action.payload; }
+        (state, action) => { 
+          state.rootNode = action.payload;
+          state.focusIndex = -1;
+        }
       )
       .addCase(
-        setCurrentFolderNodeId,
+        setCurrentFolderNodeId.fulfilled,
         (state, action) => { 
           state.currentFolderNodeId = action.payload;
           state.checkedNodeIds = [];
