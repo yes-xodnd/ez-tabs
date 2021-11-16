@@ -1,10 +1,9 @@
-import { useState } from 'react';
 import styled from 'styled-components';
 import { BookmarkNode } from 'src/constants/types';
 import { Folder } from '@styled-icons/material-outlined';
 
 import { useTypedDispatch, useTypedSelector, useScrollCenterFocused } from 'src/hooks';
-import { selectIsChecked, setCurrentFolderNodeId } from 'src/store/modules/bookmarksSlice';
+import { selectIsChecked, setCurrentFolderNodeId, setRenameNodeId, resetRenameNodeId } from 'src/store/modules/bookmarksSlice';
  import { getHostname } from 'src/util';
  
 import Favicon from 'src/components/UI/Favicon';
@@ -23,8 +22,9 @@ const NodeListItem = ({ node, isFocused, isBaseNode = false, handleClick }: Prop
   const dispatch = useTypedDispatch();
   const isChecked = useTypedSelector(state => selectIsChecked(state, node.id));
   const ref = useScrollCenterFocused<HTMLDivElement>(isFocused);
-  
-  const [ isRename, setIsRename ] = useState(false);
+  const isRenameNode = useTypedSelector(state => state.bookmarks.renameNodeId === node.id);
+  const rename = () => dispatch(setRenameNodeId(node.id));
+  const quitRename = () => dispatch(resetRenameNodeId());
 
   const handleDoubleClick = () => {
     if (node.url) {
@@ -51,11 +51,11 @@ const NodeListItem = ({ node, isFocused, isBaseNode = false, handleClick }: Prop
       }
       <Title>
         { 
-        isRename
+        isRenameNode
         ? <InputRename 
             id={node.id}
             title={node.title}
-            quitRename={() => setIsRename(false)}
+            quitRename={quitRename}
             />
         : <div>{ node.title }</div>
         }
@@ -66,7 +66,7 @@ const NodeListItem = ({ node, isFocused, isBaseNode = false, handleClick }: Prop
           !isBaseNode &&
           <NodeListItemDropdown 
             node={node}
-            handleClickRename={() => setIsRename(true)}
+            handleClickRename={rename}
             />
         }
       </div>
