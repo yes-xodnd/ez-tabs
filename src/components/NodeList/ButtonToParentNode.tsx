@@ -4,9 +4,8 @@ import { useTypedDispatch, useTypedSelector } from 'src/hooks';
 import { toParentNode } from 'src/store/modules/bookmarksSlice';
 
 const ButtonToParentNode = () => {
-  const isFocused = useTypedSelector(state => state.bookmarks.focusIndex === -1);
+  const isFocused = useTypedSelector(state => state.nodeList.focusIndex === -1);
   const dispatch = useTypedDispatch();
-
   const handleClick = () => dispatch(toParentNode());
 
   return (
