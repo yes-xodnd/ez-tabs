@@ -1,6 +1,8 @@
-import { createAction, createSlice } from "@reduxjs/toolkit";
+import { createAsyncThunk, createSlice } from "@reduxjs/toolkit";
 import { WindowTypes } from 'src/constants/types';
 import { RootState } from "..";
+import { uncheckAll as uncheckBookmarks } from "./bookmarksSlice";
+import { uncheckAll as uncheckTabs } from "./tabsSlice";
 
 interface interfaceState {
   visibleWindow: WindowTypes;
@@ -10,14 +12,24 @@ const initialState: interfaceState = {
   visibleWindow: 'TABS',
 };
 
-const prepareWindowType = (type: WindowTypes) => ({ payload: type });
-
-export const openWindow = createAction(
+export const openWindow = createAsyncThunk<WindowTypes, WindowTypes, {}>(
   'WINODWS/OPEN_WINDOW',
-  prepareWindowType
+  (type, { dispatch }) => {
+    dispatch(uncheckBookmarks());
+    dispatch(uncheckTabs());
+    return type;
+  }
 );
 
-export const toggleWindow = createAction('WINDOWS/TOGGLE_WINDOW');
+export const toggleWindow = createAsyncThunk<void, void, { state: RootState }>(
+  'WINDOWS/TOGGLE_WINDOW',
+  (_, { getState, dispatch }) => {
+    const next: WindowTypes = getState().interfaces.visibleWindow === 'TABS'
+    ? 'BOOKMARKS'
+    : 'TABS';
+    dispatch(openWindow(next));
+  }
+);
 
 export const selectIsVisibleWindow = (type: WindowTypes) => (state: RootState) => state.interfaces.visibleWindow === type;
 
@@ -28,17 +40,9 @@ const slice = createSlice({
   extraReducers: builder => {
     builder
       .addCase(
-        openWindow,
+        openWindow.fulfilled,
         (state, action) => { 
           state.visibleWindow = action.payload;
-        }
-      )
-      .addCase(
-        toggleWindow,
-        state => { 
-          state.visibleWindow = state.visibleWindow === 'BOOKMARKS'
-            ? 'TABS'
-            : 'BOOKMARKS';
         }
       )
   }

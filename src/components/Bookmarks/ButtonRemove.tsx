@@ -9,7 +9,7 @@ const ButtonRemove = () => {
 
   return (
     <ToolbarButton 
-      title='선택 항목 삭제'
+      title='remove checked bookmarks (Ctrl + Delete)'
       handleClick={() => dispatch(removeChecked())}
       Icon={Delete}
       />

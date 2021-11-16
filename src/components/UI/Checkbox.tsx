@@ -12,7 +12,7 @@ const Checkbox = ({ isChecked, handleChange = () => {} }: Props) => {
       type="checkbox"
       checked={isChecked}
       onChange={handleChange}
-      title={isChecked ? '선택 취소' : '선택'}
+      title={isChecked ? 'uncheck (Space)' : 'check (Space)'}
       />
   );
 };

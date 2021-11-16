@@ -24,17 +24,25 @@ export const getTabs = createAsyncThunk(
 
 // actions
 export const checkAll = createAction('CHECK_ALL');
-export const clearCheck = createAction('CLEAR');
+export const uncheckAll = createAction('CLEAR');
 export const toggleCheck = createAction(
   'TABS/TOGGLE_CHECK',
   (id: number) => ({ payload: id })
+  );
+export const toggleCheckAll = createAsyncThunk<void, void, { state: RootState}>(
+  'TABS/TOGGLE_CHECK_ALL',
+  (_, { dispatch, getState }) => {
+    const { tabs, checkedTabIds } = getState().tabs;
+    if (tabs.length === checkedTabIds.length) dispatch(uncheckAll());
+    else dispatch(checkAll());
+  }
 );
 
 export const closeCheckedTabs = createAsyncThunk<void, void, { state: RootState }>(
   'TABS/REMOVE_CHECKED',
   async (_, { getState, dispatch }) => {
     const tabIds = getState().tabs.checkedTabIds.slice();
-    dispatch(clearCheck());
+    dispatch(uncheckAll());
     api.tabs.remove(tabIds);
   }
 );
@@ -46,16 +54,13 @@ export const closeTab = createAsyncThunk(
   }
 );
 
-export const closeTabHotkey = createAsyncThunk<void, void, { state: RootState }>(
+export const closeFocusTab = createAsyncThunk<void, void, { state: RootState }>(
   'TABS/CLOSE_TAB_HOTKEY',
   async (_, { dispatch, getState }) => {
-    const { checkedTabIds } = getState().tabs;
     const targetId = selectFocusedId(getState());
-
-    if (checkedTabIds.length) dispatch(closeCheckedTabs());
-    else targetId && dispatch(closeTab(targetId));
+    targetId && dispatch(closeTab(targetId));
   }
-)
+);
 
 export const moveFocusIndex = createAction(
   'TABS/MOVE_FOCUS_INDEX',
@@ -65,6 +70,11 @@ export const moveFocusIndex = createAction(
 export const setFocusIndex = createAction(
   'TABS/SET_FOCUS_INDEX',
   (index: number) => ({ payload: index })
+);
+
+export const setFocusIndexEnd = createAction(
+  'TABS/setFocusIndexEnd',
+  (target: 'START' | 'END') => ({ payload: target })
 );
 
 export const toggleCheckFocused = createAsyncThunk<void, void, { state: RootState }>(
@@ -119,7 +129,7 @@ const slice = createSlice({
         }
       )
       .addCase(
-        clearCheck,
+        uncheckAll,
         (state) => { state.checkedTabIds = [] }
       )
       .addCase(
@@ -147,6 +157,14 @@ const slice = createSlice({
       .addCase(
         setFocusIndex,
         (state, action) => { state.tabIndex = action.payload; }
+      )
+      .addCase(
+        setFocusIndexEnd,
+        (state, action) => {
+          state.tabIndex = action.payload === 'START'
+            ? 0
+            : state.tabs.length -1;
+        }
       )
   }
 });

@@ -7,7 +7,7 @@ const ButtonCloseTab = ({ id }: { id: number | undefined }) => {
   const closeTab = useCloseTab(id);
 
   return (
-    <Button onClick={closeTab} title="탭 닫기">
+    <Button onClick={closeTab} title="close tab (Delete)">
       <Close size="16" />
     </Button>
   );

@@ -4,20 +4,14 @@ import { createFolder } from 'src/store/modules/bookmarksSlice';
 import ToolbarButton from "../UI/ToolbarButton";
 
 const ButtonCreateFolder = () => {
-  const currentFolderNodeId = useTypedSelector(state => state.bookmarks.currentFolderNodeId);
   const disabled = useTypedSelector(state => state.bookmarks.view === 'SEARCH');
   const dispatch = useTypedDispatch();
 
-  const handleClick = () => {
-    dispatch(createFolder({
-      title: '새 폴더',
-      parentId: currentFolderNodeId,
-    }));
-  }
+  const handleClick = () => dispatch(createFolder());
 
   return (
     <ToolbarButton 
-      title={'새 폴더'}
+      title={'New Folder (Ctrl + Insert)'}
       Icon={CreateNewFolder}
       handleClick={handleClick}
       disabled={disabled}

@@ -8,7 +8,7 @@ const ButtonRemoveCheckedTabs = () => {
 
   return (
     <ToolbarButton 
-      title="선택 탭 닫기"
+      title="close checked tabs (Ctrl + Delete)"
       handleClick={handleClick}
       Icon={Delete}
       />

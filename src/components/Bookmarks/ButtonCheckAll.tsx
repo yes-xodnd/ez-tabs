@@ -18,7 +18,7 @@ const ButtonSelectAll = () => {
 
   return (
     <ToolbarButton 
-      title={isAllChecked ? '전체 취소' : '전체 선택'}
+      title={isAllChecked ? 'uncheck all (Ctrl + a)' : 'check all (Ctrl + a)'}
       handleClick={handleClick}
       Icon={isAllChecked ? CheckBoxOutlineBlank : CheckBox} />
   );

@@ -12,6 +12,12 @@ const isExceptionTag = (tagName: string): boolean => (
   ['INPUT', 'TEXTAREA', 'SELECT'].includes(tagName)
 );
 
+const getKey = (e: ReactKeyboardEvent) => {
+  let ctrl: string = e.ctrlKey ? 'Ctrl+' : '';
+  let shift: string = e.shiftKey ? 'Shift+' : '';
+  return ctrl + shift + e.key;
+}
+
 export const useHotkeys = <T extends HandlerMap>(keyHandlers: T) => {
 
   const handlerRef = useRef<HandlerMap>({});
@@ -19,12 +25,12 @@ export const useHotkeys = <T extends HandlerMap>(keyHandlers: T) => {
 
   const throttledInput = useRef(throttle((e: ReactKeyboardEvent) => {
     const target = e.target as HTMLElement;
-    const key = e.key;  
+    const key = getKey(e);
     
     if (target && target.tagName && isExceptionTag(target.tagName)) return;
     handlerRef.current[key] && handlerRef.current[key](e);
     
-  }, 100));
+  }, 50));
    
   const handleKeyDown: KeyboardEventHandler = e => throttledInput.current(e);
 
@@ -45,7 +51,8 @@ export const useGlobalKeyHandlers = () => {
   const dispatch = useTypedDispatch();
 
   return useMemo(() => ({
-    PageDown: () => dispatch(toggleWindow())
+    'PageUp': () => dispatch(toggleWindow()),
+    'PageDown': () => dispatch(toggleWindow()),
   }), [ dispatch ]);
 }
 
