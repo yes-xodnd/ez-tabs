@@ -1,11 +1,9 @@
+import { forwardRef } from 'react';
 import styled from 'styled-components';
 import { BookmarkNode } from 'src/constants/types';
 import { Folder } from '@styled-icons/material-outlined';
+import { getHostname } from 'src/util';
 
-import { useTypedDispatch, useTypedSelector, useScrollCenterFocused } from 'src/hooks';
-import { selectIsChecked, setCurrentFolderNodeId, setRenameNodeId, resetRenameNodeId } from 'src/store/modules/bookmarksSlice';
- import { getHostname } from 'src/util';
- 
 import Favicon from 'src/components/UI/Favicon';
 import Checkbox from 'src/components/UI/Checkbox';
 import InputRename from "./InputRename";
@@ -15,24 +13,15 @@ interface Props {
   node: BookmarkNode;
   isFocused: boolean;
   isBaseNode?: boolean;
+  isChecked: boolean;
+  isRenameNode: boolean;
   handleClick: () => void;
+  handleDoubleClick: () => void;
+  toggleRename: () => void;
 }
 
-const NodeListItem = ({ node, isFocused, isBaseNode = false, handleClick }: Props) => {
-  const dispatch = useTypedDispatch();
-  const isChecked = useTypedSelector(state => selectIsChecked(state, node.id));
-  const ref = useScrollCenterFocused<HTMLDivElement>(isFocused);
-  const isRenameNode = useTypedSelector(state => state.bookmarks.renameNodeId === node.id);
-  const rename = () => dispatch(setRenameNodeId(node.id));
-  const quitRename = () => dispatch(resetRenameNodeId());
-
-  const handleDoubleClick = () => {
-    if (node.url) {
-      window.open(node.url);
-    } else {
-      dispatch(setCurrentFolderNodeId(node.id));
-    }
-  };
+const NodeListItem = forwardRef<HTMLDivElement, Props>((props, ref) => {
+  const { node, isFocused, isChecked, isRenameNode, isBaseNode, handleClick, handleDoubleClick, toggleRename } = props;
 
   return (
     <NodeContentContainer 
@@ -55,7 +44,7 @@ const NodeListItem = ({ node, isFocused, isBaseNode = false, handleClick }: Prop
         ? <InputRename 
             id={node.id}
             title={node.title}
-            quitRename={quitRename}
+            quitRename={toggleRename}
             />
         : <div>{ node.title }</div>
         }
@@ -66,7 +55,7 @@ const NodeListItem = ({ node, isFocused, isBaseNode = false, handleClick }: Prop
           !isBaseNode &&
           <NodeListItemDropdown 
             node={node}
-            handleClickRename={rename}
+            handleClickRename={toggleRename}
             />
         }
       </div>
@@ -76,7 +65,7 @@ const NodeListItem = ({ node, isFocused, isBaseNode = false, handleClick }: Prop
       }
     </NodeContentContainer>
   );
-};
+});
 
 export default NodeListItem;
 
