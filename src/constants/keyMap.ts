@@ -25,8 +25,9 @@ export const treeKeyMap = {
   
   // ListItem
   CHECK: ' ',
+  RENAME: 'F2',
   DELETE_NODE: 'Delete',
-  TO_PARENT_NODE: 'BackSpace',
+  TO_PARENT_NODE: 'Backspace',
   OPEN_URL: 'Enter',
 
   // Toolbar
