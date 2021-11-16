@@ -1,15 +1,13 @@
-import { BookmarkNode } from 'src/constants/types';
 import styled from 'styled-components';
 import { customScroll } from 'src/style';
 import NodeListItemContainer from './NodeListItemContainer';
+import { useCurrentFolderNode } from 'src/hooks/nodeList';
+import { useTypedSelector } from 'src/hooks';
 import ButtonToParentNode from './ButtonToParentNode';
 
-interface Props {
-  currentFolderNode: BookmarkNode | undefined;
-}
-
-const NodeList = ({ currentFolderNode }: Props) => {
-  const nodes = currentFolderNode?.children || [];
+const NodeList = () => {
+  const currentFolderNode = useCurrentFolderNode();
+  const nodes = useTypedSelector(state => state.nodeList.nodes);
 
   return (
     <Wrapper>
@@ -20,15 +18,6 @@ const NodeList = ({ currentFolderNode }: Props) => {
       {
         !!nodes.length &&
         nodes
-        .filter(node => !node.url)
-        .map((node, index) => (
-          <NodeListItemContainer node={node} index={index} key={node.id} />
-        ))
-      }
-      {
-        !!nodes.length &&
-        nodes
-        .filter(node => node.url)
         .map((node, index) => (
           <NodeListItemContainer node={node} index={index} key={node.id} />
         ))
