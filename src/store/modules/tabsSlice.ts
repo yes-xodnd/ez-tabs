@@ -24,7 +24,7 @@ export const getTabs = createAsyncThunk(
 
 // actions
 export const checkAll = createAction('CHECK_ALL');
-export const clearCheck = createAction('CLEAR');
+export const uncheckAll = createAction('CLEAR');
 export const toggleCheck = createAction(
   'TABS/TOGGLE_CHECK',
   (id: number) => ({ payload: id })
@@ -33,7 +33,7 @@ export const toggleCheckAll = createAsyncThunk<void, void, { state: RootState}>(
   'TABS/TOGGLE_CHECK_ALL',
   (_, { dispatch, getState }) => {
     const { tabs, checkedTabIds } = getState().tabs;
-    if (tabs.length === checkedTabIds.length) dispatch(clearCheck());
+    if (tabs.length === checkedTabIds.length) dispatch(uncheckAll());
     else dispatch(checkAll());
   }
 );
@@ -42,7 +42,7 @@ export const closeCheckedTabs = createAsyncThunk<void, void, { state: RootState 
   'TABS/REMOVE_CHECKED',
   async (_, { getState, dispatch }) => {
     const tabIds = getState().tabs.checkedTabIds.slice();
-    dispatch(clearCheck());
+    dispatch(uncheckAll());
     api.tabs.remove(tabIds);
   }
 );
@@ -129,7 +129,7 @@ const slice = createSlice({
         }
       )
       .addCase(
-        clearCheck,
+        uncheckAll,
         (state) => { state.checkedTabIds = [] }
       )
       .addCase(
