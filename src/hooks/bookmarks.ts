@@ -14,7 +14,8 @@ import {
   toggleCheckAll, 
   removeChecked, 
   removeFocusNode,
-  setView
+  setView,
+  setRenameNodeIdFocused
 } from "src/store/modules/bookmarksSlice";
 import { showAllNodeList } from "src/store/modules/searchSlice";
 
@@ -65,6 +66,7 @@ export const useTreeKeyHandlers = () => {
     [keyMap.CHECK]: () => dispatch(onSelect()), 
     [keyMap.DELETE_NODE]: () => dispatch(removeFocusNode()),
     [keyMap.TO_PARENT_NODE]: () => dispatch(toParentNode()),
+    [keyMap.RENAME]: () => dispatch(setRenameNodeIdFocused()),
 
     // Toolbar
     [keyMap.NEW_FOLDER]: () => dispatch(createFolder()),
@@ -73,6 +75,6 @@ export const useTreeKeyHandlers = () => {
     [keyMap.SHOW_ALL]: showAll,
     [keyMap.FOCUS_SEARCHBAR]: () => {
       document.querySelector<HTMLInputElement>('#search-input')?.focus();
-    }
+    },
   }), [ dispatch, showAll ]);
 }
