@@ -1,8 +1,8 @@
 import { KeyboardEvent as ReactKeyboardEvent, KeyboardEventHandler, useEffect, useMemo, useRef } from "react";
 import { toggleWindow } from 'src/store/modules/windowsSlice';
 import { once, throttle } from "src/util";
-import { useSearchKeyHandlers, useTabsKeyHandlers, useTypedSelector } from ".";
-import { useTreeKeyHandlers } from "./bookmarks";
+import { useTabsKeyHandlers, useTypedSelector } from ".";
+import { useBookmarksKeyHandlers } from "./bookmarks";
 import { useTypedDispatch } from "./redux";
 
 type Handler = (e?: ReactKeyboardEvent) => void;
@@ -72,17 +72,11 @@ export const useGlobalHotkeys = once((handlers: HandlerMap) => {
 
 export const useCombinedKeyHandlers = () => {
   const windowType = useTypedSelector(state => state.interfaces.visibleWindow);
-  const bookmarksView = useTypedSelector(state => state.bookmarks.view);
-
   const global = useGlobalKeyHandlers();
   const tabs = useTabsKeyHandlers();
-  const tree = useTreeKeyHandlers();
-  const search = useSearchKeyHandlers();
+  const bookmarks = useBookmarksKeyHandlers();
   
-  const current = 
-    windowType === 'TABS'    ? tabs :
-    bookmarksView === 'TREE' ? tree :
-    search;
+  const current = windowType === 'TABS' ? tabs : bookmarks;
 
   return {
     ...global,
