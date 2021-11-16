@@ -44,9 +44,7 @@ const FolderListNode = ({ node, depth = 0 }: Props) => {
         </Title>
 
         {
-          isHovered &&
-          isChecked &&
-          !isCurrentFolder &&
+          (isHovered && isChecked && !isCurrentFolder) &&
           <MoveButton 
             onClick={() => { dispatch(moveChecked(node.id)) }}
             title={node.title + '로 이동'}
