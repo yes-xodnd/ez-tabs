@@ -13,7 +13,7 @@ const ButtonToParentNode = () => {
     <NodeContentContainer onClick={handleClick} isFocused={isFocused}>
       <ArrowUpward size="16" />
       <div></div>
-      <div>상위 폴더</div>
+      <div>to parent folder (Backspace)</div>
     </NodeContentContainer>
   );
 };
