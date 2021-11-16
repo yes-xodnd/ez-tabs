@@ -4,8 +4,7 @@ import { useTypedSelector } from 'src/hooks';
 import WindowWrapper from 'src/components/UI/WindowWrapper';
 import Toolbar from 'src/components/Bookmarks/BookmarksToolbar';
 import FolderTree from 'src/components/FolderTree/FolderTree';
-import NodeListContainer from 'src/components/NodeList/NodeListContainer';
-import SearchResult from 'src/components/Search/SearchResult';
+import NodeList from 'src/components/NodeList/NodeList';
 
 
 const BookmarksWindow = () => {
@@ -14,14 +13,10 @@ const BookmarksWindow = () => {
   return (
     <WindowWrapper windowType={'BOOKMARKS'}>
       <Toolbar />
-      {
-        view === 'SEARCH'
-        ? <SearchResult />
-        : <ContentContainer>
-            <FolderTree />
-            <NodeListContainer />
-          </ContentContainer>
-      }
+      <ContentContainer>
+        { view === 'TREE' && <FolderTree /> }
+        <NodeList />
+      </ContentContainer>
     </WindowWrapper>
   );
 };
