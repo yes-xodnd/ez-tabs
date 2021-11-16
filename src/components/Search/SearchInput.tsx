@@ -3,15 +3,16 @@ import { useSearch } from 'src/hooks';
 
 const SearchInput = () => {
   const handleChange = useSearch();
+  const placeholder = 'Search (Shift + f)';
 
   return (
     <Wrapper>
-      <Label htmlFor="search-input">검색어를 입력하세요</Label>
+      <Label htmlFor="search-input">{ placeholder }</Label>
       <Input 
         type="text"
         id="search-input"
         onChange={handleChange}
-        placeholder="검색어를 입력하세요"
+        placeholder={placeholder}
         />
     </Wrapper>
   );
