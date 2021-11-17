@@ -1,8 +1,7 @@
+import { ChangeEventHandler } from "react";
 import styled, { DefaultTheme } from "styled-components";
-import { useSearch } from 'src/hooks';
 
-const SearchInput = () => {
-  const handleChange = useSearch();
+const SearchInput = ({ handleChange }: { handleChange: ChangeEventHandler }) => {
   const placeholder = 'Search (Shift + f)';
 
   return (
