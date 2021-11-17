@@ -5,9 +5,9 @@ import MenubarItem from './MenubarItem';
 const Menubar = () => {
 
   return (
-    <List>
-        <MenubarItem title={'탭'} type={'TABS'} Icon={Apps} />
-        <MenubarItem title={'북마크'} type={'BOOKMARKS'} Icon={Bookmark} />
+    <List title='toggle view (PageDown | PageUp)'>
+        <MenubarItem name={'Tabs'} type={'TABS'} Icon={Apps} title={'view Tabs'} />
+        <MenubarItem name={'Bookmarks'} type={'BOOKMARKS'} Icon={Bookmark} title='view bookmarks' />
     </List>
   );
 };
