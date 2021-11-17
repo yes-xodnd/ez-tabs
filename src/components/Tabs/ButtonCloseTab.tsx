@@ -7,7 +7,7 @@ const ButtonCloseTab = ({ id }: { id: number | undefined }) => {
   const closeTab = useCloseTab(id);
 
   return (
-    <Button onClick={closeTab} title="close tab (Delete)">
+    <Button onClick={e => {closeTab(); e.stopPropagation();}} title="close tab (Delete)">
       <Close size="16" />
     </Button>
   );
@@ -19,17 +19,15 @@ const Button = styled.button`
   display: flex;
   justify-content: center;
   align-items: center;
-  width: 18px;
-  height: 18px;
+  width: 50px;
+  height: 100%;
   padding: 2px;
   border: none;
-  border-radius: 100%;
-  background-color: white;
-  color: ${props => props.theme.colors.danger};
+  background-color: lightgrey;
+  color: white;
 
   &:hover {
     cursor: pointer;
     background-color: ${props => props.theme.colors.danger};
-    color: white;
   }
 `;

@@ -14,7 +14,6 @@ import {
 import { createFromTabs } from "src/store/modules/bookmarksSlice";
 import { openWindow } from "src/store/modules/windowsSlice";
 import { useTypedDispatch } from ".";
-import { throttle } from "src/util";
 import { tabsKeyMap as keyMap } from 'src/constants/keyMap';
 
 export const useToggleCheckTab = (id: number | undefined) => {
@@ -25,14 +24,12 @@ export const useToggleCheckTab = (id: number | undefined) => {
 
 export const useCloseTab = (id: number | undefined) => {
   const dispatch = useTypedDispatch();
-  
-  return throttle(() => { id && dispatch(closeTab(id)); }, 1000);
+  return () => id && dispatch(closeTab(id));
 };
 
 export const useCloseCheckedTabs = () => {
   const dispatch = useTypedDispatch();  
-
-  return throttle(() => { dispatch(closeCheckedTabs()) }, 1000);
+  return () => dispatch(closeCheckedTabs());
 };
 
 export const useSnapshotTabs = () => {
