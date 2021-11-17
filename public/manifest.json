@@ -3,9 +3,21 @@
   "version": "1.0.0",
   "manifest_version": 3,
 
+  "icons": {
+    "128": "icon128.png"
+  },
+
   "action": {
-    "default_title": "open manager",
-    "default_popup": "index.html#popup"
+    "default_title": "open ez-tabs",
+    "default_popup": "index.html"
+  },
+  "commands": {
+    "_execute_action": {
+      "suggested_key": {
+        "default": "Ctrl+Shift+Y",
+        "mac": "Command+Shift+Y"
+      }
+    }
   },
   "permissions": [
     "bookmarks",
