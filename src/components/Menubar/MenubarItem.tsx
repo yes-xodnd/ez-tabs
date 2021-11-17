@@ -4,12 +4,13 @@ import { openWindow } from "src/store/modules/windowsSlice";
 import styled from "styled-components";
 
 interface MenubarItemProps {
+  name: string;
   title: string;
   type: WindowTypes;
   Icon: StyledIcon;
 }
 
-const MenubarItem = ({ title, type, Icon }: MenubarItemProps) => {
+const MenubarItem = ({ name, title, type, Icon }: MenubarItemProps) => {
   const dispatch = useTypedDispatch();
   const isActive = useTypedSelector(state => state.interfaces.visibleWindow === type);
   const onClick = () => dispatch(openWindow(type));
@@ -17,7 +18,7 @@ const MenubarItem = ({ title, type, Icon }: MenubarItemProps) => {
   return (
     <ListItem { ...{ title, isActive, onClick } }>
       <Icon size="16" />
-      <Title>{ title }</Title>
+      <Title>{ name }</Title>
     </ListItem>
   );
 }
