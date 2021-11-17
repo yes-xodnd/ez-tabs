@@ -13,7 +13,8 @@ export const tabsKeyMap = {
   // Toolbar
   CLOSE_CHECKED_TABS: 'Ctrl+Delete',
   SAVE_SNAPSHOT: 'Ctrl+Enter',
-  CHECK_ALL: 'Ctrl+a'
+  CHECK_ALL: 'Ctrl+a',
+  FOCUS_SEARCHBAR: 'Shift+F'
 };
 
 export const treeKeyMap = {

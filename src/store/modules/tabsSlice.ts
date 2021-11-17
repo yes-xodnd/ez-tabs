@@ -1,5 +1,6 @@
 import { createAction, createSlice, createAsyncThunk, createSelector } from "@reduxjs/toolkit";
 import api from "src/api";
+import { Tab } from "src/constants/types";
 import { RootState } from '../index';
 
 interface TabsState {
@@ -14,11 +15,16 @@ const initialState: TabsState = {
   tabIndex: -1,
 }
 
-export const getTabs = createAsyncThunk(
+const setTabs = createAction(
+  'TABS/SET_TABS',
+  (tabs: Tab[]) => ({ payload: tabs })
+);
+
+export const getTabs = createAsyncThunk<void, void, {}>(
   'TABS/GET_TABS',
-  async () => {
+  async (_, { dispatch }) => {
     const tabs = await api.tabs.query({});
-    return tabs.filter(tab => !tab.url?.match(/chrome:\/\/bookmarks/g));
+    dispatch(setTabs(tabs));
   }
 );
 
@@ -91,7 +97,22 @@ export const activateFocusedTab = createAsyncThunk<void, void, { state: RootStat
     const id = selectFocusedId(getState());
     id && api.tabs.update(id, { active: true });
   }
-)
+);
+
+const isMatch = (query: string) => (tab: Tab) => {
+  const regexp = new RegExp(query, 'i');
+  return (tab.url && regexp.test(tab.url.toLowerCase()))
+  || (tab.title && regexp.test(tab.title.toLowerCase()));
+};
+
+export const search = createAsyncThunk<void, string, { state: RootState }>(
+  'TABS/SEARCH',
+  (query, { getState, dispatch }) => {
+    const { tabs } = getState().tabs;
+    const filtered = tabs.filter(isMatch(query));
+    if (tabs.length !== filtered.length) dispatch(setTabs(filtered));
+  }
+);
 
 // selectors
 export const selectAllChecked = ({ tabs }: RootState) => {
@@ -112,9 +133,9 @@ const slice = createSlice({
   extraReducers: builder => {
     builder
       .addCase(
-        getTabs.fulfilled,
-        (state, action) => { 
-          state.tabs = action.payload; 
+        setTabs,
+        (state, action) => {
+          state.tabs = action.payload;
           if (state.tabIndex >= state.tabs.length) {
             state.tabIndex = state.tabs.length - 1;
           }

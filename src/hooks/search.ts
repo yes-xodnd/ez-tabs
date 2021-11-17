@@ -5,8 +5,9 @@ import { setView } from 'src/store/modules/bookmarksSlice';
 import { setSearchResult } from 'src/store/modules/nodeListSlice';
 import { debounce } from 'src/util';
 import api from 'src/api';
+import { getTabs, search } from 'src/store/modules/tabsSlice';
 
-export const useSearch = () => {
+export const useBookmarkSearch = () => {
   const dispatch = useTypedDispatch();
   const isSearchView = useTypedSelector(state => state.bookmarks.view === 'SEARCH');
 
@@ -27,3 +28,21 @@ export const useSearch = () => {
   
   return handleChange;
 } 
+
+export const useTabsSearch = () => {
+  const dispatch = useTypedDispatch();
+
+  const searchRef = useRef(debounce((query: string) => {
+    dispatch(search(query));
+  }, 500));
+
+  const handleChange: ChangeEventHandler<HTMLInputElement> = e => {
+    const { value } = e.target;
+    
+    !value
+    ? dispatch(getTabs())
+    : searchRef.current(value);
+  }
+
+  return handleChange;
+}

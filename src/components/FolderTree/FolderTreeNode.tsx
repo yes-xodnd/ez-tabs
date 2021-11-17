@@ -17,6 +17,8 @@ const FolderListNode = ({ node, depth = 0 }: Props) => {
   const { isOpen, toggleOpen } = useFolderOpen(node.id);
   const { isCurrentFolder, setCurrentFolder } = useCurrentFolder(node.id);
   const isChecked = useTypedSelector(state => state.nodeList.checkedNodeIds.length);
+  const isMoveButtonVisible = (!!isHovered && !!isChecked && !isCurrentFolder);
+
   const dispatch = useTypedDispatch();
 
   return (
@@ -44,7 +46,7 @@ const FolderListNode = ({ node, depth = 0 }: Props) => {
         </Title>
 
         {
-          (isHovered && isChecked && !isCurrentFolder) &&
+          isMoveButtonVisible && 
           <MoveButton 
             onClick={() => { dispatch(moveChecked(node.id)) }}
             title={node.title + '로 이동'}
