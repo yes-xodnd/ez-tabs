@@ -9,6 +9,8 @@ import { getHostname } from 'src/util';
 import Favicon from 'src/components/UI/Favicon';
 import TabCheckbox from './TabCheckbox';
 import ButtonCloseTab from './ButtonCloseTab';
+import ButtonActivateTab from './ButtonActivateTab';
+import api from 'src/api';
 
 interface Props {
   tab: Tab;
@@ -25,13 +27,17 @@ const TabListItem = ({ tab, index }: Props) => {
   const handleClick = () => {
     tab.id && dispatch(toggleCheck(tab.id));
     dispatch(setFocusIndex(index));
-  }
+  };
+
+  const activateTab = () => {
+    tab.id && api.tabs.update(tab.id, { active: true })
+  };
 
   return ( 
-
     <ContentContainer
       ref={ref}
       onClick={handleClick}
+      onDoubleClick={activateTab}
       onMouseEnter={() => setHover(true)}
       onMouseOver={() => setHover(true)}
       onMouseLeave={() => setHover(false)}
@@ -39,8 +45,9 @@ const TabListItem = ({ tab, index }: Props) => {
       >
       <Content tab={tab} />
 
-      <ButtonWrapper>
-        { isHover && <ButtonCloseTab id={tab.id} /> }
+      <ButtonWrapper isVisible={isHover}>
+        <ButtonActivateTab activateTab={activateTab} />
+        <ButtonCloseTab id={tab.id} />
       </ButtonWrapper>
     </ContentContainer>
   );
@@ -77,12 +84,11 @@ const ContentContainer = styled.div<{ isFocused: boolean, theme: DefaultTheme }>
   overflow-x: hidden;
 
   &:hover {
-    cursor: pointer;
     background-color: ${props => props.theme.colors.hover};
   }
 
   ${props => props.isFocused && `
-    border-color: ${props.theme.colors.main}
+    border-color: ${props.theme.colors.main};
   `}
 `;
 
@@ -99,7 +105,14 @@ const Hostname = styled.div`
   color: darkgrey;
 `;
 
-const ButtonWrapper = styled.div`
+const ButtonWrapper = styled.div<{ isVisible: boolean }>`
   position: absolute;
-  right: 10px;
+  display: flex;
+  right: 0;
+      height: 100%;
+
+  ${props => !props.isVisible && `
+    width: 0;
+    overflow: hidden;
+  `}
 `;
