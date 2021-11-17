@@ -65,6 +65,9 @@ export const useTabsKeyHandlers = () => {
     [keyMap.CHECK_ALL]: () => dispatch(toggleCheckAll()),
     [keyMap.CLOSE_CHECKED_TABS]: () => dispatch(closeCheckedTabs()),
     [keyMap.SAVE_SNAPSHOT]: snapshotTabs,
+    [keyMap.FOCUS_SEARCHBAR]: () => {
+      document.querySelector<HTMLInputElement>('#search-input')?.focus();
+    }
   }), [ dispatch, snapshotTabs ]);
 
   return keyHandlers;
