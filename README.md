@@ -1,6 +1,12 @@
 # EZ Tabs: Tabs and Bookmarks Manager Extension
 
-EZ Tabs는 탭 및 북마크 관리자 크롬 확장 프로그램입니다.
+![image (1)](../../../../Downloads/image (1).png)
+
+EZ Tabs는 탭과 북마크를 키보드로 간편하게 관리할 수 있는 크롬 확장 프로그램입니다. 
+
+## Installation
+
+[크롬 웹 스토어](https://chrome.google.com/webstore/detail/ez-tabs-tabs-bookmarks-ma/pefabcpjihpcagbcdcjpedppcfmmlonh/related?hl=ko)에서 설치할 수 있습니다.
 
 ## Installation (local)
 
