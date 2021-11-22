@@ -1,6 +1,6 @@
 # EZ Tabs: Tabs and Bookmarks Manager Extension
 
-![image (1)](../../../../Downloads/image (1).png)
+![header](./README.assets/header.png)
 
 EZ Tabs는 탭과 북마크를 키보드로 간편하게 관리할 수 있는 크롬 확장 프로그램입니다. 
 
