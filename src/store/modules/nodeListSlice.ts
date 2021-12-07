@@ -1,6 +1,6 @@
 import { createSlice, createAction, createAsyncThunk } from "@reduxjs/toolkit";
 import { BookmarkNode } from "src/constants/types";
-import { RootState } from "..";
+import { RootState, ThunkApiConfig } from "..";
 import { remove, setCurrentFolderNodeId, toParentNode, selectAllNodeList } from "./bookmarksSlice";
 
 interface State {
@@ -22,7 +22,7 @@ export const setNodeList = createAction(
   (nodes: BookmarkNode[]) => ({ payload: nodes })
 );
 
-export const setSearchResult = createAsyncThunk<void, BookmarkNode[], { state: RootState }>(
+export const setSearchResult = createAsyncThunk<void, BookmarkNode[], ThunkApiConfig>(
   'NODELIST/SET_SEARCH_RESULT',
   (nodes, { dispatch, getState }) => {
     if (getState().bookmarks.view === 'SEARCH') {
@@ -31,7 +31,7 @@ export const setSearchResult = createAsyncThunk<void, BookmarkNode[], { state: R
   }
 );
 
-export const moveFocusIndex = createAsyncThunk<void, 'UP' | 'DOWN', { state: RootState }>(
+export const moveFocusIndex = createAsyncThunk<void, 'UP' | 'DOWN', ThunkApiConfig>(
   'NODELIST/MOVE_FOCUS_INDEX',
   (direction, { dispatch, getState }) => {
     const diff = direction === 'UP' ? -1 : 1;
@@ -55,7 +55,7 @@ export const toggleCheck = createAction(
   (id: string) => ({ payload: id })
 );
 
-export const toggleCheckFocused = createAsyncThunk<void, void, { state: RootState }>(
+export const toggleCheckFocused = createAsyncThunk<void, void, ThunkApiConfig>(
   'NODELIST/CHECK_FOCUSED_NODE',
   (_, { dispatch, getState }) => {
     if (getState().nodeList.focusIndex === -1) {
@@ -73,7 +73,7 @@ export const toggleCheckFocused = createAsyncThunk<void, void, { state: RootStat
 export const toggleCheckAll = createAction('NODELIST/TOGGLE_CHECK_ALL');
 export const uncheckAll = createAction('NODELIST/UNCHECK_ALL');
 
-export const openUrlFocused = createAsyncThunk<void, void, { state: RootState }>(
+export const openUrlFocused = createAsyncThunk<void, void, ThunkApiConfig>(
   'NODELIST/OPEN_FOCUS_NODE_URL',
   (_, { getState }) => {
     const url = selectFocusedNode(getState()).url;
@@ -81,7 +81,7 @@ export const openUrlFocused = createAsyncThunk<void, void, { state: RootState }>
   }
 );
 
-export const removeFocused = createAsyncThunk<void, void, { state: RootState }>(
+export const removeFocused = createAsyncThunk<void, void, ThunkApiConfig>(
   'NODELIST/REMOVE_FOCUS_NODE',
   (_, { dispatch, getState }) => {
     const node = selectFocusedNode(getState());
@@ -89,7 +89,7 @@ export const removeFocused = createAsyncThunk<void, void, { state: RootState }>(
   }
 );
 
-export const removeChecked = createAsyncThunk<void, void, { state: RootState }>(
+export const removeChecked = createAsyncThunk<void, void, ThunkApiConfig>(
   'NODELIST/REMOVE_CHECKED',
   (_, { dispatch, getState }) => {
     const ids = getState().nodeList.checkedNodeIds.slice();
@@ -104,7 +104,7 @@ export const toggleRename = createAction(
   (id: string) => ({ payload: id })
 );
 
-export const toggleRenameFocused = createAsyncThunk<void, void, { state: RootState}>(
+export const toggleRenameFocused = createAsyncThunk<void, void, ThunkApiConfig>(
   'NODELIST/TOGGLE_RENAME_FOCUSED',
   (_, { dispatch, getState }) => {
     const id = selectFocusedNode(getState()).id;
@@ -112,7 +112,7 @@ export const toggleRenameFocused = createAsyncThunk<void, void, { state: RootSta
   }
 );
 
-export const showAllNodeList = createAsyncThunk<void, void, { state: RootState }>(
+export const showAllNodeList = createAsyncThunk<void, void, ThunkApiConfig>(
   'NODELIST/SHOW_ALL_NODE_LIST',
   (_, { getState, dispatch }) => {
     const allNodeList = selectAllNodeList(getState());
