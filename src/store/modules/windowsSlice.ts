@@ -1,6 +1,6 @@
-import { createAsyncThunk, createSlice } from "@reduxjs/toolkit";
+import { createAction, createAsyncThunk, createSlice } from "@reduxjs/toolkit";
 import { WindowTypes } from 'src/constants/types';
-import { RootState } from "..";
+import { RootState, ThunkApiConfig } from "..";
 
 interface interfaceState {
   visibleWindow: WindowTypes;
@@ -10,14 +10,12 @@ const initialState: interfaceState = {
   visibleWindow: 'TABS',
 };
 
-export const openWindow = createAsyncThunk<WindowTypes, WindowTypes, {}>(
+export const openWindow = createAction(
   'WINODWS/OPEN_WINDOW',
-  (type, { dispatch }) => {
-    return type;
-  }
+  (type) => ({ payload: type })
 );
 
-export const toggleWindow = createAsyncThunk<void, void, { state: RootState }>(
+export const toggleWindow = createAsyncThunk<void, void, ThunkApiConfig>(
   'WINDOWS/TOGGLE_WINDOW',
   (_, { getState, dispatch }) => {
     const next: WindowTypes = getState().interfaces.visibleWindow === 'TABS'
@@ -36,7 +34,7 @@ const slice = createSlice({
   extraReducers: builder => {
     builder
       .addCase(
-        openWindow.fulfilled,
+        openWindow,
         (state, action) => { 
           state.visibleWindow = action.payload;
         }

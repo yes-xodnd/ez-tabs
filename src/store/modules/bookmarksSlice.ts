@@ -6,7 +6,7 @@ import {
 } from '@reduxjs/toolkit';
 import { BookmarkNode } from 'src/constants/types';
 import { selectCheckedTabs } from './tabsSlice';
-import { RootState } from 'src/store';
+import { RootState, ThunkApiConfig } from 'src/store';
 import api from 'src/api';
 
 interface BookmarksState {
@@ -32,7 +32,7 @@ export const getTree = createAsyncThunk(
   }
 );
 
-export const setCurrentFolderNodeId = createAsyncThunk<string, string, { state: RootState }>(
+export const setCurrentFolderNodeId = createAsyncThunk<string, string, ThunkApiConfig>(
   'BOOKMARKS/SET_CURRENT_FOLDER_NODE_ID',
   (id: string, { dispatch }) => {
     dispatch(openFolderNode(id));
@@ -41,7 +41,7 @@ export const setCurrentFolderNodeId = createAsyncThunk<string, string, { state: 
   }
 );
 
-export const createFolder = createAsyncThunk<void, void, { state: RootState }>(
+export const createFolder = createAsyncThunk<void, void, ThunkApiConfig>(
   'BOOOKMARKS/CREATE_FOLDER',
   async (_, { getState, dispatch }) => {
     const parentId = getState().bookmarks.currentFolderNodeId;
@@ -51,7 +51,7 @@ export const createFolder = createAsyncThunk<void, void, { state: RootState }>(
   }
 )
 
-export const createFromTabs = createAsyncThunk<void, void, { state: RootState }>(
+export const createFromTabs = createAsyncThunk<void, void, ThunkApiConfig>(
   'BOOKMARKS/CREATE_FROM_TABS',
   async (_, { dispatch, getState }) => {
     const state = getState();
@@ -77,7 +77,7 @@ export const createFromTabs = createAsyncThunk<void, void, { state: RootState }>
   }
 );
 
-export const openFolderNode = createAsyncThunk<string[], string, { state: RootState }>(
+export const openFolderNode = createAsyncThunk<string[], string, ThunkApiConfig>(
   'BOOKMARKS/OPEN_FOLDER_NODE',
   (id: string, { getState }) => {
     const parentListIds = selectParentIdList(getState(), id);
@@ -90,9 +90,9 @@ export const closeFolderNode = createAction(
   (id: string) => ({ payload: id })
 );
 
-export const rename = createAsyncThunk(
+export const rename = createAsyncThunk<void, { id: string, title: string }, ThunkApiConfig>(
   'BOOKMARKS/RENAME',
-  async (details: {id: string, title: string}, { dispatch }) => {
+  async (details, { dispatch }) => {
     const { id, title } = details;
     await api.bookmarks.update(id, { title });
     
@@ -100,7 +100,7 @@ export const rename = createAsyncThunk(
   }
 )
 
-export const remove = createAsyncThunk(
+export const remove = createAsyncThunk<void, BookmarkNode | string, ThunkApiConfig>(
   'BOOKMARKS/REMOVE',
   async (node: BookmarkNode | string, { dispatch }) => {
     
@@ -134,7 +134,7 @@ export const setView = createAction(
   (type: 'TREE' | 'SEARCH') => ({ payload: type })
 );
 
-export const toParentNode = createAsyncThunk<void, void, { state: RootState }>(
+export const toParentNode = createAsyncThunk<void, void, ThunkApiConfig>(
   'BOOKMARKS/TO_PARENT_NODE',
   (_, { getState, dispatch }) => {
     const parentId = selectCurrentFolderNode(getState()).parentId;

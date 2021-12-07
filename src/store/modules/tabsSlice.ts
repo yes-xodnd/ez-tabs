@@ -1,7 +1,6 @@
 import { createAction, createSlice, createAsyncThunk, createSelector } from "@reduxjs/toolkit";
-import api from "src/api";
 import { Tab } from "src/constants/types";
-import { RootState } from '../index';
+import { RootState, ThunkApiConfig } from '..';
 
 interface TabsState {
   tabs: chrome.tabs.Tab[];
@@ -20,10 +19,10 @@ const setTabs = createAction(
   (tabs: Tab[]) => ({ payload: tabs })
 );
 
-export const getTabs = createAsyncThunk<void, void, {}>(
+export const getTabs = createAsyncThunk<void, void, ThunkApiConfig>(
   'TABS/GET_TABS',
-  async (_, { dispatch }) => {
-    const tabs = await api.tabs.query({});
+  async (_, { dispatch, extra }) => {
+    const tabs = await extra.api.tabs.query({});
     dispatch(setTabs(tabs));
   }
 );
@@ -36,7 +35,7 @@ export const toggleCheck = createAction(
   (id: number) => ({ payload: id })
 );
 
-export const toggleCheckAll = createAsyncThunk<void, void, { state: RootState}>(
+export const toggleCheckAll = createAsyncThunk<void, void, ThunkApiConfig>(
   'TABS/TOGGLE_CHECK_ALL',
   (_, { dispatch, getState }) => {
     const { tabs, checkedTabIds } = getState().tabs;
@@ -45,23 +44,23 @@ export const toggleCheckAll = createAsyncThunk<void, void, { state: RootState}>(
   }
 );
 
-export const closeCheckedTabs = createAsyncThunk<void, void, { state: RootState }>(
+export const closeCheckedTabs = createAsyncThunk<void, void, ThunkApiConfig>(
   'TABS/REMOVE_CHECKED',
-  async (_, { getState }) => {
+  async (_, { getState, extra }) => {
     const tabIds = getState().tabs.checkedTabIds.slice();
-    api.tabs.remove(tabIds);
+    extra.api.tabs.remove(tabIds);
   }
 );
 
-export const closeTab = createAsyncThunk(
+export const closeTab = createAsyncThunk<number, number, ThunkApiConfig>(
   'TABS/CLOSE_TAB',
-  async (id: number) => {
-    api.tabs.remove(id);
+  async (id, { extra }) => {
+    extra.api.tabs.remove(id);
     return id;
   }
 );
 
-export const closeFocusTab = createAsyncThunk<void, void, { state: RootState }>(
+export const closeFocusTab = createAsyncThunk<void, void, ThunkApiConfig>(
   'TABS/CLOSE_TAB_HOTKEY',
   async (_, { dispatch, getState }) => {
     const targetId = selectFocusedId(getState());
@@ -84,7 +83,7 @@ export const setFocusIndexEnd = createAction(
   (target: 'START' | 'END') => ({ payload: target })
 );
 
-export const toggleCheckFocused = createAsyncThunk<void, void, { state: RootState }>(
+export const toggleCheckFocused = createAsyncThunk<void, void, ThunkApiConfig>(
   'TABS/TOGGLE_CHECK_FOCUSED',
   (_, { dispatch, getState }) => {
     const id = selectFocusedId(getState());
@@ -92,11 +91,11 @@ export const toggleCheckFocused = createAsyncThunk<void, void, { state: RootStat
   }
 );
 
-export const activateFocusedTab = createAsyncThunk<void, void, { state: RootState }>(
+export const activateFocusedTab = createAsyncThunk<void, void, ThunkApiConfig>(
   'TABS/ACTIVATE_FOCUSED_TAB',
-  (_, { getState }) => {
+  (_, { getState, extra }) => {
     const id = selectFocusedId(getState());
-    id && api.tabs.update(id, { active: true });
+    id && extra.api.tabs.update(id, { active: true });
   }
 );
 
@@ -106,7 +105,7 @@ const isMatch = (query: string) => (tab: Tab) => {
   || (tab.title && regexp.test(tab.title.toLowerCase()));
 };
 
-export const search = createAsyncThunk<void, string, { state: RootState }>(
+export const search = createAsyncThunk<void, string, ThunkApiConfig>(
   'TABS/SEARCH',
   (query, { getState, dispatch }) => {
     const { tabs } = getState().tabs;
