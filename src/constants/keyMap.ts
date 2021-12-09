@@ -11,9 +11,9 @@ export const tabsKeyMap = {
   CLOSE_FOCUSED_TAB: 'Delete',
 
   // Toolbar
-  CLOSE_CHECKED_TABS: 'Ctrl+Delete',
+  CLOSE_CHECKED_TABS: 'Shift+Delete',
   SAVE_SNAPSHOT: 'Ctrl+Enter',
-  CHECK_ALL: 'Ctrl+a',
+  CHECK_ALL: 'Ctrl+A',
   FOCUS_SEARCHBAR: 'Shift+F'
 };
 
@@ -33,8 +33,8 @@ export const treeKeyMap = {
 
   // Toolbar
   NEW_FOLDER: 'Ctrl+Insert',
-  CHECK_ALL: 'Ctrl+a',
-  DELETE_CHECKED_NODES: 'Ctrl+Delete',
+  CHECK_ALL: 'Ctrl+A',
+  DELETE_CHECKED_NODES: 'Shift+Delete',
   SHOW_ALL: 'Ctrl+Enter',
   FOCUS_SEARCHBAR: 'Shift+F'
 };
