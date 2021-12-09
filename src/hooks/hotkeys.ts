@@ -6,34 +6,65 @@ import { useBookmarksKeyHandlers } from "./bookmarks";
 import { useTypedDispatch } from "./redux";
 
 type Handler = (e?: ReactKeyboardEvent) => void;
-type HandlerMap = { [key: string]: Handler };
+type HandlerMap = { [command: string]: Handler };
 
-const isExceptionTag = (tagName: string): boolean => (
-  ['INPUT', 'TEXTAREA', 'SELECT'].includes(tagName)
-);
+const MODIFIER_KEYS = ['ALT', 'CTRL', 'SHIFT']
+const EXCEPTION_TAGS = ['INPUT', 'TEXTAREA', 'SELECT']
 
-const getKey = (e: ReactKeyboardEvent) => {
-  let ctrl: string = e.ctrlKey ? 'Ctrl+' : '';
-  let shift: string = e.shiftKey ? 'Shift+' : '';
-  return ctrl + shift + e.key;
+const getCommand = ({ altKey, ctrlKey, shiftKey, key: keyInput }: ReactKeyboardEvent): string => {
+  const key = keyInput.toUpperCase()
+
+  if (MODIFIER_KEYS.includes(key)) return key;
+
+  return [ altKey, ctrlKey, shiftKey ]
+    .map((isPressed, i) => isPressed ? MODIFIER_KEYS[i] : '')
+    .filter(key => key.length)
+    .concat(key)
+    .join('+');
 }
 
-export const useHotkeys = <T extends HandlerMap>(keyHandlers: T) => {
+const normalizeCommand = (command: string): string => {
+  const keys = command
+    .toUpperCase()
+    .split('+');
+
+  const modifiers = MODIFIER_KEYS
+    .map(key => keys.includes(key) ? key : '')
+    .filter(key => key.length);
+
+  const nonModifiers = keys
+    .filter(key => !MODIFIER_KEYS.includes(key));
+
+  return modifiers
+    .concat(nonModifiers)
+    .join('+');
+}
+
+const normalizeHandlerMap = (handlerMap: HandlerMap) => {
+  const result: HandlerMap = {};
+
+  for (const command in handlerMap) {
+    result[normalizeCommand(command)] = handlerMap[command];
+  }
+  return result;
+}
+
+export const useHotkeys = (handlerMap: HandlerMap): KeyboardEventHandler => {
 
   const handlerRef = useRef<HandlerMap>({});
-  handlerRef.current = keyHandlers;
+  handlerRef.current = useMemo(() => normalizeHandlerMap(handlerMap), [ handlerMap ]);
 
-  const throttledInput = useRef(throttle((e: ReactKeyboardEvent) => {
+  const handleKeyDownRef = useRef(throttle((e: ReactKeyboardEvent) => {
     const target = e.target as HTMLElement;
-    const key = getKey(e);
+    const command = getCommand(e);
+    console.log(command)
     
-    if (target && target.tagName && isExceptionTag(target.tagName)) return;
-    handlerRef.current[key] && handlerRef.current[key](e);
+    if (target && target.tagName && EXCEPTION_TAGS.includes(target.tagName)) return;
+    handlerRef.current[command] && handlerRef.current[command](e);
     
   }, 50));
    
-  const handleKeyDown: KeyboardEventHandler = e => throttledInput.current(e);
-
+  const handleKeyDown: KeyboardEventHandler = e => handleKeyDownRef.current(e);
   return handleKeyDown;
 }
 
