@@ -27,20 +27,31 @@ export const getTabs = createAsyncThunk<void, void, ThunkApiConfig>(
   }
 );
 
-// actions
-export const checkAll = createAction('CHECK_ALL');
-export const uncheckAll = createAction('CLEAR');
-export const toggleCheck = createAction(
-  'TABS/TOGGLE_CHECK',
+export const checkTab = createAction(
+  'TABS/CHECK', 
   (id: number) => ({ payload: id })
 );
+export const uncheckTab = createAction(
+  'TABS/UNCHECK',
+  (id: number) => ({ payload: id })
+);
+export const checkAllTabs = createAction('TABS/CHECK_ALL_TABS');
+export const uncheckAllTabs = createAction('TABS/UNCHECK_ALL_TABS');
+export const toggleCheck = createAsyncThunk<void, number, ThunkApiConfig>(
+  'TABS/TOGGLE_CHECK',
+  (id: number, { getState, dispatch }) => {
+    getState().tabs.checkedTabIds.includes(id)
+    ? dispatch(uncheckTab(id))
+    : dispatch(checkTab(id))
+  }
+)
 
 export const toggleCheckAll = createAsyncThunk<void, void, ThunkApiConfig>(
   'TABS/TOGGLE_CHECK_ALL',
   (_, { dispatch, getState }) => {
     const { tabs, checkedTabIds } = getState().tabs;
-    if (tabs.length === checkedTabIds.length) dispatch(uncheckAll());
-    else dispatch(checkAll());
+    if (tabs.length === checkedTabIds.length) dispatch(uncheckAllTabs());
+    else dispatch(checkAllTabs());
   }
 );
 
@@ -124,7 +135,12 @@ export const selectFocusedId = createSelector(
    ({ tabs, tabIndex }) => tabs[tabIndex]?.id
 );
 
-export const selecFocusedNode = ({ tabs }: RootState) => tabs.tabs[tabs.tabIndex];
+export const selecFocusedTab = ({ tabs }: RootState) => tabs.tabs[tabs.tabIndex];
+
+export const selectCheckedTabs = (state: RootState) => {
+  const { tabs, checkedTabIds } = state.tabs;
+  return tabs.filter(tab => tab.id && checkedTabIds.includes(tab.id));
+};
 
 const slice = createSlice({
   name: 'tabs',
@@ -142,7 +158,20 @@ const slice = createSlice({
         }
       )
       .addCase(
-        checkAll,
+        checkTab,
+        (state, action) => {
+          state.checkedTabIds.push(action.payload)
+        }
+      )
+      .addCase(
+        uncheckTab,
+        (state, action) => {
+          state.checkedTabIds = state.checkedTabIds
+            .filter(id => id !== action.payload);
+        }
+      )
+      .addCase(
+        checkAllTabs,
         (state) => {
           state.checkedTabIds = state.tabs
             .filter(tab => tab.id)
@@ -150,16 +179,8 @@ const slice = createSlice({
         }
       )
       .addCase(
-        uncheckAll,
+        uncheckAllTabs,
         (state) => { state.checkedTabIds = [] }
-      )
-      .addCase(
-        toggleCheck,
-        (state, action) => { 
-          const id = action.payload;
-          if (!state.checkedTabIds.includes(id)) state.checkedTabIds.push(id);
-          else state.checkedTabIds = state.checkedTabIds.filter(item => item !== id);
-        }
       )
       .addCase(
         closeTab.fulfilled,
@@ -198,10 +219,4 @@ const slice = createSlice({
       )
   }
 });
-
-export const selectCheckedTabs = (state: RootState) => {
-  const { tabs, checkedTabIds } = state.tabs;
-  return tabs.filter(tab => tab.id && checkedTabIds.includes(tab.id));
-};
-
 export default slice.reducer;
