@@ -8,7 +8,7 @@ import {
   closeTab,
   closeFocusTab,
   toggleCheckFocused,
-  uncheckAll,
+  uncheckAllTabs,
   setFocusIndexEnd
 } from "src/store/modules/tabsSlice";
 import { createFromTabs } from "src/store/modules/bookmarksSlice";
@@ -37,7 +37,7 @@ export const useSnapshotTabs = () => {
   
   return () => {
     dispatch(createFromTabs());
-    dispatch(uncheckAll());
+    dispatch(uncheckAllTabs());
     dispatch(openWindow('BOOKMARKS'));
   };
 };
