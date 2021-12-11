@@ -57,7 +57,6 @@ export const useHotkeys = (handlerMap: HandlerMap): KeyboardEventHandler => {
   const handleKeyDownRef = useRef(throttle((e: ReactKeyboardEvent) => {
     const target = e.target as HTMLElement;
     const command = getCommand(e);
-    console.log(command)
     
     if (target && target.tagName && EXCEPTION_TAGS.includes(target.tagName)) return;
     handlerRef.current[command] && handlerRef.current[command](e);

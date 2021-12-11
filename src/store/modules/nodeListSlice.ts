@@ -50,9 +50,44 @@ export const setFocusIndexEnd = createAction(
   (target: 'TOP' | 'BOTTOM') => ({ payload: target })
 );
 
-export const toggleCheck = createAction(
-  'NODELIST/TOGGLE_CHECK',
+export const checkNode = createAction(
+  'NODELIST/CHECK_NODE',
   (id: string) => ({ payload: id })
+);
+
+export const uncheckNode = createAction(
+  'NODELIST/UNCHECK_NODE',
+  (id: string) => ({ payload: id })
+)
+
+export const toggleCheck = createAsyncThunk<void, string, ThunkApiConfig>(
+  'NODELIST/TOGGLE_CHECK',
+  (id, { getState, dispatch }) => {
+    const isChecked = getState().nodeList.checkedNodeIds.includes(id);
+    isChecked
+    ? dispatch(uncheckNode(id))
+    : dispatch(checkNode(id))
+  }
+)
+
+export const duplicateCheck = createAsyncThunk<void, 'UP' | 'DOWN', ThunkApiConfig>(
+  'NODELIST/DUPLICATE_CHECK',
+  (direction, { getState, dispatch }) => {
+    const { nodes, checkedNodeIds, focusIndex } = getState().nodeList;
+    const diff = direction === 'UP' ? -1 : 1;
+    const nextIndex = focusIndex + diff;
+
+    if (nextIndex < 0 || nextIndex >= nodes.length) return;
+
+    const isChecked = checkedNodeIds.includes(nodes[focusIndex].id);
+    const nextNodeId = nodes[nextIndex].id;
+    
+    dispatch(moveFocusIndex(direction));
+    
+    isChecked
+    ? dispatch(checkNode(nextNodeId))
+    : dispatch(uncheckNode(nextNodeId));
+  }
 );
 
 export const toggleCheckFocused = createAsyncThunk<void, void, ThunkApiConfig>(
@@ -70,8 +105,8 @@ export const toggleCheckFocused = createAsyncThunk<void, void, ThunkApiConfig>(
   }
 );
 
-export const toggleCheckAll = createAction('NODELIST/TOGGLE_CHECK_ALL');
-export const uncheckAll = createAction('NODELIST/UNCHECK_ALL');
+export const checkAllNodes = createAction('NODELIST/CHECK_ALL_NODES');
+export const uncheckAllNodes = createAction('NODELIST/UNCHECK_ALL_NODES');
 
 export const openUrlFocused = createAsyncThunk<void, void, ThunkApiConfig>(
   'NODELIST/OPEN_FOCUS_NODE_URL',
@@ -94,7 +129,7 @@ export const removeChecked = createAsyncThunk<void, void, ThunkApiConfig>(
   (_, { dispatch, getState }) => {
     const ids = getState().nodeList.checkedNodeIds.slice();
     
-    dispatch(uncheckAll());
+    dispatch(uncheckAllNodes());
     for (const id of ids) dispatch(remove(id));
   }
 );
@@ -168,17 +203,20 @@ const slice = createSlice({
       }
     )
     .addCase(
-      toggleCheck,
+      checkNode,
       (state, action) => {
-        if (state.checkedNodeIds.includes(action.payload)) {
-          state.checkedNodeIds = state.checkedNodeIds.filter(id => id !== action.payload);
-        } else {
-          state.checkedNodeIds.push(action.payload);
-        }
+        state.checkedNodeIds.push(action.payload);
       }
     )
     .addCase(
-      toggleCheckAll,
+      uncheckNode,
+      (state, action) => {
+        state.checkedNodeIds = state.checkedNodeIds
+          .filter(id => id !== action.payload);
+      }
+    )
+    .addCase(
+      checkAllNodes,
       state => {
         state.checkedNodeIds = state.checkedNodeIds.length === state.nodes.length
         ? []
@@ -186,7 +224,7 @@ const slice = createSlice({
       }
     )
     .addCase(
-      uncheckAll,
+      uncheckAllNodes,
       state => { state.checkedNodeIds = []; }
     )
     .addCase(

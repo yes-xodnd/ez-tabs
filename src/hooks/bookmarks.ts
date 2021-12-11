@@ -15,11 +15,12 @@ import {
   setFocusIndexEnd,
   openUrlFocused,
   toggleCheckFocused,
-  toggleCheckAll, 
+  checkAllNodes, 
   removeFocused,
   removeChecked, 
   toggleRenameFocused,
   showAllNodeList,
+  duplicateCheck,
 } from 'src/store/modules/nodeListSlice';
 
 export const useFolderOpen = (id: string): { isOpen: boolean, toggleOpen: () => void } => {
@@ -63,6 +64,8 @@ export const useBookmarksKeyHandlers = () => {
     [keyMap.MOVE_DOWN]: () => dispatch(moveFocusIndex('DOWN')),
     [keyMap.MOVE_TOP]: () => dispatch(setFocusIndexEnd('TOP')),
     [keyMap.MOVE_BOTTOM]: () => dispatch(setFocusIndexEnd('BOTTOM')),
+    [keyMap.DUPLICATE_CHECK_UP]: () => dispatch(duplicateCheck('UP')),
+    [keyMap.DUPLICATE_CHECK_DOWN]:() => dispatch(duplicateCheck('DOWN')),
 
     // ListItem
     [keyMap.OPEN_URL]: () => dispatch(openUrlFocused()),
@@ -73,7 +76,7 @@ export const useBookmarksKeyHandlers = () => {
 
     // Toolbar
     [keyMap.NEW_FOLDER]: () => dispatch(createFolder()),
-    [keyMap.CHECK_ALL]: () => dispatch(toggleCheckAll()),
+    [keyMap.CHECK_ALL]: () => dispatch(checkAllNodes()),
     [keyMap.DELETE_CHECKED_NODES]: () => dispatch(removeChecked()),
     [keyMap.SHOW_ALL]: showAll,
     [keyMap.FOCUS_SEARCHBAR]: () => {
