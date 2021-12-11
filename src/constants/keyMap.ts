@@ -1,9 +1,11 @@
 export const tabsKeyMap = {
   // List
-  MOVE_DOWN: 'ArrowDown',
   MOVE_UP: 'ArrowUp',
+  MOVE_DOWN: 'ArrowDown',
   MOVE_TOP: 'Home',
   MOVE_BOTTOM: 'End',
+  DUPLICATE_CHECK_UP: 'Shift+ArrowUp',
+  DUPLICATE_CHECK_DOWN: 'Shift+ArrowDown',
 
   // ListItem
   CHECK: ' ',
@@ -19,10 +21,12 @@ export const tabsKeyMap = {
 
 export const treeKeyMap = {
   // List
-  MOVE_DOWN: 'ArrowDown',
   MOVE_UP: 'ArrowUp',
+  MOVE_DOWN: 'ArrowDown',
   MOVE_TOP: 'Home',
   MOVE_BOTTOM: 'End',
+  DUPLICATE_CHECK_UP: 'Shift+ArrowUp',
+  DUPLICATE_CHECK_DOWN: 'Shift+ArrowDown',
   
   // ListItem
   CHECK: ' ',
