@@ -2,12 +2,12 @@ import { CheckBox, CheckBoxOutlineBlank } from '@styled-icons/material-outlined'
 import ToolbarButton from 'src/components/UI/ToolbarButton';
 import { useTypedDispatch, useTypedSelector } from 'src/hooks';
 
-import { toggleCheckAll, selectIsAllChecked } from 'src/store/modules/nodeListSlice';
+import { checkAllNodes, selectIsAllChecked } from 'src/store/modules/nodeListSlice';
 
 const ButtonCheckAll = () => {
   const isAllChecked = useTypedSelector(selectIsAllChecked);
   const dispatch = useTypedDispatch();
-  const handleClick = () => dispatch(toggleCheckAll());
+  const handleClick = () => dispatch(checkAllNodes());
 
   return (
     <ToolbarButton 
