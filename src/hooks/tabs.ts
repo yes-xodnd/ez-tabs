@@ -9,7 +9,8 @@ import {
   closeFocusTab,
   toggleCheckFocused,
   uncheckAllTabs,
-  setFocusIndexEnd
+  setFocusIndexEnd,
+  duplicateCheck
 } from "src/store/modules/tabsSlice";
 import { createFromTabs } from "src/store/modules/bookmarksSlice";
 import { openWindow } from "src/store/modules/windowsSlice";
@@ -52,6 +53,8 @@ export const useTabsKeyHandlers = () => {
     [keyMap.MOVE_DOWN]: () => dispatch(moveFocusIndex(1)),
     [keyMap.MOVE_TOP]: () => dispatch(setFocusIndexEnd('START')),
     [keyMap.MOVE_BOTTOM]: () => dispatch(setFocusIndexEnd('END')),
+    [keyMap.DUPLICATE_CHECK_UP]: () => dispatch(duplicateCheck('UP')),
+    [keyMap.DUPLICATE_CHECK_DOWN]: () => dispatch(duplicateCheck('DOWN')),
 
     // ListItem
     [keyMap.CHECK]: () => dispatch(toggleCheckFocused()),
