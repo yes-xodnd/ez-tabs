@@ -3,13 +3,12 @@ import { useState, useEffect, useRef } from 'react';
 import { getTree } from 'src/store/modules/bookmarksSlice';
 import { getTabs } from 'src/store/modules/tabsSlice';
 import { addTabsChangeListener } from 'src/api';
-
 import { useTypedDispatch, useTypedSelector } from './redux';
 
-export { useFolderOpen, useCurrentFolder } from './bookmarks';
-export { useBookmarkSearch, useTabsSearch } from './search';
-export { useTabsKeyHandlers, useCloseCheckedTabs, useCloseTab, useToggleCheckTab } from './tabs';
-export { useHotkeys, useScrollCenterFocused, useGlobalKeyHandlers, useGlobalHotkeys, useCombinedKeyHandlers } from './hotkeys';
+export * from './bookmarks';
+export * from './search';
+export * from './tabs';
+export * from './hotkeys';
 export { useTypedDispatch, useTypedSelector };
 
 export const useToggle = (initState: boolean): [ boolean, () => void ] => {
