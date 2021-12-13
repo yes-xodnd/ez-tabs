@@ -2,6 +2,8 @@
 
 ![header](./README.assets/header.png)
 
+![gif1](./README.assets/eztabs1.gif)
+
 EZ Tabs는 탭과 북마크를 키보드로 간편하게 관리할 수 있는 크롬 확장 프로그램입니다. 
 
 ## Installation
